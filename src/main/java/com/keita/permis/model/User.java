@@ -3,16 +3,18 @@ package com.keita.permis.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Date;
 
-@MappedSuperclass
+@Entity
 @Data
-public abstract class User {
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+public abstract class User implements Serializable {
 
     @Id
     @GeneratedValue (strategy = GenerationType.AUTO)
-    private Long id;
-    private String firstName,lastName,gender,email,password,cellNumber,city;
-    private Date dateOfBirth;
+    protected Long id;
+    protected String firstName,lastName,gender,email,password,cellNumber,city;
+    protected Date dateOfBirth;
 
 }
