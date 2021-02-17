@@ -4,11 +4,12 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
 import java.io.Serializable;
 
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class Test extends Permit implements Serializable {
+public class PermitTest extends Permit implements Serializable {
     private int LIFE_TIME;
 }
