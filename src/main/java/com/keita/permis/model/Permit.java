@@ -21,9 +21,7 @@ public abstract class Permit implements Serializable {
     protected PermitCategory permitCategory;
     //List ne marche pas
     protected String restrictedAreas;
-
-    @OneToOne
-    protected Citizen citizen;
+    protected boolean isActive;
 
     @ManyToMany
     protected List<Administrator> administrators;

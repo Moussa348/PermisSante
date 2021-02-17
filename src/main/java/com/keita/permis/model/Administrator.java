@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Administrator extends User implements Serializable {
+
     private String role;
 
     @ManyToMany(mappedBy = "administrators")
