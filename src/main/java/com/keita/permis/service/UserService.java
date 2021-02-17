@@ -14,8 +14,8 @@ public class UserService {
     private UserRepository userRepository;
 
     /*
-    TODO
-        -Make my controller return a ResponseEntity
+        TODO
+            -Make my controller return a ResponseEntity -> for code status
      */
 
     public void registerUser(User user) {
