@@ -5,7 +5,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
+import java.util.Date;
 
 @Entity
 @Data
@@ -14,6 +14,11 @@ public class Administrator extends User implements Serializable {
 
     private String role;
 
-    @ManyToMany(mappedBy = "administrators")
-    private List<Permit> permits;
+    public Administrator(){}
+
+    public Administrator(String firstName, String lastName, String gender, String email, String password,
+                         String cellNumber, String city, Date dateOfBirth, String role) {
+        super(firstName, lastName, gender, email, password, cellNumber, city, dateOfBirth);
+        this.role = role;
+    }
 }

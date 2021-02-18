@@ -14,44 +14,47 @@ public class UserService {
     private UserRepository userRepository;
 
     /*
-        TODO
-            -Make my controller return a ResponseEntity -> for code status
-     */
-
-    public void registerUser(User user) {
+      TODO:
+        -If age lower than 18 return error with a message
+        -check with the Ministry of Health(socialInsurance,isVaccinated) before I instantiate a citizen (by calling WS)
+        -Call service that generateQr(sendEmail,pdf...), that I will code in the near future, and associate with User
+    */
+    public boolean registerUser(User user) {
         try {
             userRepository.save(user);
+            return true;
 
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 
+    //Only used for testing
     public void registerListUser(List<User> users) {
         try {
             userRepository.saveAll(users);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public User getUser(Long id){
+    public User getUser(Long id) {
         return userRepository.getOne(id);
     }
 
-    public List<User> getListUser(){
+    public List<User> getListUser() {
         return userRepository.findAll();
     }
 
-    public boolean deleteUser(Long id){
+    public boolean deleteUser(Long id) {
 
-        if(userRepository.findById(id).isPresent()) {
+        if (userRepository.findById(id).isPresent()) {
             userRepository.deleteById(id);
             return true;
         }
         return false;
     }
-
 
 
 }

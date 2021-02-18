@@ -33,6 +33,7 @@ public abstract class User implements Serializable {
         this.cellNumber = cellNumber;
         this.city = city;
         this.dateOfBirth = dateOfBirth;
+        this.isActive = true;
     }
 
 }

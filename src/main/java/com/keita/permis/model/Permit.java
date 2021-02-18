@@ -6,7 +6,6 @@ import lombok.Data;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Data
@@ -18,12 +17,33 @@ public abstract class Permit implements Serializable {
     protected Long id;
     protected Date date;
     protected Byte qrCode;
-    protected PermitCategory permitCategory;
     //List ne marche pas
     protected String restrictedAreas;
     protected boolean isActive;
+    protected PermitCategory permitCategory;
 
-    @ManyToMany
-    protected List<Administrator> administrators;
+    @OneToOne
+    private Citizen citizen;
 
+    @ManyToOne
+    protected Administrator administrator;
+
+    public Permit(){}
+
+    public Permit(Date date, Byte qrCode, PermitCategory permitCategory,
+                  String restrictedAreas, Citizen citizen, Administrator administrator) {
+        this.date = date;
+        this.qrCode = qrCode;
+        this.permitCategory = permitCategory;
+        this.restrictedAreas = restrictedAreas;
+        this.citizen = citizen;
+        this.administrator = administrator;
+        this.isActive = true;
+        /*
+            TODO
+                -After, In my service related to Permit, I will have a method that will set the permit to inactive,
+                 for example for the test after 14 days and then send an email
+
+         */
+    }
 }

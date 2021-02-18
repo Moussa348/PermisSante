@@ -32,10 +32,7 @@ public class DatabaseRunner implements CommandLineRunner {
                         "5143435478",
                         "mtl",
                         new SimpleDateFormat("yyyy-MM-dd").parse("1998-11-23"),
-                        "MASSOUMA980725",
-                        false,
-                        false,
-                        null
+                        "MASSOUMA980725"
                 ),
                 new Citizen(
                         "Cancre",
@@ -46,10 +43,7 @@ public class DatabaseRunner implements CommandLineRunner {
                         "5143435478",
                         "mtl",
                         new SimpleDateFormat("yyyy-MM-dd").parse("1996-10-22"),
-                        "CANCC961022",
-                        false,
-                        false,
-                        null
+                        "CANCC961022"
                 ),
                 new Administrator(),
                 new Administrator()
