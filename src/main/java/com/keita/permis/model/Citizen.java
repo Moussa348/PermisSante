@@ -19,12 +19,12 @@ public class Citizen extends User implements Serializable {
 
     public Citizen() { }
 
-    public Citizen(String firstName, String lastName, String gender,
-                   String email, String password, String cellNumber,
-                   String city, Date dateOfBirth, String socialInsurance) {
-
+    public Citizen(@NonNull String firstName, @NonNull String lastName, @NonNull String gender,
+                   @NonNull String email, @NonNull String password, @NonNull String cellNumber,
+                   @NonNull String city, @NonNull Date dateOfBirth, @NonNull String socialInsurance) {
         super(firstName, lastName, gender, email, password, cellNumber, city, dateOfBirth);
         this.socialInsurance = socialInsurance;
         this.isVaccinated = false;
+        this.isActive = true;
     }
 }

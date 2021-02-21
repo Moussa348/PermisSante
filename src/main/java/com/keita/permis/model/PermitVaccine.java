@@ -1,8 +1,10 @@
 package com.keita.permis.model;
 
 import com.keita.permis.enums.PermitCategory;
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NonNull;
 
 import javax.persistence.Entity;
 import java.io.Serializable;
@@ -15,8 +17,9 @@ public class PermitVaccine extends Permit implements Serializable {
 
     public PermitVaccine(){}
 
-    public PermitVaccine(Date date, Byte qrCode, PermitCategory permitCategory,
-                         String restrictedAreas, Citizen citizen, Administrator administrator) {
-        super(date, qrCode, permitCategory, restrictedAreas, citizen, administrator);
+    @Builder
+    public PermitVaccine(@NonNull Date date, @NonNull Byte qrCode, @NonNull String restrictedAreas,
+                         @NonNull PermitCategory permitCategory, @NonNull Citizen citizen) {
+        super(date, qrCode, restrictedAreas, permitCategory, citizen);
     }
 }
