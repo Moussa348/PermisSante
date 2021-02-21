@@ -3,7 +3,7 @@ package com.keita.permis;
 import com.keita.permis.model.Administrator;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.model.User;
-import com.keita.permis.service.UserService;
+import com.keita.permis.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -19,7 +19,7 @@ import java.util.List;
 public class DatabaseRunner implements CommandLineRunner {
 
     @Autowired
-    UserService userService;
+    private UserRepository userRepository;
 
     private void loadUsers() throws ParseException {
         List<User> users = Arrays.asList(
@@ -49,7 +49,7 @@ public class DatabaseRunner implements CommandLineRunner {
                 new Administrator()
         );
 
-        userService.registerListUser(users);
+        userRepository.saveAll(users);
     }
 
     @Override
