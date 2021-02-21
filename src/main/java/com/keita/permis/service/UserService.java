@@ -39,22 +39,4 @@ public class UserService {
         }
     }
 
-    public User getUser(Long id) {
-        return userRepository.getOne(id);
-    }
-
-    public List<User> getListUser() {
-        return userRepository.findAll();
-    }
-
-    public boolean deleteUser(Long id) {
-
-        if (userRepository.findById(id).isPresent()) {
-            userRepository.deleteById(id);
-            return true;
-        }
-        return false;
-    }
-
-
 }

@@ -1,7 +1,9 @@
 package com.keita.permis.dto;
 
 import com.sun.istack.NotNull;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NonNull;
 
 @Data
 public class LoginForm {
@@ -10,7 +12,7 @@ public class LoginForm {
 
     public LoginForm(){}
 
-    public LoginForm(String email, String password) {
+    public LoginForm(@NonNull String email,@NonNull String password) {
         this.email = email;
         this.password = password;
     }
