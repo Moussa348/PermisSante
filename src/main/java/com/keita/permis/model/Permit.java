@@ -1,10 +1,7 @@
 package com.keita.permis.model;
 
 import com.keita.permis.enums.PermitCategory;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,22 +15,13 @@ public abstract class Permit implements Serializable {
     @Id
     @GeneratedValue
     protected Long id;
-
-    @NonNull
     protected Date date;
-
-    @NonNull
     protected Byte qrCode;
-
-    @NonNull
     protected String restrictedAreas;
     protected boolean isActive;
-
-    @NonNull
     protected PermitCategory permitCategory;
 
-    @NonNull
-    @OneToOne
+    @ManyToOne
     private Citizen citizen;
 
     @ManyToOne
@@ -41,8 +29,8 @@ public abstract class Permit implements Serializable {
 
     public Permit() { }
 
-    public Permit(@NonNull Date date, @NonNull Byte qrCode, @NonNull String restrictedAreas,
-                  @NonNull PermitCategory permitCategory, @NonNull Citizen citizen) {
+    public Permit(Date date, Byte qrCode, String restrictedAreas,
+                  PermitCategory permitCategory, Citizen citizen) {
         this.date = date;
         this.qrCode = qrCode;
         this.restrictedAreas = restrictedAreas;

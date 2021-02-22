@@ -46,7 +46,6 @@ public class DatabaseRunner implements CommandLineRunner {
                         "CANCC961022"
                 ),
                 new Administrator(),
-
                 new Administrator()
         );
 

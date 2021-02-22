@@ -14,14 +14,13 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 public class Administrator extends User implements Serializable {
 
-    @NonNull
     private String role;
 
     public Administrator(){}
 
     @Builder
-    public Administrator(@NonNull String firstName, @NonNull String lastName, @NonNull String gender, @NonNull String email,
-                         @NonNull String password, @NonNull String cellNumber, @NonNull String city, @NonNull Date dateOfBirth,@NonNull String role) {
+    public Administrator(String firstName,String lastName,String gender, String email,
+                         String password, String cellNumber, String city, Date dateOfBirth, String role) {
         super(firstName, lastName, gender, email, password, cellNumber, city, dateOfBirth);
         this.role = role;
     }

@@ -15,14 +15,13 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 public class PermitTest extends Permit implements Serializable {
 
-    @NonNull
     private int LIFE_TIME;
 
     public PermitTest(){}
 
     @Builder
-    public PermitTest(@NonNull Date date, @NonNull Byte qrCode, @NonNull String restrictedAreas,
-                      @NonNull PermitCategory permitCategory, @NonNull Citizen citizen, @NonNull int LIFE_TIME) {
+    public PermitTest(Date date, Byte qrCode, String restrictedAreas,
+                      PermitCategory permitCategory, Citizen citizen, int LIFE_TIME) {
         super(date, qrCode, restrictedAreas, permitCategory, citizen);
         this.LIFE_TIME = LIFE_TIME;
     }
