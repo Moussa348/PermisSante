@@ -1,5 +1,6 @@
 package com.keita.permis.model;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NonNull;
@@ -19,12 +20,12 @@ public class Citizen extends User implements Serializable {
 
     public Citizen() { }
 
+    @Builder
     public Citizen(@NonNull String firstName, @NonNull String lastName, @NonNull String gender,
                    @NonNull String email, @NonNull String password, @NonNull String cellNumber,
                    @NonNull String city, @NonNull Date dateOfBirth, @NonNull String socialInsurance) {
         super(firstName, lastName, gender, email, password, cellNumber, city, dateOfBirth);
         this.socialInsurance = socialInsurance;
         this.isVaccinated = false;
-        this.isActive = true;
     }
 }

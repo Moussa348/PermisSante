@@ -12,11 +12,11 @@ import java.util.Date;
 
 @Entity
 @Data
-@RequiredArgsConstructor
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Permit implements Serializable {
 
     @Id
+    @GeneratedValue
     protected Long id;
 
     @NonNull
@@ -40,6 +40,16 @@ public abstract class Permit implements Serializable {
     protected Administrator administrator;
 
     public Permit() { }
+
+    public Permit(@NonNull Date date, @NonNull Byte qrCode, @NonNull String restrictedAreas,
+                  @NonNull PermitCategory permitCategory, @NonNull Citizen citizen) {
+        this.date = date;
+        this.qrCode = qrCode;
+        this.restrictedAreas = restrictedAreas;
+        this.permitCategory = permitCategory;
+        this.citizen = citizen;
+        this.isActive = true;
+    }
 
     /*
             TODO

@@ -14,6 +14,7 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class PermitTest extends Permit implements Serializable {
+
     @NonNull
     private int LIFE_TIME;
 
