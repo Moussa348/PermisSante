@@ -1,19 +1,20 @@
 package com.keita.permis.dto;
 
-import com.sun.istack.NotNull;
+import javax.validation.constraints.*;
+
 import lombok.Builder;
 import lombok.Data;
-import lombok.NonNull;
+
+import java.io.Serializable;
 
 @Data
-public class LoginForm {
+public class LoginForm implements Serializable {
 
     @NotNull
     private String email,password;
 
-    public LoginForm(){}
-
-    public LoginForm(@NonNull String email,@NonNull String password) {
+    @Builder
+    public LoginForm(@NotNull String email, @NotNull String password) {
         this.email = email;
         this.password = password;
     }

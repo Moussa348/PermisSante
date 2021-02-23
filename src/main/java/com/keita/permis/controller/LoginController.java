@@ -23,7 +23,7 @@ public class LoginController {
     private LoginService loginService;
 
     @PostMapping
-    public ResponseEntity<Boolean> login(@RequestBody @NonNull LoginForm loginForm){
+    public ResponseEntity<Boolean> login(@RequestBody LoginForm loginForm){
         if(loginService.login(loginForm)) {
             logger.info("A user has logged into the application!");
             return new ResponseEntity<>(true, HttpStatus.OK);

@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.text.ParseException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +17,7 @@ public class LoginServiceTest {
     private LoginService loginService;
 
     @Test
-    public void login() throws ParseException {
+    public void login() {
         //Arrange
         User user =  Citizen.builder()
                 .email("massou@gmail.com")

@@ -14,7 +14,6 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 public class Citizen extends User implements Serializable {
 
-    @NonNull
     private String socialInsurance;
     private boolean isVaccinated;
 

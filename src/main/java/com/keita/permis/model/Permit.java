@@ -21,7 +21,7 @@ public abstract class Permit implements Serializable {
     protected boolean isActive;
     protected PermitCategory permitCategory;
 
-    @ManyToOne
+    @OneToOne
     private Citizen citizen;
 
     @ManyToOne
