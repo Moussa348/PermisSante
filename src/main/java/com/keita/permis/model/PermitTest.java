@@ -17,7 +17,7 @@ public class PermitTest extends Permit implements Serializable {
 
     private int LIFE_TIME;
 
-    public PermitTest(){}
+    public PermitTest() { }
 
     @Builder
     public PermitTest(Date date, Byte qrCode, String restrictedAreas,

@@ -25,28 +25,27 @@ public class DatabaseRunner implements CommandLineRunner {
 
     private void loadUsers() throws ParseException {
         List<User> users = Arrays.asList(
-                new Citizen(
-                        "Massou",
-                        "massou",
-                        "M",
-                        "massou@gmail.com",
-                        "massou123",
-                        "5143435478",
-                        "mtl",
-                        new SimpleDateFormat("yyyy-MM-dd").parse("1998-11-23"),
-                        "MASSOUMA980725"
-                ),
-                new Citizen(
-                        "Cancre",
-                        "Cancre",
-                        "M",
-                        "cancre@gmail.com",
-                        "cancre123",
-                        "5143435478",
-                        "mtl",
-                        new SimpleDateFormat("yyyy-MM-dd").parse("1996-10-22"),
-                        "CANCC961022"
-                )
+                Citizen.builder()
+                        .firstName("Massou")
+                        .lastName("massou")
+                        .gender("M")
+                        .email("massou@gmail.com")
+                        .password("massou123")
+                        .cellNumber("5143435478")
+                        .city("mtl")
+                        .dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1998-11-23"))
+                        .socialInsurance("MASSOUMA980725").build()
+
+                , Citizen.builder()
+                        .firstName("Cancre")
+                        .lastName("Cancre")
+                        .gender("M")
+                        .email("cancre@gmail.com")
+                        .password("cancre123")
+                        .cellNumber("5143435478")
+                        .city("mtl")
+                        .dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1996-10-22"))
+                        .socialInsurance("CANCC961022").build()
         );
 
         userRepository.saveAll(users);
@@ -54,6 +53,6 @@ public class DatabaseRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        //loadUsers();
+        loadUsers();
     }
 }

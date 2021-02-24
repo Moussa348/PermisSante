@@ -15,11 +15,11 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = true)
 public class PermitVaccine extends Permit implements Serializable {
 
-    public PermitVaccine(){}
+    public PermitVaccine() { }
 
     @Builder
-    public PermitVaccine(@NonNull Date date, @NonNull Byte qrCode, @NonNull String restrictedAreas,
-                         @NonNull PermitCategory permitCategory, @NonNull Citizen citizen) {
+    public PermitVaccine(Date date, Byte qrCode, String restrictedAreas,
+                         PermitCategory permitCategory, Citizen citizen) {
         super(date, qrCode, restrictedAreas, permitCategory, citizen);
     }
 }
