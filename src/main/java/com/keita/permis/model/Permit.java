@@ -1,42 +1,52 @@
 package com.keita.permis.model;
 
 import com.keita.permis.enums.PermitCategory;
+import com.keita.permis.enums.PermitType;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Data
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Permit implements Serializable {
+public class Permit implements Serializable {
 
     @Id
     @GeneratedValue
-    protected Long id;
-    protected Date date;
-    protected Byte qrCode;
-    protected String restrictedAreas;
-    protected boolean isActive;
-    protected PermitCategory permitCategory;
+    private Long id;
+    private LocalDate dateCreation;
+    private LocalDate dateExpiration;
+    private Byte qrCode;
+    private String restrictedAreas;
+    private boolean isActive;
+    private PermitCategory permitCategory;
+    private PermitType permitType;
+    private int lifeTime;
 
     @OneToOne
     private Citizen citizen;
 
-    @ManyToOne
-    protected Administrator administrator;
-
     public Permit() { }
 
-    public Permit(Date date, Byte qrCode, String restrictedAreas,
-                  PermitCategory permitCategory, Citizen citizen) {
-        this.date = date;
+    public Permit(Byte qrCode, String restrictedAreas,
+                  PermitCategory permitCategory, Citizen citizen, PermitType permitType) {
+        this.dateCreation = LocalDate.now();
         this.qrCode = qrCode;
         this.restrictedAreas = restrictedAreas;
         this.permitCategory = permitCategory;
+        this.permitType = permitType;
         this.citizen = citizen;
         this.isActive = true;
+
+        if(permitType.equals(PermitType.VACCINE)){
+            this.lifeTime = 6;
+            this.dateExpiration = LocalDate.now().plusMonths(6);
+        }else{
+            this.lifeTime = 15;
+            this.dateExpiration = LocalDate.now().plusDays(15);
+        }
+
     }
 
     /*

@@ -20,6 +20,13 @@ public class LoginServiceTest {
     @InjectMocks
     private LoginService loginService;
 
+    /*
+        -@Spy
+        -Cas normal,acune surprise des resultats
+        -cas anormal
+        -cas improbable
+     */
+
     @Test
     public void login() {
         //Arrange
