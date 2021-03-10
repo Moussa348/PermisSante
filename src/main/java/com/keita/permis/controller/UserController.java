@@ -1,7 +1,7 @@
 package com.keita.permis.controller;
 
 import com.keita.permis.dto.LoginForm;
-import com.keita.permis.service.LoginService;
+import com.keita.permis.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,16 +13,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/login")
-public class LoginController {
+@RequestMapping("/user")
+public class UserController {
 
     @Autowired
-    private LoginService loginService;
-    private final Logger logger = LoggerFactory.getLogger(LoginController.class);
+    private UserService userService;
+    private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @PostMapping
+    @PostMapping("/login")
     public ResponseEntity<Boolean> login(@RequestBody LoginForm loginForm){
-        if(loginService.login(loginForm)) {
+        if(userService.login(loginForm)) {
             logger.info("A user has logged into the application!");
             return new ResponseEntity<>(true, HttpStatus.OK);
         }else {

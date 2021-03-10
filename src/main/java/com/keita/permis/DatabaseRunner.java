@@ -1,10 +1,7 @@
 package com.keita.permis;
 
-import com.keita.permis.model.Administrator;
 import com.keita.permis.model.Citizen;
-import com.keita.permis.model.PermitTest;
 import com.keita.permis.model.User;
-import com.keita.permis.repository.PermitRepository;
 import com.keita.permis.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
