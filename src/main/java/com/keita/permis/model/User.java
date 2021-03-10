@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -15,13 +16,13 @@ public abstract class User implements Serializable {
     @GeneratedValue
     protected Long id;
     protected String firstName,lastName,gender,email,password,cellNumber,city;
-    protected Date dateOfBirth;
+    protected LocalDate dateOfBirth;
     protected boolean isActive;
 
     public User(){}
 
     public User(String firstName, String lastName, String gender, String email,
-                String password, String cellNumber, String city, Date dateOfBirth) {
+                String password, String cellNumber, String city, LocalDate dateOfBirth) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;

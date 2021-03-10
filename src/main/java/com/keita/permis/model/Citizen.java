@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.Entity;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -21,7 +22,7 @@ public class Citizen extends User implements Serializable {
     @Builder
     public Citizen(String firstName, String lastName, String gender,
                    String email, String password, String cellNumber,
-                   String city, Date dateOfBirth, String socialInsurance) {
+                   String city, LocalDate dateOfBirth, String socialInsurance) {
         super(firstName, lastName, gender, email, password, cellNumber, city, dateOfBirth);
         this.socialInsurance = socialInsurance;
         this.isVaccinated = false;

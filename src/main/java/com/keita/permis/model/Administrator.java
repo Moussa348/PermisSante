@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -20,7 +21,7 @@ public class Administrator extends User implements Serializable {
 
     @Builder
     public Administrator(String firstName, String lastName, String gender, String email,
-                         String password, String cellNumber, String city, Date dateOfBirth, String role) {
+                         String password, String cellNumber, String city, LocalDate dateOfBirth, String role) {
         super(firstName, lastName, gender, email, password, cellNumber, city, dateOfBirth);
         this.role = role;
     }

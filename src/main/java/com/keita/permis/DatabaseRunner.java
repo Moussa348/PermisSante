@@ -1,5 +1,6 @@
 package com.keita.permis;
 
+import com.keita.permis.model.Administrator;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.model.User;
 import com.keita.permis.repository.UserRepository;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,6 +23,7 @@ public class DatabaseRunner implements CommandLineRunner {
     private UserRepository userRepository;
 
     private void loadUsers() throws ParseException {
+
         List<User> users = Arrays.asList(
                 Citizen.builder()
                         .firstName("Massou")
@@ -30,7 +33,7 @@ public class DatabaseRunner implements CommandLineRunner {
                         .password("massou123")
                         .cellNumber("5143435478")
                         .city("mtl")
-                        .dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1998-11-23"))
+                        .dateOfBirth(LocalDate.of(1996,11,2))
                         .socialInsurance("MASSOUMA980725").build()
 
                 , Citizen.builder()
@@ -41,8 +44,9 @@ public class DatabaseRunner implements CommandLineRunner {
                         .password("cancre123")
                         .cellNumber("5143435478")
                         .city("mtl")
-                        .dateOfBirth(new SimpleDateFormat("yyyy-MM-dd").parse("1996-10-22"))
-                        .socialInsurance("CANCC961022").build()
+                        .dateOfBirth(LocalDate.of(1996,11,2))
+                        .socialInsurance("CANCC961022").build(),
+                new Administrator()
         );
 
         userRepository.saveAll(users);
@@ -50,6 +54,6 @@ public class DatabaseRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        loadUsers();
+        //loadUsers();
     }
 }
