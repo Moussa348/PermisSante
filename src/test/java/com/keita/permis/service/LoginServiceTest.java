@@ -12,13 +12,13 @@ import org.springframework.boot.test.context.SpringBootTest;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
-public class UserServiceTest {
+public class LoginServiceTest {
 
     @Mock
     UserRepository userRepository;
 
     @InjectMocks
-    private UserService userService;
+    private LoginService loginService;
 
     /*
         -@Spy
@@ -36,6 +36,6 @@ public class UserServiceTest {
         Mockito.when(userRepository.existsByEmailAndPassword(loginForm.getEmail(), loginForm.getPassword())).thenReturn(true);
         Mockito.when(userRepository.existsByEmailAndPassword(loginForm2.getEmail(), loginForm2.getPassword())).thenReturn(false);
         //Assert
-        assertTrue(userService.login(loginForm) && !userService.login(loginForm2) );
+        assertTrue(loginService.login(loginForm) && !loginService.login(loginForm2) );
     }
 }
