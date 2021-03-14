@@ -15,7 +15,7 @@ public abstract class User implements Serializable {
     @GeneratedValue
     protected Long id;
     protected String firstName,lastName,gender,email,password,cellNumber,city;
-    protected LocalDate dateOfBirth;
+    protected LocalDate dateOfBirth,registrationDate;
     protected boolean isActive;
 
     public User(){}
@@ -30,6 +30,7 @@ public abstract class User implements Serializable {
         this.cellNumber = cellNumber;
         this.city = city;
         this.dateOfBirth = dateOfBirth;
+        this.registrationDate = LocalDate.now();
         this.isActive = true;
     }
 }
