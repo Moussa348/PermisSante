@@ -2,6 +2,7 @@ package com.keita.permis.model;
 
 import com.keita.permis.enums.PermitCategory;
 import com.keita.permis.enums.PermitType;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -29,6 +30,7 @@ public class Permit implements Serializable {
 
     public Permit() { }
 
+    @Builder
     public Permit(Byte qrCode, String restrictedAreas,
                   PermitCategory permitCategory, Citizen citizen, PermitType permitType) {
         this.dateCreation = LocalDate.now();
@@ -46,7 +48,6 @@ public class Permit implements Serializable {
             this.lifeTime = 15;
             this.dateExpiration = LocalDate.now().plusDays(15);
         }
-
     }
 
     /*
