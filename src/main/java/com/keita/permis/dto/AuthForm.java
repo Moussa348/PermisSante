@@ -33,6 +33,6 @@ public class AuthForm implements Serializable {
         this.email = email;
         this.password = password;
         this.newPassword = newPassword;
-        this.forgotPassword = false;
+        this.forgotPassword = true;
     }
 }

@@ -24,7 +24,7 @@ public class UserService {
     }
 
     private boolean forgotPassword(AuthForm authForm){
-        if(userRepository.existByEmail(authForm.getEmail()))
+        if(userRepository.existsByEmail(authForm.getEmail()))
             return authForm.getPassword().equals(authForm.getNewPassword());
         return false;
     }
