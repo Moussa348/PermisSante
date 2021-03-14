@@ -70,8 +70,8 @@ public class UserServiceTest {
     public void authentication() {
         //Arrange
 
-        AuthForm authForm1 = new AuthForm("rejArch@gmail.com", "rej123");
-        AuthForm authForm2 = new AuthForm("andreMarc12@gmail.com", "andreee");
+        AuthForm authForm1 = new AuthForm("rejArch@gmail.com", "rej123","");
+        AuthForm authForm2 = new AuthForm("andreMarc12@gmail.com", "andreee",null);
 
         AuthForm authForm3 = new AuthForm("rejArch@gmail.com", "arc123", "arc123");
         AuthForm authForm4 = new AuthForm("archRej@gmail.com", "arc123", "arc123");

@@ -15,15 +15,15 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.validation.Valid;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private UserService userService;
     private final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @PostMapping
-    public ResponseEntity<Boolean> login(@Valid @RequestBody AuthForm authForm){
+    @PostMapping("/auth")
+    public ResponseEntity<Boolean> authentication(@Valid @RequestBody AuthForm authForm){
         if(userService.authentication(authForm)) {
             logger.info("A user has logged into the application!");
             return new ResponseEntity<>(true, HttpStatus.OK);

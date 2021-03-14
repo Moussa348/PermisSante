@@ -3,7 +3,6 @@ package com.keita.permis.dto;
 import javax.validation.constraints.*;
 
 import com.keita.permis.utils.ErrorMessage;
-import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -16,23 +15,20 @@ public class AuthForm implements Serializable {
 
     @NotNull(message = ErrorMessage.PASSWORD_INVALID)
     private String password;
-
-    @NotNull
     private String newPassword;
-    private boolean forgotPassword;
+    private boolean forgotPassword = false;
 
-    public AuthForm(@NotNull String email, @NotNull String password) {
-        this.email = email;
-        this.password = password;
-        this.forgotPassword = false;
-    }
+    public AuthForm() { }
 
     public AuthForm(@NotNull String email,
                     @NotNull String password,
-                    @NotNull String newPassword) {
+                    String newPassword) {
         this.email = email;
         this.password = password;
-        this.newPassword = newPassword;
-        this.forgotPassword = true;
+
+        if(newPassword != null) {
+            this.newPassword = newPassword;
+            this.forgotPassword = !newPassword.isEmpty();
+        }
     }
 }
