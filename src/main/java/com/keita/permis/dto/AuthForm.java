@@ -21,19 +21,18 @@ public class AuthForm implements Serializable {
     private String newPassword;
     private boolean forgotPassword;
 
-    @Builder
     public AuthForm(@NotNull String email, @NotNull String password) {
         this.email = email;
         this.password = password;
         this.forgotPassword = false;
     }
 
-    @Builder
     public AuthForm(@NotNull String email,
                     @NotNull String password,
                     @NotNull String newPassword) {
         this.email = email;
         this.password = password;
+        this.newPassword = newPassword;
         this.forgotPassword = false;
     }
 }

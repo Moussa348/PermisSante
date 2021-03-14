@@ -34,27 +34,26 @@ public class UserServiceTest {
     public void insertData()  {
         List<User> users = Arrays.asList(
                 Citizen.builder()
-                        .firstName("Massou")
-                        .lastName("massou")
+                        .firstName("Rejean")
+                        .lastName("Archambault")
                         .gender("M")
-                        .email("massou@gmail.com")
-                        .password("massou123")
+                        .email("rejArch@gmail.com")
+                        .password("rej123")
                         .cellNumber("5143435478")
-                        .city("mtl")
+                        .city("Trois-Rivieres")
                         .dateOfBirth(LocalDate.of(1996,11,2))
-                        .socialInsurance("MASSOUMA980725").build()
+                        .socialInsurance("ARCA96110214").build()
 
                 , Citizen.builder()
-                        .firstName("Cancre")
-                        .lastName("Cancre")
+                        .firstName("Marc")
+                        .lastName("Andre")
                         .gender("M")
-                        .email("cancre@gmail.com")
-                        .password("cancre123")
-                        .cellNumber("5143435478")
-                        .city("mtl")
-                        .dateOfBirth(LocalDate.of(1996,11,2))
-                        .socialInsurance("CANCC961022").build(),
-                new Administrator()
+                        .email("andreMarc12@gmail.com")
+                        .password("marc123")
+                        .cellNumber("4389765490")
+                        .city("Quebec")
+                        .dateOfBirth(LocalDate.of(1968,9,13))
+                        .socialInsurance("ANDM68091315").build()
         );
 
         userRepository.saveAll(users);
@@ -70,15 +69,23 @@ public class UserServiceTest {
     @Test
     public void authentication() {
         //Arrange
-        AuthForm authForm = AuthForm.builder()
-                .email("massou@gmail.com").password("massou123").build();
 
-        AuthForm authForm2 = AuthForm.builder()
-                .email("cancre@gmail.com").password("massou123").build();
+        AuthForm authForm = new AuthForm("rejArch@gmail.com","rej123");
+        AuthForm authForm2 = new AuthForm("andreMarc12@gmail.com","andreee");
+
+        AuthForm authForm3 = new AuthForm("rejArch@gmail.com","arc123","arc123");
+        AuthForm authForm4 = new AuthForm("archRej@gmail.com","arc123","arc123");
+        AuthForm authForm5 = new AuthForm("rejArch@gmail.com","arc123","aarcc123");
+
         //Act
         Mockito.when(userRepository.existsByEmailAndPassword(authForm.getEmail(), authForm.getPassword())).thenReturn(true);
         Mockito.when(userRepository.existsByEmailAndPassword(authForm2.getEmail(), authForm2.getPassword())).thenReturn(false);
+
+        Mockito.when(userRepository.existByEmail(authForm3.getEmail())).thenReturn(true);
+        Mockito.when(userRepository.existByEmail(authForm4.getEmail())).thenReturn(false);
+        Mockito.when(userRepository.existByEmail(authForm5.getEmail())).thenReturn(true);
         //Assert
-        assertTrue(userService.authentication(authForm) && !userService.authentication(authForm2) );
+        assertTrue(userService.authentication(authForm));
+        assertFalse(userService.authentication(authForm2) );
     }
 }
