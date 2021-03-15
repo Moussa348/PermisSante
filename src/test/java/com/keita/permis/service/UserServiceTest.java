@@ -69,7 +69,6 @@ public class UserServiceTest {
     @Test
     public void authentication() {
         //Arrange
-
         AuthForm authForm1 = new AuthForm("rejArch@gmail.com", "rej123","");
         AuthForm authForm2 = new AuthForm("andreMarc12@gmail.com", "andreee",null);
 
