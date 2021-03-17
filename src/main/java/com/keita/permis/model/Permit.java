@@ -31,7 +31,7 @@ public class Permit implements Serializable {
     public Permit() { }
 
     @Builder
-    public Permit(Byte qrCode, String restrictedAreas,
+    public Permit(String restrictedAreas,
                   PermitCategory permitCategory, Citizen citizen, PermitType permitType) {
         this.dateCreation = LocalDate.now();
         this.restrictedAreas = restrictedAreas;

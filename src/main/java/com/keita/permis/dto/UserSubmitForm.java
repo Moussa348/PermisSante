@@ -16,6 +16,7 @@ public class UserSubmitForm implements Serializable {
             password,cellNumber,city,role,socialInsurance;
     @NotNull
     private Date dateOfBirth;
+    private boolean renewal;
 
     @Builder
     public UserSubmitForm(@NotNull String firstName, @NotNull String lastName, @NotNull String gender,
@@ -32,5 +33,6 @@ public class UserSubmitForm implements Serializable {
         this.role = role;
         this.socialInsurance = socialInsurance;
         this.dateOfBirth = dateOfBirth;
+        this.renewal = false;
     }
 }

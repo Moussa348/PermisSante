@@ -29,42 +29,39 @@ import java.util.List;
 
 @Service
 public class PermitService {
+    //TODO: remove all static field after making sure that everything works
 
     @Autowired
     private PermitRepository permitRepository;
 
     @Autowired
-    private Environment environment;
+    private static Environment environment;
 
     @Autowired
-    private JavaMailSender javaMailSender;
+    private static JavaMailSender javaMailSender;
 
 
-    //TODO: refactoring(try and catch + bitMatrix)
-    public void generatePermit(Citizen citizen, String filePath) throws WriterException, IOException {
+    //TODO: refactoring(try and catch + bitMatrix + write + save Permit)
+    public static void generatePermit(Citizen citizen, String filePath) throws WriterException, IOException {
         Path path = FileSystems.getDefault().getPath(filePath);
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        BitMatrix bitMatrix = qrCodeWriter.encode(citizen.getSocialInsurance(), BarcodeFormat.QR_CODE, 300, 300);
 
-       // bitMatrix.getRow()
-        /*
+        BitMatrix bitMatrix =  qrCodeWriter.encode(
+                citizen.getSocialInsurance(),
+                BarcodeFormat.QR_CODE,
+                Integer.parseInt(environment.getProperty("QrCode.width")),
+                Integer.parseInt(environment.getProperty("QrCode.heigth")));
 
         MatrixToImageWriter
-                .writeToPath(
-                        qrCodeWriter.encode(
-                                citizen.getSocialInsurance(),
-                                BarcodeFormat.QR_CODE,
-                                Integer.parseInt(environment.getProperty("QrCode.width")),
-                                Integer.parseInt(environment.getProperty("QrCode.heigth"))),
+                .writeToPath(bitMatrix,
                         environment.getProperty("QrCode.extension"),
                         path);
-         */
     }
 
     //TODO:
     //      *refactoring put qrCode as an argument
     //      *save qrCode as byte[]
-    public void generatePDF(String filePath, String qrFilePath) throws Exception {
+    public static void generatePDF(String filePath, String qrFilePath) throws Exception {
         PdfWriter pdfWriter = new PdfWriter(filePath);
         PdfDocument pdfDocument = new PdfDocument(pdfWriter);
 
@@ -77,7 +74,8 @@ public class PermitService {
     }
 
     //TODO: replace citizen by a generic to be able to use it for reset
-    public void sendEmail(Citizen citizen, List<String> filePaths) throws Exception {
+
+    public static void sendEmail(Citizen citizen, List<String> filePaths) throws Exception {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
         helper.setTo(citizen.getEmail());
@@ -86,17 +84,15 @@ public class PermitService {
         javaMailSender.send(helper.getMimeMessage());
     }
 
-    /*
 
     public static void main(String[] args) throws Exception {
-        String qrFilePath = "C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\barCode\\fifth.png";
-        String pdfFilePath = "C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\pdf\\firstQr.pdf";
+        //Atring qrFilePath = environment.getProperty("Files.qrFilePath") + "firstQr.PNG";
+        //String pdfFilePath = environment.getProperty("Files.qrFilePath") + "firstPDf.pdf";
         Citizen citizen = Citizen.builder()
                 .socialInsurance("92786327")
                 .build();
-        //generatePermit(citizen,qrFilePath);
-        generatePDF(pdfFilePath,qrFilePath);
+       // generatePermit(citizen,qrFilePath);
+        //generatePDF(pdfFilePath,qrFilePath);
 
     }
-     */
 }
