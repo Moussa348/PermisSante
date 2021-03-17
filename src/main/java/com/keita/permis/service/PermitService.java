@@ -46,10 +46,9 @@ public class PermitService {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(citizen.getSocialInsurance(), BarcodeFormat.QR_CODE, 300, 300);
 
-        for (int i = 0; i < bitMatrix.getRowSize() ; i++) {
-            BitArray bitArray = bitMatrix.getRow(i,new BitArray());
-        }
        // bitMatrix.getRow()
+        /*
+
         MatrixToImageWriter
                 .writeToPath(
                         qrCodeWriter.encode(
@@ -59,6 +58,7 @@ public class PermitService {
                                 Integer.parseInt(environment.getProperty("QrCode.heigth"))),
                         environment.getProperty("QrCode.extension"),
                         path);
+         */
     }
 
     //TODO:
