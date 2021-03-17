@@ -23,7 +23,6 @@ public class Permit implements Serializable {
     private boolean isActive;
     private PermitCategory permitCategory;
     private PermitType permitType;
-    private int lifeTime;
 
     @OneToOne
     private Citizen citizen;

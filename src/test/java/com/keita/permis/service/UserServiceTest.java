@@ -1,7 +1,6 @@
 package com.keita.permis.service;
 
 import com.keita.permis.dto.AuthForm;
-import com.keita.permis.model.Administrator;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.model.User;
 import com.keita.permis.repository.UserRepository;

@@ -3,6 +3,7 @@ package com.keita.permis.model;
 import lombok.Builder;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import javax.persistence.Entity;
 import java.io.Serializable;
@@ -11,6 +12,7 @@ import java.util.Date;
 
 @Entity
 @Data
+@ToString(callSuper=true)
 @EqualsAndHashCode(callSuper = true)
 public class Citizen extends User implements Serializable {
 
