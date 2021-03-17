@@ -23,6 +23,7 @@ public class UserService {
         return userRepository.existsByEmailAndPassword(authForm.getEmail(), authForm.getPassword());
     }
 
+    //TODO: Send Email with combination of random number to enter in the form(EmailService)
     private boolean forgotPassword(AuthForm authForm){
         if(userRepository.existsByEmail(authForm.getEmail()))
             return authForm.getPassword().equals(authForm.getNewPassword());

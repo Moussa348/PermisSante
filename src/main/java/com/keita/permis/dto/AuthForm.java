@@ -6,6 +6,9 @@ import com.keita.permis.utils.ErrorMessage;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Random;
+import java.util.Set;
 
 @Data
 public class AuthForm implements Serializable {
@@ -16,6 +19,7 @@ public class AuthForm implements Serializable {
     @NotNull(message = ErrorMessage.PASSWORD_INVALID)
     private String password;
     private String newPassword;
+    private String secretKey;
     private boolean forgotPassword = false;
 
     public AuthForm() { }
@@ -31,4 +35,5 @@ public class AuthForm implements Serializable {
             this.forgotPassword = !newPassword.isEmpty();
         }
     }
+
 }

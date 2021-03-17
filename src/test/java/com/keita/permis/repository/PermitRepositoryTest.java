@@ -1,8 +1,10 @@
 package com.keita.permis.repository;
 
-import com.keita.permis.dto.AuthForm;
+import com.keita.permis.enums.PermitCategory;
+import com.keita.permis.enums.PermitType;
 import com.keita.permis.model.Citizen;
-import com.keita.permis.model.User;
+import com.keita.permis.model.Permit;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -12,19 +14,23 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class UserRepositoryTest {
+public class PermitRepositoryTest {
 
     @Autowired
-    UserRepository userRepository;
+    CitizenRepository citizenRepository;
+
+    @Autowired
+    PermitRepository permitRepository;
 
     @BeforeAll
     public void insertData() {
-        List<User> users = Arrays.asList(
+        List<Citizen> citizens = Arrays.asList(
                 Citizen.builder()
                         .firstName("Rejean")
                         .lastName("Archambault")
@@ -47,40 +53,37 @@ public class UserRepositoryTest {
                         .dateOfBirth(LocalDate.of(1968, 9, 13))
                         .socialInsurance("ANDM68091315").build()
         );
+        citizenRepository.saveAll(citizens);
 
-        userRepository.saveAll(users);
+        List<Permit> permits = Arrays.asList(
+                Permit.builder()
+                        .citizen(citizenRepository.getOne(1L))
+                        .permitCategory(PermitCategory.ADULT)
+                        .permitType(PermitType.VACCINE)
+                        .restrictedAreas("NONE").build(),
+                Permit.builder()
+                        .citizen(citizenRepository.getOne(2L))
+                        .permitCategory(PermitCategory.ADULT)
+                        .permitType(PermitType.VACCINE)
+                        .restrictedAreas("NONE").build()
+
+        );
+        permitRepository.saveAll(permits);
     }
 
     @Test
-    void existByEmailAndPassword(){
+    void findByCitizenEmail(){
         //Arrange
-        AuthForm authForm1 = new AuthForm("rejArch@gmail.com", "rej123", "");
-        AuthForm authForm2 = new AuthForm("andreMarcc15@gmail.com", "marc123", "");
-        AuthForm authForm3 = new AuthForm("andreMarc12@gmail.com", "marcc1234", "");
+        Citizen citizen1 = Citizen.builder().email("andreMarc12@gmail.com").build();
+        Citizen citizen2 = Citizen.builder().email("jeaaaan@gmail.com").build();
 
         //Act
-        boolean authForm1Log = userRepository.existsByEmailAndPassword(authForm1.getEmail(),authForm1.getPassword());
-        boolean authForm2Log = userRepository.existsByEmailAndPassword(authForm2.getEmail(),authForm2.getPassword());
-        boolean authForm3Log = userRepository.existsByEmailAndPassword(authForm3.getEmail(),authForm3.getPassword());
+        Optional<Permit> citizen1HasPermit = permitRepository.findByCitizenEmail(citizen1.getEmail());
+        Optional<Permit> citizen2HasPermit = permitRepository.findByCitizenEmail(citizen2.getEmail());
 
         //Assert
-        assertTrue(authForm1Log);
-        assertFalse(authForm2Log);
-        assertFalse(authForm3Log);
+        assertTrue(citizen1HasPermit.isPresent());
+        assertFalse(citizen2HasPermit.isPresent());
     }
 
-    @Test
-    void existByEmail(){
-        //Arrange
-        AuthForm authForm1 = new AuthForm("rejArch@gmail.com", "rej123", "");
-        AuthForm authForm2 = new AuthForm("andreMarcc15@gmail.com", "marc123", "");
-
-        //Act
-        boolean authForm1Log = userRepository.existsByEmail(authForm1.getEmail());
-        boolean authForm2Log = userRepository.existsByEmail(authForm2.getEmail());
-
-        //Assert
-        assertTrue(authForm1Log);
-        assertFalse(authForm2Log);
-    }
 }
