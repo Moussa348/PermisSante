@@ -13,16 +13,17 @@ public class UserSubmitForm implements Serializable {
 
     @NotNull
     private String firstName,lastName,gender,email,
-            password,cellNumber,city,role,socialInsurance;
-    @NotNull
-    private String dateOfBirth;
+            password,cellNumber,city,socialInsurance,dateOfBirth;
+
+    private String firstNameParent,lastNameParent,emailParent;
     private boolean renewal;
 
     @Builder
     public UserSubmitForm(@NotNull String firstName, @NotNull String lastName, @NotNull String gender,
                           @NotNull String email,@Size(min = 8) @NotNull String password,
-                          @NotNull String cellNumber, @NotNull String city, @NotNull String role,
-                          @NotNull String socialInsurance, @NotNull String dateOfBirth) {
+                          @NotNull String cellNumber, @NotNull String city,
+                          @NotNull String socialInsurance, @NotNull String dateOfBirth,
+                          String firstNameParent,String lastNameParent,String emailParent) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -30,9 +31,11 @@ public class UserSubmitForm implements Serializable {
         this.password = password;
         this.cellNumber = cellNumber;
         this.city = city;
-        this.role = role;
         this.socialInsurance = socialInsurance;
         this.dateOfBirth = dateOfBirth;
+        this.firstNameParent= firstNameParent;
+        this.lastNameParent= lastNameParent;
+        this.emailParent= emailParent;
         this.renewal = false;
     }
 }
