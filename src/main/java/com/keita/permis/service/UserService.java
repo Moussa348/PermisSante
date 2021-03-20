@@ -5,6 +5,8 @@ import com.keita.permis.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.constraints.NotNull;
+
 
 @Service
 public class UserService {
@@ -12,7 +14,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public boolean authentication(AuthForm authForm){
+    public boolean authentication(@NotNull AuthForm authForm){
         if(!authForm.isForgotPassword())
             return login(authForm);
         else

@@ -1,22 +1,13 @@
 package com.keita.permis.service;
 
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.client.j2se.MatrixToImageWriter;
-import com.google.zxing.qrcode.QRCodeWriter;
-import com.keita.permis.enums.PermitCategory;
-import com.keita.permis.enums.PermitType;
 import com.keita.permis.model.Citizen;
-import com.keita.permis.model.Permit;
 import com.keita.permis.repository.PermitRepository;
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,14 +23,43 @@ public class PermitServiceTest {
     PermitService permitService;
 
     @Test
-    void generateQR() throws Exception {
+    void generatePermit() {
         //Arrange
         Citizen citizen1 = Citizen.builder()
-                .lastName("Hamza")
-                .socialInsurance("HAMRE72112213").build();
+                .firstName("Rejean")
+                .lastName("Archambault")
+                .gender("M")
+                .email("rejArch@gmail.com")
+                .password("rej123")
+                .cellNumber("5143435478")
+                .city("Trois-Rivieres")
+                .dateOfBirth(LocalDate.of(1996, 11, 2))
+                .socialInsurance("ARCA96110214").build();
         //Act
-        boolean successful = permitService.generateQR(citizen1);
+        boolean successful = permitService.generatePermit(citizen1);
         //Assert
         assertTrue(successful);
     }
+/*
+
+    @Test
+    void generatePDF(){
+        //Arrange
+        Citizen citizen1 = Citizen.builder()
+                .firstName("Rejean")
+                .lastName("Archambault")
+                .gender("M")
+                .email("rejArch@gmail.com")
+                .password("rej123")
+                .cellNumber("5143435478")
+                .city("Trois-Rivieres")
+                .dateOfBirth(LocalDate.of(1996, 11, 2))
+                .socialInsurance("ARCA96110214").build();
+        //Act
+        boolean success = permitService.generatePDF(citizen1);
+        //Assert
+        assertTrue(success);
+
+    }
+ */
 }

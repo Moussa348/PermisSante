@@ -19,7 +19,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.mail.internet.MimeMessage;
+import javax.validation.constraints.NotNull;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -34,20 +36,33 @@ public class PermitService {
     private PermitRepository permitRepository;
 
     @Autowired
-    private static Environment environment;
+    private Environment environment;
 
     @Autowired
-    private static JavaMailSender javaMailSender;
+    private JavaMailSender javaMailSender;
 
+    //Put this as environment properties
+    private final String qrDirectory = "C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\barCode\\";
+    private final String pdfDirectory = "C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\pdf\\";
+
+
+    public boolean generatePermit(Citizen citizen){
+        Path qrDirectoryPath = FileSystems.getDefault().getPath(qrDirectory);
+        Path pdfDirectoryPath = FileSystems.getDefault().getPath(pdfDirectory);
+        Path qrFilePath = FileSystems.getDefault().getPath(qrDirectory + citizen.getLastName() + ".PNG");
+        Path pdfFilePath = FileSystems.getDefault().getPath(pdfDirectoryPath + citizen.getLastName() + ".pdf");
+
+        if(Files.exists(qrDirectoryPath) && Files.exists(pdfDirectoryPath)){
+
+            return generateQR(citizen,qrFilePath);
+        }
+
+        return false;
+    }
 
     //TODO: store filePath as environment property
-    public boolean generateQR(Citizen citizen) {
-        boolean success = true;
-        String filePath = "C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\barCode\\"
-                + citizen.getLastName() + ".PNG";
-        Path path = FileSystems.getDefault().getPath(filePath);
+    private boolean generateQR(@NotNull Citizen citizen,Path path) {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
-
         try {
             MatrixToImageWriter
                     .writeToPath(qrCodeWriter.encode(
@@ -58,38 +73,45 @@ public class PermitService {
                             "PNG",
                             path);
         } catch (Exception e) {
-            success = false;
+            return false;
         }
-
-        if(Files.exists(path)){
-            try {
-                Files.delete(path);
-            } catch (IOException e) {
-                success = false;
-            }
-        }
-        return success;
+        return true;
     }
 
-    //TODO:
-    //      *refactoring put qrCode as an argument
-    //      *save qrCode as byte[]
-    /*
+    public boolean generatePDF(Citizen citizen) {
+        String filePath = pdfFilePath + citizen.getLastName() + ".pdf";
+        String qrFile = qrFilePath + citizen.getLastName() + ".PNG";
 
-    public static void generatePDF(String filePath, String qrFilePath) throws Exception {
-        PdfWriter pdfWriter = new PdfWriter(filePath);
-        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+        try {
+            PdfWriter pdfWriter = new PdfWriter(filePath);
+            PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+            Document document = new Document(pdfDocument);
+            Image image = new Image(ImageDataFactory.create(qrFile));
+            Paragraph paragraph = new Paragraph("Hi M/Mme." + citizen.getLastName()+ ", here is your qrCode and please be safe!\n")
+                    .add(image);
+            document.add(paragraph);
+            document.close();
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
 
-        Document document = new Document(pdfDocument);
-        Image image = new Image(ImageDataFactory.create(qrFilePath));
-        Paragraph paragraph = new Paragraph("Good morning fellow citizen, here is your qrCode\n")
-                .add(image);
-        document.add(paragraph);
-        document.close();
+    //TODO : call into sendPermitToCitizen
+    private boolean deleteFile(Path path) {
+        if (Files.exists(path)) {
+            try {
+                Files.delete(path);
+                return true;
+            } catch (IOException e) {
+                return false;
+            }
+        }
+        return false;
     }
 
     //TODO: replace citizen by a generic to be able to use it for reset
-
+    /*
     public static void sendPermitToCitizen(Citizen citizen, List<String> filePaths) throws Exception {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
