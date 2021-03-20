@@ -35,17 +35,19 @@ public class PermitServiceTest {
                 .city("Trois-Rivieres")
                 .dateOfBirth(LocalDate.of(1996, 11, 2))
                 .socialInsurance("ARCA96110214").build();
-        //Act
-        boolean successful = permitService.generatePermit(citizen1);
-        //Assert
-        assertTrue(successful);
-    }
-/*
 
-    @Test
-    void generatePDF(){
-        //Arrange
-        Citizen citizen1 = Citizen.builder()
+        Citizen citizen2 = Citizen.builder()
+                .firstName("Rejean")
+                .lastName("")
+                .gender("M")
+                .email("rejArch@gmail.com")
+                .password("rej123")
+                .cellNumber("5143435478")
+                .city("Trois-Rivieres")
+                .dateOfBirth(LocalDate.of(1996, 11, 2))
+                .socialInsurance("ARCA96110214").build();
+
+        Citizen citizen3 = Citizen.builder()
                 .firstName("Rejean")
                 .lastName("Archambault")
                 .gender("M")
@@ -54,12 +56,14 @@ public class PermitServiceTest {
                 .cellNumber("5143435478")
                 .city("Trois-Rivieres")
                 .dateOfBirth(LocalDate.of(1996, 11, 2))
-                .socialInsurance("ARCA96110214").build();
+                .socialInsurance("").build();
         //Act
-        boolean success = permitService.generatePDF(citizen1);
+        boolean successful = permitService.generatePermit(citizen1);
+        boolean notSuccessful1 = permitService.generatePermit(citizen2);
+        boolean notSuccessful2 = permitService.generatePermit(citizen3);
         //Assert
-        assertTrue(success);
-
+        assertTrue(successful);
+        assertFalse(notSuccessful1);
+        assertFalse(notSuccessful2);
     }
- */
 }

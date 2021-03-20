@@ -6,12 +6,11 @@ import com.keita.permis.utils.ErrorMessage;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Random;
-import java.util.Set;
 
 @Data
 public class AuthForm implements Serializable {
+
+    //TODO: will have to generate a secret key when forgotPassword is null, to send an email
 
     @NotNull(message = ErrorMessage.LOGIN_INVALID)
     private String email;
@@ -19,7 +18,6 @@ public class AuthForm implements Serializable {
     @NotNull(message = ErrorMessage.PASSWORD_INVALID)
     private String password;
     private String newPassword;
-    private String secretKey;
     private boolean forgotPassword = false;
 
     public AuthForm() { }

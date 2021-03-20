@@ -10,7 +10,10 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
+import com.keita.permis.enums.PermitCategory;
+import com.keita.permis.enums.PermitType;
 import com.keita.permis.model.Citizen;
+import com.keita.permis.model.Permit;
 import com.keita.permis.repository.PermitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
@@ -26,6 +29,7 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -46,48 +50,56 @@ public class PermitService {
     private final String pdfDirectory = "C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\pdf\\";
 
 
-    public boolean generatePermit(Citizen citizen){
-        Path qrDirectoryPath = FileSystems.getDefault().getPath(qrDirectory);
-        Path pdfDirectoryPath = FileSystems.getDefault().getPath(pdfDirectory);
-        Path qrFilePath = FileSystems.getDefault().getPath(qrDirectory + citizen.getLastName() + ".PNG");
-        Path pdfFilePath = FileSystems.getDefault().getPath(pdfDirectoryPath + citizen.getLastName() + ".pdf");
+    public boolean generatePermit(@NotNull Citizen citizen) {
+        if (!citizen.getLastName().isEmpty()) {
 
-        if(Files.exists(qrDirectoryPath) && Files.exists(pdfDirectoryPath)){
+            Path qrDirectoryPath = FileSystems.getDefault().getPath(qrDirectory);
+            Path pdfDirectoryPath = FileSystems.getDefault().getPath(pdfDirectory);
+            Path qrFilePath = FileSystems.getDefault().getPath(qrDirectory + citizen.getLastName() + ".PNG");
+            Path pdfFilePath = FileSystems.getDefault().getPath(pdfDirectory + citizen.getLastName() + ".pdf");
 
-            return generateQR(citizen,qrFilePath);
+            if (Files.exists(qrDirectoryPath) && Files.exists(pdfDirectoryPath)) {
+
+                if (generateQR(citizen, qrFilePath)) {
+                    return generatePDF(citizen);
+                }
+            }
         }
-
         return false;
     }
 
-    //TODO: store filePath as environment property
-    private boolean generateQR(@NotNull Citizen citizen,Path path) {
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        try {
-            MatrixToImageWriter
-                    .writeToPath(qrCodeWriter.encode(
-                            citizen.getSocialInsurance(),
-                            BarcodeFormat.QR_CODE,
-                            300,
-                            300),
-                            "PNG",
-                            path);
-        } catch (Exception e) {
-            return false;
+    //TODO: put width,height,format as environment properties
+    private boolean generateQR(Citizen citizen, Path path) {
+        if (!citizen.getSocialInsurance().isEmpty()) {
+
+            QRCodeWriter qrCodeWriter = new QRCodeWriter();
+            try {
+                MatrixToImageWriter
+                        .writeToPath(qrCodeWriter.encode(
+                                citizen.getSocialInsurance(),
+                                BarcodeFormat.QR_CODE,
+                                300,
+                                300),
+                                "PNG",
+                                path);
+            } catch (Exception e) {
+                return false;
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
-    public boolean generatePDF(Citizen citizen) {
-        String filePath = pdfFilePath + citizen.getLastName() + ".pdf";
-        String qrFile = qrFilePath + citizen.getLastName() + ".PNG";
+    private boolean generatePDF(Citizen citizen) {
+        String pdfFile = pdfDirectory + citizen.getLastName() + ".pdf";
+        String qrFile = qrDirectory + citizen.getLastName() + ".PNG";
 
         try {
-            PdfWriter pdfWriter = new PdfWriter(filePath);
+            PdfWriter pdfWriter = new PdfWriter(pdfFile);
             PdfDocument pdfDocument = new PdfDocument(pdfWriter);
             Document document = new Document(pdfDocument);
             Image image = new Image(ImageDataFactory.create(qrFile));
-            Paragraph paragraph = new Paragraph("Hi M/Mme." + citizen.getLastName()+ ", here is your qrCode and please be safe!\n")
+            Paragraph paragraph = new Paragraph("Hi M/Mme." + citizen.getLastName() + ", here is your qrCode and please be safe!\n")
                     .add(image);
             document.add(paragraph);
             document.close();
@@ -98,16 +110,17 @@ public class PermitService {
     }
 
     //TODO : call into sendPermitToCitizen
-    private boolean deleteFile(Path path) {
-        if (Files.exists(path)) {
-            try {
-                Files.delete(path);
-                return true;
-            } catch (IOException e) {
-                return false;
+    private boolean deleteFile(List<Path> paths) {
+        for (Path path : paths) {
+            if (Files.exists(path)) {
+                try {
+                    Files.delete(path);
+                } catch (IOException e) {
+                    return false;
+                }
             }
         }
-        return false;
+        return true;
     }
 
     //TODO: replace citizen by a generic to be able to use it for reset
@@ -121,6 +134,5 @@ public class PermitService {
         javaMailSender.send(helper.getMimeMessage());
     }
      */
-
 
 }

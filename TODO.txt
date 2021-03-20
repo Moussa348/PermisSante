@@ -1,0 +1,11 @@
+DAns le front end, jai mon formulaire
+quand il click register
+ca appelle ma methode registration qui appelle d'abord le ministry of health et ensuit confirme les chanmps
+
+cad doit retourner un citizen et la jvais l'affecter a une variable
+
+et dans mon front-end jaurais un ngIf pour qui va afficher une boite de dialogue si register et click et que citizen n'est pas vide
+puis ca va afficher comme quoi nous allons maintenant générer et vous envoyer votre permis, veuillez cliquer sur ok pour continuer
+
+dans le cas ou la registration est mal faite et que rien na ete retournee ben jaurais un message qui me dira que je ne fais pas parti de la base de donné
+du ministère

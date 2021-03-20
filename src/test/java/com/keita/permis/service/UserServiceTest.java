@@ -1,17 +1,29 @@
 package com.keita.permis.service;
 
 import com.keita.permis.dto.AuthForm;
+import com.keita.permis.dto.UserSubmitForm;
+import com.keita.permis.model.Administrator;
+import com.keita.permis.model.Citizen;
+import com.keita.permis.model.User;
 import com.keita.permis.repository.UserRepository;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
+
+import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@SpringBootTest
+@DataJpaTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class UserServiceTest {
 
     @Mock
