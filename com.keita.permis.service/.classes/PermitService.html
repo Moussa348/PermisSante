@@ -1,0 +1,187 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: PermitService</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">com.keita.permis.service</a> ]
+</div>
+
+<h1>Coverage Summary for Class: PermitService (com.keita.permis.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">PermitService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    50%
+  </span>
+  <span class="absValue">
+    (3/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    47,6%
+  </span>
+  <span class="absValue">
+    (20/ 42)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package com.keita.permis.service;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import com.google.zxing.BarcodeFormat;
+<i>4</i>&nbsp;import com.google.zxing.WriterException;
+<i>5</i>&nbsp;import com.google.zxing.client.j2se.MatrixToImageWriter;
+<i>6</i>&nbsp;import com.google.zxing.qrcode.QRCodeWriter;
+<i>7</i>&nbsp;import com.itextpdf.io.image.ImageDataFactory;
+<i>8</i>&nbsp;import com.itextpdf.kernel.pdf.PdfDocument;
+<i>9</i>&nbsp;import com.itextpdf.kernel.pdf.PdfWriter;
+<i>10</i>&nbsp;import com.itextpdf.layout.Document;
+<i>11</i>&nbsp;import com.itextpdf.layout.element.Image;
+<i>12</i>&nbsp;import com.itextpdf.layout.element.Paragraph;
+<i>13</i>&nbsp;import com.keita.permis.model.Citizen;
+<i>14</i>&nbsp;import com.keita.permis.repository.PermitRepository;
+<i>15</i>&nbsp;import org.springframework.beans.factory.annotation.Autowired;
+<i>16</i>&nbsp;import org.springframework.core.env.Environment;
+<i>17</i>&nbsp;import org.springframework.mail.javamail.JavaMailSender;
+<i>18</i>&nbsp;import org.springframework.mail.javamail.MimeMessageHelper;
+<i>19</i>&nbsp;import org.springframework.stereotype.Service;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;import javax.mail.internet.MimeMessage;
+<i>22</i>&nbsp;import java.io.File;
+<i>23</i>&nbsp;import java.io.IOException;
+<i>24</i>&nbsp;import java.nio.file.FileSystems;
+<i>25</i>&nbsp;import java.nio.file.Files;
+<i>26</i>&nbsp;import java.nio.file.Path;
+<i>27</i>&nbsp;import java.util.List;
+<i>28</i>&nbsp;
+<b class="fc"><i>29</i>&nbsp;@Service</b>
+<b class="fc"><i>30</i>&nbsp;public class PermitService {</b>
+<i>31</i>&nbsp;    //TODO: remove all static field after making sure that everything works
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    @Autowired
+<i>34</i>&nbsp;    private PermitRepository permitRepository;
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    @Autowired
+<i>37</i>&nbsp;    private static Environment environment;
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    @Autowired
+<i>40</i>&nbsp;    private static JavaMailSender javaMailSender;
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    //TODO: store filePath as environment property
+<b class="fc"><i>44</i>&nbsp;    public boolean generateQR(Citizen citizen) {</b>
+<b class="fc"><i>45</i>&nbsp;        boolean success = true;</b>
+<b class="fc"><i>46</i>&nbsp;        String filePath = &quot;C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\barCode\\&quot;</b>
+<b class="fc"><i>47</i>&nbsp;                + citizen.getLastName() + &quot;.PNG&quot;;</b>
+<b class="fc"><i>48</i>&nbsp;        Path path = FileSystems.getDefault().getPath(filePath);</b>
+<b class="fc"><i>49</i>&nbsp;        QRCodeWriter qrCodeWriter = new QRCodeWriter();</b>
+<b class="fc"><i>50</i>&nbsp;</b>
+<b class="fc"><i>51</i>&nbsp;        try {</b>
+<b class="fc"><i>52</i>&nbsp;            MatrixToImageWriter</b>
+<b class="fc"><i>53</i>&nbsp;                    .writeToPath(qrCodeWriter.encode(</b>
+<b class="fc"><i>54</i>&nbsp;                            citizen.getSocialInsurance(),</b>
+<i>55</i>&nbsp;                            BarcodeFormat.QR_CODE,
+<i>56</i>&nbsp;                            300,
+<i>57</i>&nbsp;                            300),
+<b class="nc"><i>58</i>&nbsp;                            &quot;PNG&quot;,</b>
+<b class="nc"><i>59</i>&nbsp;                            path);</b>
+<b class="fc"><i>60</i>&nbsp;        } catch (Exception e) {</b>
+<b class="fc"><i>61</i>&nbsp;            success = false;</b>
+<b class="fc"><i>62</i>&nbsp;        }</b>
+<i>63</i>&nbsp;
+<b class="fc"><i>64</i>&nbsp;        if(Files.exists(path)){</b>
+<i>65</i>&nbsp;            try {
+<b class="fc"><i>66</i>&nbsp;                Files.delete(path);</b>
+<b class="nc"><i>67</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>68</i>&nbsp;                success = false;</b>
+<b class="fc"><i>69</i>&nbsp;            }</b>
+<i>70</i>&nbsp;        }
+<b class="fc"><i>71</i>&nbsp;        return success;</b>
+<b class="nc"><i>72</i>&nbsp;    }</b>
+<b class="nc"><i>73</i>&nbsp;</b>
+<b class="nc"><i>74</i>&nbsp;    //TODO:</b>
+<b class="nc"><i>75</i>&nbsp;    //      *refactoring put qrCode as an argument</b>
+<b class="nc"><i>76</i>&nbsp;    //      *save qrCode as byte[]</b>
+<b class="nc"><i>77</i>&nbsp;    /*</b>
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    public static void generatePDF(String filePath, String qrFilePath) throws Exception {
+<i>80</i>&nbsp;        PdfWriter pdfWriter = new PdfWriter(filePath);
+<i>81</i>&nbsp;        PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+<b class="nc"><i>82</i>&nbsp;</b>
+<b class="nc"><i>83</i>&nbsp;        Document document = new Document(pdfDocument);</b>
+<b class="nc"><i>84</i>&nbsp;        Image image = new Image(ImageDataFactory.create(qrFilePath));</b>
+<b class="nc"><i>85</i>&nbsp;        Paragraph paragraph = new Paragraph(&quot;Good morning fellow citizen, here is your qrCode\n&quot;)</b>
+<b class="nc"><i>86</i>&nbsp;                .add(image);</b>
+<b class="nc"><i>87</i>&nbsp;        document.add(paragraph);</b>
+<b class="nc"><i>88</i>&nbsp;        document.close();</b>
+<i>89</i>&nbsp;    }
+<i>90</i>&nbsp;
+<i>91</i>&nbsp;    //TODO: replace citizen by a generic to be able to use it for reset
+<i>92</i>&nbsp;
+<i>93</i>&nbsp;    public static void sendPermitToCitizen(Citizen citizen, List&lt;String&gt; filePaths) throws Exception {
+<b class="nc"><i>94</i>&nbsp;        MimeMessage mimeMessage = javaMailSender.createMimeMessage();</b>
+<b class="nc"><i>95</i>&nbsp;        MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);</b>
+<b class="nc"><i>96</i>&nbsp;        helper.setTo(citizen.getEmail());</b>
+<b class="nc"><i>97</i>&nbsp;        helper.addAttachment(&quot;QR_CODE IMAGE&quot;, new File(filePaths.get(0)));</b>
+<i>98</i>&nbsp;        helper.addAttachment(&quot;QR_CODE PDF&quot;, new File(filePaths.get(1)));
+<i>99</i>&nbsp;        javaMailSender.send(helper.getMimeMessage());
+<i>100</i>&nbsp;    }
+<b class="nc"><i>101</i>&nbsp;     */</b>
+<i>102</i>&nbsp;
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2021-03-19 21:34</div>
+</div>
+</body>
+</html>
