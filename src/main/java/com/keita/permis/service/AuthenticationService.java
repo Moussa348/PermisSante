@@ -1,7 +1,7 @@
 package com.keita.permis.service;
 
 import com.keita.permis.dto.AuthForm;
-import com.keita.permis.repository.UserRepository;
+import com.keita.permis.repository.CitizenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,10 +9,10 @@ import javax.validation.constraints.NotNull;
 
 
 @Service
-public class UserService {
+public class AuthenticationService {
 
     @Autowired
-    private UserRepository userRepository;
+    private CitizenRepository citizenRepository;
 
     public boolean authentication(@NotNull AuthForm authForm){
         if(!authForm.isForgotPassword())
@@ -22,12 +22,12 @@ public class UserService {
     }
 
     private boolean login(AuthForm authForm){
-        return userRepository.existsByEmailAndPassword(authForm.getEmail(), authForm.getPassword());
+        return citizenRepository.existsByEmailAndPassword(authForm.getEmail(), authForm.getPassword());
     }
 
     //TODO: Send Email with combination of random number to enter in the form(EmailService)
     private boolean forgotPassword(AuthForm authForm){
-        if(userRepository.existsByEmail(authForm.getEmail()))
+        if(citizenRepository.existsByEmail(authForm.getEmail()))
             return authForm.getPassword().equals(authForm.getNewPassword());
         return false;
     }

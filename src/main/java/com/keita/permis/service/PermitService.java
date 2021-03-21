@@ -34,7 +34,6 @@ import java.util.List;
 
 @Service
 public class PermitService {
-    //TODO: remove all static field after making sure that everything works
 
     @Autowired
     private PermitRepository permitRepository;

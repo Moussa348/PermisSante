@@ -1,6 +1,6 @@
 package com.keita.permis.service;
 
-import com.keita.permis.dto.UserSubmitForm;
+import com.keita.permis.dto.SubmitForm;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.repository.CitizenRepository;
 import org.junit.jupiter.api.BeforeAll;
@@ -57,39 +57,39 @@ public class CitizenServiceTest {
     @Test
     void registration(){
         //Arrange
-        UserSubmitForm form1 =
-                UserSubmitForm.builder()
+        SubmitForm form1 =
+                SubmitForm.builder()
                         .firstName("Karim").lastName("Mihoubi")
                         .gender("M").email("kMihoubi@gmail.com").password("karim123")
                         .passwordAgain("karim123").cellNumber("5143786549").city("Montreal")
                         .socialInsurance("MIHOUKa1234390").dateOfBirth("1976-02-01").build();
 
-        UserSubmitForm form2 =
-                UserSubmitForm.builder()
+        SubmitForm form2 =
+                SubmitForm.builder()
                         .firstName("Mika").lastName("Kami")
                         .gender("F").email("mikaKami@gmail.com").password("mika123")
                         .passwordAgain("mika123").cellNumber("5143786549").city("Montreal")
                         .socialInsurance("MIKA45678765").dateOfBirth("2004-12-23")
                         .firstNameParent("Rejean").lastNameParent("Archambault").emailParent("rejArch@gmail.com").build();
 
-        UserSubmitForm form3 =
-                UserSubmitForm.builder()
+        SubmitForm form3 =
+                SubmitForm.builder()
                         .email("mikaKami@gmail.com").dateOfBirth("54-12-12").build();
 
-        UserSubmitForm form4 =
-                UserSubmitForm.builder()
+        SubmitForm form4 =
+                SubmitForm.builder()
                         .email("moukFa@gmail.com").dateOfBirth("1996-12-23").build();
 
-        UserSubmitForm form5 =
-                UserSubmitForm.builder()
+        SubmitForm form5 =
+                SubmitForm.builder()
                         .firstName("Mika").lastName("Kami")
                         .gender("F").email("mikaKami@gmail.com").password("mika123")
                         .passwordAgain("mika123").cellNumber("5143786549").city("Montreal")
                         .socialInsurance("MIKA45678765").dateOfBirth("2004-12-23")
                         .firstNameParent("incognito").lastNameParent("incognito").emailParent("incognito@gmail.com").build();
 
-        UserSubmitForm form6 =
-                UserSubmitForm.builder()
+        SubmitForm form6 =
+                SubmitForm.builder()
                         .firstName("Mathieu").lastName("Marc")
                         .gender("F").email("mathieuMa@gmail.com").password("mathieu123")
                         .passwordAgain("mathieu1234").cellNumber("5143786549").city("Montreal")

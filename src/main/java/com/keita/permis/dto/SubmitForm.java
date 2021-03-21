@@ -8,7 +8,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 @Data
-public class UserSubmitForm implements Serializable {
+public class SubmitForm implements Serializable {
 
     @NotNull @NotEmpty
     private String firstName,lastName,gender,email,
@@ -18,10 +18,10 @@ public class UserSubmitForm implements Serializable {
     private boolean renewal;
 
     @Builder
-    public UserSubmitForm(@NotNull @NotEmpty String firstName, @NotNull @NotEmpty String lastName, @NotNull @NotEmpty String gender,
-                          @NotNull @NotEmpty String email, @NotNull @NotEmpty String password, @NotNull @NotEmpty String passwordAgain,
-                          @NotNull @NotEmpty String cellNumber, @NotNull @NotEmpty String city, @NotNull @NotEmpty String socialInsurance,
-                          @NotNull @NotEmpty String dateOfBirth, String firstNameParent, String lastNameParent, String emailParent) {
+    public SubmitForm(@NotNull @NotEmpty String firstName, @NotNull @NotEmpty String lastName, @NotNull @NotEmpty String gender,
+                      @NotNull @NotEmpty String email, @NotNull @NotEmpty String password, @NotNull @NotEmpty String passwordAgain,
+                      @NotNull @NotEmpty String cellNumber, @NotNull @NotEmpty String city, @NotNull @NotEmpty String socialInsurance,
+                      @NotNull @NotEmpty String dateOfBirth, String firstNameParent, String lastNameParent, String emailParent) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;

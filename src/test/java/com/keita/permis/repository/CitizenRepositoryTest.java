@@ -1,8 +1,6 @@
 package com.keita.permis.repository;
 
-import com.keita.permis.model.Administrator;
 import com.keita.permis.model.Citizen;
-import com.keita.permis.model.User;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -57,6 +55,28 @@ public class CitizenRepositoryTest {
         assertTrue(exist);
         assertFalse(notExist);
     }
+
+    @Test
+    void existByEmailAndPassword(){
+        //Arrange
+        Citizen citizen1 = Citizen.builder()
+                .email("rejArch@gmail.com").password("rej123").build();
+        Citizen citizen2 = Citizen.builder()
+                .email("andreMarcc15@gmail.com").password("marc123").build();
+        Citizen citizen3 = Citizen.builder()
+                .email("andreMarc12@gmail.com").password("marcc1234").build();
+
+        //Act
+        boolean exist = citizenRepository.existsByEmailAndPassword(citizen1.getEmail(),citizen1.getPassword());
+        boolean notExist1 = citizenRepository.existsByEmailAndPassword(citizen2.getEmail(),citizen2.getPassword());
+        boolean notExist2 = citizenRepository.existsByEmailAndPassword(citizen3.getEmail(),citizen3.getPassword());
+
+        //Assert
+        assertTrue(exist);
+        assertFalse(notExist1);
+        assertFalse(notExist2);
+    }
+
 
     @Test
     void existByEmailAndFirstNameAndLastName(){

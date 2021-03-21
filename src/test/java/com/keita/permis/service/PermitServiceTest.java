@@ -2,7 +2,6 @@ package com.keita.permis.service;
 
 import com.keita.permis.model.Citizen;
 import com.keita.permis.repository.PermitRepository;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -11,7 +10,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
 @SpringBootTest
 public class PermitServiceTest {

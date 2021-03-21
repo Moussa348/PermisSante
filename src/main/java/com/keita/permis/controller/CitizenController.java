@@ -1,6 +1,6 @@
 package com.keita.permis.controller;
 
-import com.keita.permis.dto.UserSubmitForm;
+import com.keita.permis.dto.SubmitForm;
 import com.keita.permis.service.CitizenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,7 +17,7 @@ public class CitizenController {
     private CitizenService citizenService;
 
     @PostMapping("/registration")
-    public boolean registration(@Valid UserSubmitForm userSubmitForm){
-        return citizenService.registration(userSubmitForm);
+    public boolean registration(@Valid SubmitForm submitForm){
+        return citizenService.registration(submitForm);
     }
 }

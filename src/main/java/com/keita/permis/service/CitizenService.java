@@ -1,6 +1,6 @@
 package com.keita.permis.service;
 
-import com.keita.permis.dto.UserSubmitForm;
+import com.keita.permis.dto.SubmitForm;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.repository.CitizenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +16,7 @@ public class CitizenService {
     @Autowired
     private CitizenRepository citizenRepository;
 
-    public boolean registration(UserSubmitForm form) {
+    public boolean registration(SubmitForm form) {
         if (!citizenRepository.existsByEmail(form.getEmail())) {
 
             LocalDate dateOfBirth = dateFormatter(form.getDateOfBirth());
@@ -40,7 +40,7 @@ public class CitizenService {
         }
     }
 
-    private boolean ifMinorCheckIfParentExist(UserSubmitForm form, LocalDate dateOfBirth) {
+    private boolean ifMinorCheckIfParentExist(SubmitForm form, LocalDate dateOfBirth) {
         int ageMin = 18;
         if (getAgeFromLocalDate(dateOfBirth) < ageMin)
             return citizenRepository
@@ -53,7 +53,7 @@ public class CitizenService {
         return Period.between(dateOfBirth,LocalDate.now()).getYears();
     }
 
-    private boolean saveCitizen(UserSubmitForm form, LocalDate dateOfBirth) {
+    private boolean saveCitizen(SubmitForm form, LocalDate dateOfBirth) {
         if (form.getPassword().equals(form.getPasswordAgain())) {
             Citizen citizen =
                     Citizen.builder()
