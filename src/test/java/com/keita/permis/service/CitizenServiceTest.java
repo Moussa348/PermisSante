@@ -1,22 +1,21 @@
 package com.keita.permis.service;
 
 import com.keita.permis.dto.UserSubmitForm;
-import com.keita.permis.model.Administrator;
 import com.keita.permis.model.Citizen;
-import com.keita.permis.model.User;
 import com.keita.permis.repository.CitizenRepository;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -36,7 +35,7 @@ public class CitizenServiceTest {
                         .firstName("Rejean").lastName("Archambault")
                         .email("rejArch@gmail.com").password("rej123")
                         .cellNumber("5143456789").city("Gaspesie")
-                        .dateOfBirth(LocalDate.of(1996,12,23))
+                        .dateOfBirth(LocalDate.of(1967,12,23))
                         .socialInsurance("REJEAR1239892").city("Gaspesie").build(),
                 Citizen.builder()
                         .firstName("Antoine").lastName("Fafard")
@@ -62,26 +61,68 @@ public class CitizenServiceTest {
                 UserSubmitForm.builder()
                         .firstName("Karim").lastName("Mihoubi")
                         .gender("M").email("kMihoubi@gmail.com").password("karim123")
-                        .cellNumber("5143786549").city("Montreal")
+                        .passwordAgain("karim123").cellNumber("5143786549").city("Montreal")
                         .socialInsurance("MIHOUKa1234390").dateOfBirth("1976-02-01").build();
 
         UserSubmitForm form2 =
                 UserSubmitForm.builder()
-                        .email("briceNice@gmail.com").dateOfBirth("76-02-01").build();
+                        .firstName("Mika").lastName("Kami")
+                        .gender("F").email("mikaKami@gmail.com").password("mika123")
+                        .passwordAgain("mika123").cellNumber("5143786549").city("Montreal")
+                        .socialInsurance("MIKA45678765").dateOfBirth("2004-12-23")
+                        .firstNameParent("Rejean").lastNameParent("Archambault").emailParent("rejArch@gmail.com").build();
 
         UserSubmitForm form3 =
                 UserSubmitForm.builder()
-                        .firstName("Karim").lastName("Mihoubi")
-                        .gender("M").email("fafaAn@gmail.com").password("karim123")
-                        .cellNumber("5143786549").city("Montreal")
-                        .socialInsurance("MIHOUKa1234390").dateOfBirth("1976-02-01").build();
+                        .email("mikaKami@gmail.com").dateOfBirth("54-12-12").build();
+
+        UserSubmitForm form4 =
+                UserSubmitForm.builder()
+                        .email("moukFa@gmail.com").dateOfBirth("1996-12-23").build();
+
+        UserSubmitForm form5 =
+                UserSubmitForm.builder()
+                        .firstName("Mika").lastName("Kami")
+                        .gender("F").email("mikaKami@gmail.com").password("mika123")
+                        .passwordAgain("mika123").cellNumber("5143786549").city("Montreal")
+                        .socialInsurance("MIKA45678765").dateOfBirth("2004-12-23")
+                        .firstNameParent("incognito").lastNameParent("incognito").emailParent("incognito@gmail.com").build();
+
+        UserSubmitForm form6 =
+                UserSubmitForm.builder()
+                        .firstName("Mathieu").lastName("Marc")
+                        .gender("F").email("mathieuMa@gmail.com").password("mathieu123")
+                        .passwordAgain("mathieu1234").cellNumber("5143786549").city("Montreal")
+                        .socialInsurance("MIKA45678765").dateOfBirth("1994-12-24").build();
+
 
         //Act
-        Mockito.when(citizenRepository.existsByEmail(form1.getEmail())).thenReturn(false);
+        when(citizenRepository.existsByEmail(form1.getEmail())).thenReturn(false);
 
+        when(citizenRepository.existsByEmail(form2.getEmail())).thenReturn(false);
+        when(citizenRepository.existsByEmailAndFirstNameAndLastName(
+                form2.getEmailParent(), form2.getFirstNameParent(), form2.getLastNameParent()))
+                .thenReturn(true);
+
+        when(citizenRepository.existsByEmail(form4.getEmail())).thenReturn(true);
+
+        when(citizenRepository.existsByEmail(form5.getEmail())).thenReturn(false);
+        when(citizenRepository.existsByEmailAndFirstNameAndLastName(
+                form5.getEmailParent(), form5.getFirstNameParent(), form5.getLastNameParent()))
+                .thenReturn(false);
+
+        when(citizenRepository.existsByEmail(form6.getEmail())).thenReturn(false);
+
+        when(citizenRepository.save(any(Citizen.class))).thenReturn(new Citizen());
 
         //Assert
-        Assertions.assertTrue(citizenService.registration(form1));
+        assertTrue(citizenService.registration(form1));
+        assertTrue(citizenService.registration(form2));
+
+        assertFalse(citizenService.registration(form3));
+        assertFalse(citizenService.registration(form4));
+        assertFalse(citizenService.registration(form5));
+        assertFalse(citizenService.registration(form6));
     }
 
 

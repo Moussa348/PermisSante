@@ -1,9 +1,12 @@
 package com.keita.permis;
 
+import com.keita.permis.dto.UserSubmitForm;
 import com.keita.permis.model.Administrator;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.model.User;
 import com.keita.permis.repository.UserRepository;
+import com.keita.permis.service.CitizenService;
+import com.keita.permis.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.core.annotation.Order;
@@ -21,6 +24,9 @@ public class DatabaseRunner implements CommandLineRunner {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CitizenService citizenService;
 
     private void loadUsers() throws ParseException {
 
@@ -49,11 +55,19 @@ public class DatabaseRunner implements CommandLineRunner {
                 new Administrator()
         );
 
-        userRepository.saveAll(users);
+        UserSubmitForm form1 =
+                UserSubmitForm.builder()
+                        .firstName("Karim").lastName("Mihoubi")
+                        .gender("M").email("kMihoubi@gmail.com").password("karim123")
+                        .passwordAgain("karim123").cellNumber("5143786549").city("Montreal")
+                        .socialInsurance("MIHOUKa1234390").dateOfBirth("1976-02-01").build();
+
+        //userRepository.saveAll(users);
+        citizenService.registration(form1);
     }
 
     @Override
     public void run(String... args) throws Exception {
-        //loadUsers();
+       loadUsers();
     }
 }
