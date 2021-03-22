@@ -99,4 +99,9 @@ public class CitizenRepositoryTest {
         assertTrue(exist);
         assertFalse(notExist);
     }
+
+    @Test
+    void findByFirstNameAndLastNameAndEmail(){
+        
+    }
 }

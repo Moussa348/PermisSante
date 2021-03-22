@@ -17,8 +17,6 @@ public class DatabaseRunner implements CommandLineRunner {
     private CitizenService citizenService;
 
     private void loadUsers() throws ParseException {
-
-
         SubmitForm form1 =
                 SubmitForm.builder()
                         .firstName("Karim").lastName("Mihoubi")

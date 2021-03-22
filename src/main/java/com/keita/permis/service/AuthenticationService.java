@@ -25,7 +25,9 @@ public class AuthenticationService {
         return citizenRepository.existsByEmailAndPassword(authForm.getEmail(), authForm.getPassword());
     }
 
-    //TODO: Send Email with combination of random number to enter in the form(EmailService)
+    //TODO:
+    // *Send Email with combination of random number to enter in the form(EmailService)
+    // *Implement Spring Security(youtube or teacher) to be able to retrieve info from auth
     private boolean forgotPassword(AuthForm authForm){
         if(citizenRepository.existsByEmail(authForm.getEmail()))
             return authForm.getPassword().equals(authForm.getNewPassword());

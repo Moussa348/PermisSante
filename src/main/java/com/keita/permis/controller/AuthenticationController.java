@@ -22,7 +22,7 @@ public class AuthenticationController {
     private AuthenticationService authenticationService;
     private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
 
-    @PostMapping("/auth")
+    @PostMapping
     public ResponseEntity<Boolean> authentication(@Valid @RequestBody AuthForm authForm){
         if(authenticationService.authentication(authForm)) {
             logger.info("A user has logged into the application!");

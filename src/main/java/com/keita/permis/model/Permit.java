@@ -24,6 +24,7 @@ public class Permit implements Serializable {
     private PermitCategory permitCategory;
     private PermitType permitType;
     private int lifeTime;
+    private int numberOfTimesItWasSent;
 
     @OneToOne
     private Citizen citizen;
