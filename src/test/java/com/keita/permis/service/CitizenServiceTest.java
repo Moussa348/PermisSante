@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -35,19 +36,19 @@ public class CitizenServiceTest {
                         .firstName("Rejean").lastName("Archambault")
                         .email("rejArch@gmail.com").password("rej123")
                         .cellNumber("5143456789").city("Gaspesie")
-                        .dateOfBirth(LocalDate.of(1967,12,23))
+                        .dateOfBirth(LocalDate.of(1967, 12, 23))
                         .socialInsurance("REJEAR1239892").city("Gaspesie").build(),
                 Citizen.builder()
                         .firstName("Antoine").lastName("Fafard")
                         .email("fafaAn@gmail.com").password("ant123")
                         .cellNumber("5143456789").city("Laval")
-                        .dateOfBirth(LocalDate.of(1996,12,23))
+                        .dateOfBirth(LocalDate.of(1996, 12, 23))
                         .socialInsurance("FAFAAN1232424").build(),
                 Citizen.builder()
                         .firstName("Fadi").lastName("Mouk")
                         .email("moukFa@gmail.com").password("fadi123")
                         .cellNumber("5143456789").city("Montreal")
-                        .dateOfBirth(LocalDate.of(1996,12,23))
+                        .dateOfBirth(LocalDate.of(1996, 12, 23))
                         .socialInsurance("FADIMO2321412").build()
         );
 
@@ -55,7 +56,7 @@ public class CitizenServiceTest {
     }
 
     @Test
-    void registration(){
+    void registration() {
         //Arrange
         SubmitForm form1 =
                 SubmitForm.builder()
@@ -103,6 +104,9 @@ public class CitizenServiceTest {
         when(citizenRepository.existsByEmailAndFirstNameAndLastName(
                 form2.getEmailParent(), form2.getFirstNameParent(), form2.getLastNameParent()))
                 .thenReturn(true);
+        when(citizenRepository.findByFirstNameAndLastNameAndEmail(
+                form2.getFirstNameParent(), form2.getLastNameParent(), form2.getEmailParent()))
+                .thenReturn(Optional.of(new Citizen()));
 
         when(citizenRepository.existsByEmail(form4.getEmail())).thenReturn(true);
 
@@ -110,6 +114,9 @@ public class CitizenServiceTest {
         when(citizenRepository.existsByEmailAndFirstNameAndLastName(
                 form5.getEmailParent(), form5.getFirstNameParent(), form5.getLastNameParent()))
                 .thenReturn(false);
+        when(citizenRepository.findByFirstNameAndLastNameAndEmail(
+                form5.getEmailParent(), form5.getFirstNameParent(), form5.getLastNameParent()))
+                .thenReturn(Optional.empty());
 
         when(citizenRepository.existsByEmail(form6.getEmail())).thenReturn(false);
 

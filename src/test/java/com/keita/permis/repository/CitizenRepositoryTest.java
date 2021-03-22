@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -102,6 +103,22 @@ public class CitizenRepositoryTest {
 
     @Test
     void findByFirstNameAndLastNameAndEmail(){
-        
+        //Arrange
+        Citizen citizen1 = Citizen.builder()
+                .firstName("Rejean").lastName("Archambault")
+                .email("rejArch@gmail.com").build();
+        Citizen citizen2 = Citizen.builder()
+                .firstName("Andre").lastName("Marc")
+                .email("andreMarcc15@gmail.com").build();
+        //Act
+        Optional<Citizen> optionalCitizen1 = citizenRepository
+                .findByFirstNameAndLastNameAndEmail(
+                        citizen1.getFirstName(),citizen1.getLastName(),citizen1.getEmail());
+        Optional<Citizen> optionalCitizen2 = citizenRepository
+                .findByFirstNameAndLastNameAndEmail(
+                        citizen2.getFirstName(),citizen2.getLastName(),citizen2.getEmail());
+        //Assert
+        assertTrue(optionalCitizen1.isPresent());
+        assertFalse(optionalCitizen2.isPresent());
     }
 }

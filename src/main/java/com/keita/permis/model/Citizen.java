@@ -7,6 +7,7 @@ import lombok.ToString;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 import java.io.Serializable;
 import java.time.LocalDate;
 
@@ -23,12 +24,15 @@ public class Citizen implements Serializable {
     private boolean isVaccinated;
     private boolean isActive;
 
+    @OneToOne
+    private Citizen parent;
+
     public Citizen() { }
 
     @Builder
     public Citizen(String firstName, String lastName, String gender,
                    String email, String password, String cellNumber,
-                   String city, LocalDate dateOfBirth, String socialInsurance) {
+                   String city, LocalDate dateOfBirth, String socialInsurance,Citizen parent) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -42,5 +46,6 @@ public class Citizen implements Serializable {
         this.isVaccinated = false;
         this.isActive = true;
         this.role = "USER";
+        this.parent = parent;
     }
 }

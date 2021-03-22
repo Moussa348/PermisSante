@@ -16,6 +16,8 @@ public class CitizenService {
     @Autowired
     private CitizenRepository citizenRepository;
 
+    private final int AGE_MIN = 18;
+
     public boolean registration(SubmitForm form) {
         if (!citizenRepository.existsByEmail(form.getEmail())) {
 
@@ -41,14 +43,14 @@ public class CitizenService {
     }
 
     private boolean ifMinorCheckIfParentExist(SubmitForm form, LocalDate dateOfBirth) {
-        int ageMin = 18;
-        if (getAgeFromLocalDate(dateOfBirth) < ageMin)
+        if (getAgeFromLocalDate(dateOfBirth) < AGE_MIN)
             return citizenRepository
                     .existsByEmailAndFirstNameAndLastName(
                             form.getEmailParent(), form.getFirstNameParent(), form.getLastNameParent());
         return true;
     }
 
+    //TODO : move into a utils method
     private int getAgeFromLocalDate(LocalDate dateOfBirth){
         return Period.between(dateOfBirth,LocalDate.now()).getYears();
     }
@@ -62,6 +64,13 @@ public class CitizenService {
                             .cellNumber(form.getCellNumber()).city(form.getCity())
                             .dateOfBirth(dateOfBirth)
                             .socialInsurance(form.getSocialInsurance()).build();
+
+            if(getAgeFromLocalDate(dateOfBirth) < AGE_MIN)
+                citizen.setParent(citizenRepository
+                        .findByFirstNameAndLastNameAndEmail(
+                                form.getFirstNameParent(),
+                                form.getLastNameParent(),
+                                form.getEmailParent()).get());
             citizenRepository.save(citizen);
 
             //TODO: Move into PermitService
