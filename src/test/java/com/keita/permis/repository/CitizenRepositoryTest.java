@@ -102,6 +102,25 @@ public class CitizenRepositoryTest {
     }
 
     @Test
+    void findByEmailAndPassword(){
+        Citizen citizen1 = Citizen.builder()
+                .email("rejArch@gmail.com").password("rej123").build();
+        Citizen citizen2 = Citizen.builder()
+                .email("fafaAn@gmail.com").password("allo123").build();
+        //Act
+        Optional<Citizen> optionalCitizen1 = citizenRepository
+                .findByEmailAndPassword(
+                        citizen1.getEmail(),citizen1.getPassword());
+        Optional<Citizen> optionalCitizen2 = citizenRepository
+                .findByEmailAndPassword(
+                        citizen2.getEmail(),citizen2.getPassword());
+
+        //Assert
+        assertTrue(optionalCitizen1.isPresent());
+        assertFalse(optionalCitizen2.isPresent());
+    }
+
+    @Test
     void findByFirstNameAndLastNameAndEmail(){
         //Arrange
         Citizen citizen1 = Citizen.builder()

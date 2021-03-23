@@ -4,7 +4,6 @@ import com.keita.permis.enums.PermitCategory;
 import com.keita.permis.enums.PermitType;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.model.Permit;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -72,18 +71,43 @@ public class PermitRepositoryTest {
     }
 
     @Test
-    void findByCitizenEmail(){
+    void findByCitizenEmailAndCitizenPassword(){
         //Arrange
-        Citizen citizen1 = Citizen.builder().email("andreMarc12@gmail.com").build();
-        Citizen citizen2 = Citizen.builder().email("jeaaaan@gmail.com").build();
+        Citizen citizen1 = Citizen.builder().email("andreMarc12@gmail.com").password("marc123").build();
+        Citizen citizen2 = Citizen.builder().email("jeaaaan@gmail.com").password("raa").build();
 
         //Act
-        Optional<Permit> citizen1HasPermit = permitRepository.findByCitizenEmail(citizen1.getEmail());
-        Optional<Permit> citizen2HasPermit = permitRepository.findByCitizenEmail(citizen2.getEmail());
+        Optional<Permit> citizen1HasPermit = permitRepository.findByCitizenEmailAndCitizenPassword(citizen1.getEmail(),citizen1.getPassword());
+        Optional<Permit> citizen2HasPermit = permitRepository.findByCitizenEmailAndCitizenPassword(citizen2.getEmail(),citizen1.getPassword());
 
         //Assert
         assertTrue(citizen1HasPermit.isPresent());
         assertFalse(citizen2HasPermit.isPresent());
+    }
+
+    @Test
+    void findByCitizenEmailAndCitizenCellNumberAndCitizenCity(){
+        //Arrange
+        Citizen citizen1 = Citizen.builder()
+                .email("rejArch@gmail.com").cellNumber("5143435478").city("Trois-Rivieres").build();
+        Citizen citizen2 = Citizen.builder()
+                .email("rejArch@gmail.com").cellNumber("5143435478").city("Trois-Riviere").build();
+        //Act
+        Optional<Permit> citizenHasPermit = permitRepository
+                .findByCitizenEmailAndCitizenCellNumberAndCitizenCity(
+                        citizen1.getEmail(),
+                        citizen1.getCellNumber(),
+                        citizen1.getCity()
+                );
+        Optional<Permit> citizenHasNotPermit = permitRepository
+                .findByCitizenEmailAndCitizenCellNumberAndCitizenCity(
+                        citizen2.getEmail(),
+                        citizen2.getCellNumber(),
+                        citizen2.getCity()
+                );
+        //Assert
+        assertTrue(citizenHasPermit.isPresent());
+        assertFalse(citizenHasNotPermit.isPresent());
     }
 
 }

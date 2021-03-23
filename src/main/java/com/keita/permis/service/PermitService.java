@@ -1,7 +1,6 @@
 package com.keita.permis.service;
 
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -10,27 +9,23 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
-import com.keita.permis.enums.PermitCategory;
-import com.keita.permis.enums.PermitType;
+import com.keita.permis.dto.SubmitForm;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.model.Permit;
+import com.keita.permis.repository.CitizenRepository;
 import com.keita.permis.repository.PermitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import javax.mail.internet.MimeMessage;
 import javax.validation.constraints.NotNull;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class PermitService {
@@ -39,17 +34,27 @@ public class PermitService {
     private PermitRepository permitRepository;
 
     @Autowired
-    private Environment environment;
-
-    @Autowired
-    private JavaMailSender javaMailSender;
+    private CitizenRepository citizenRepository;
 
     //Put this as environment properties
     private final String qrDirectory = "C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\barCode\\";
     private final String pdfDirectory = "C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\pdf\\";
 
+    //TODO: Move into PermitService
+    /*
+        PermitCategory permitCategory = PermitCategory.ADULT.determinePermitCategory(getAgeFromLocalDate(dateOfBirth));
+    PermitType permitType = citizen.isVaccinated() ? PermitType.VACCINE : PermitType.TEST;
+    Permit permit =
+            Permit.builder()
+                    .restrictedAreas("").permitCategory(permitCategory)
+                    .citizen(citizen).permitType(permitType).build();
+            permitRepository.save(permit);
+     */
+    public boolean generatePermit(SubmitForm submitForm) {
 
-    public boolean generatePermit(@NotNull Citizen citizen) {
+
+
+        /*
         if (!citizen.getLastName().isEmpty()) {
 
             Path qrDirectoryPath = FileSystems.getDefault().getPath(qrDirectory);
@@ -64,8 +69,20 @@ public class PermitService {
                 }
             }
         }
+         */
         return false;
     }
+
+    private boolean savePermit(SubmitForm form) {
+        Optional<Permit> permit = permitRepository
+                .findByCitizenEmailAndCitizenPassword(form.getEmail(), form.getPassword());
+        Optional<Citizen> citizen = citizenRepository.findByEmailAndPassword(form.getEmail(),form.getPassword());
+        if(!permit.isPresent()){
+
+        }
+        return false;
+    }
+            /*
 
     //TODO: put width,height,format as environment properties
     private boolean generateQR(Citizen citizen, Path path) {

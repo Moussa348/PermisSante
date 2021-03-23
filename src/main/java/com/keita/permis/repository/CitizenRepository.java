@@ -10,7 +10,7 @@ import java.util.Optional;
 public interface CitizenRepository extends JpaRepository<Citizen,Long> {
     boolean existsByEmail(String email);
     boolean existsByEmailAndPassword(String email, String password);
-    Optional<Citizen> findByEmail(String email);
     boolean existsByEmailAndFirstNameAndLastName(String email,String firstName,String password);
+    Optional<Citizen> findByEmailAndPassword(String email,String password);
     Optional<Citizen> findByFirstNameAndLastNameAndEmail(String firstName,String lastName,String email);
 }

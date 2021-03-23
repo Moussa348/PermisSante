@@ -9,5 +9,6 @@ import java.util.Optional;
 
 @Repository
 public interface PermitRepository extends JpaRepository<Permit,Long> {
-    Optional<Permit> findByCitizenEmail(String email);
+    Optional<Permit> findByCitizenEmailAndCitizenPassword(String email,String password);
+    Optional<Permit> findByCitizenEmailAndCitizenCellNumberAndCitizenCity(String email,String cellNumber,String city);
 }

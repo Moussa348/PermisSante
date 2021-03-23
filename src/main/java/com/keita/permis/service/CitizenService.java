@@ -72,19 +72,6 @@ public class CitizenService {
                                 form.getLastNameParent(),
                                 form.getEmailParent()).get());
             citizenRepository.save(citizen);
-
-            //TODO: Move into PermitService
-            /*
-
-
-            PermitCategory permitCategory = PermitCategory.ADULT.determinePermitCategory(getAgeFromLocalDate(dateOfBirth));
-            PermitType permitType = citizen.isVaccinated()? PermitType.VACCINE: PermitType.TEST;
-            Permit permit =
-                    Permit.builder()
-                            .restrictedAreas("").permitCategory(permitCategory)
-                            .citizen(citizen).permitType(permitType).build();
-            permitRepository.save(permit);
-             */
             return true;
         }
         return false;

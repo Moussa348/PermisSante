@@ -70,7 +70,7 @@ public class CitizenServiceTest {
                         .firstName("Mika").lastName("Kami")
                         .gender("F").email("mikaKami@gmail.com").password("mika123")
                         .passwordAgain("mika123").cellNumber("5143786549").city("Montreal")
-                        .socialInsurance("MIKA45678765").dateOfBirth("2004-12-23")
+                        .socialInsurance("MIKA45678765").dateOfBirth("2010-12-23")
                         .firstNameParent("Rejean").lastNameParent("Archambault").emailParent("rejArch@gmail.com").build();
 
         SubmitForm form3 =
@@ -106,7 +106,7 @@ public class CitizenServiceTest {
                 .thenReturn(true);
         when(citizenRepository.findByFirstNameAndLastNameAndEmail(
                 form2.getFirstNameParent(), form2.getLastNameParent(), form2.getEmailParent()))
-                .thenReturn(Optional.of(new Citizen()));
+                .thenReturn(Optional.of(Citizen.builder().build()));
 
         when(citizenRepository.existsByEmail(form4.getEmail())).thenReturn(true);
 
@@ -120,7 +120,7 @@ public class CitizenServiceTest {
 
         when(citizenRepository.existsByEmail(form6.getEmail())).thenReturn(false);
 
-        when(citizenRepository.save(any(Citizen.class))).thenReturn(new Citizen());
+        when(citizenRepository.save(any(Citizen.class))).thenReturn(Citizen.builder().build());
 
         //Assert
         assertTrue(citizenService.registration(form1));
