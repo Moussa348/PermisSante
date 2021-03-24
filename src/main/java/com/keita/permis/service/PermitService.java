@@ -44,19 +44,11 @@ public class PermitService {
     private final String qrDirectory = "C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\barCode\\";
     private final String pdfDirectory = "C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\pdf\\";
 
-    //TODO: Move into PermitService
-    /*
-        PermitCategory permitCategory = PermitCategory.ADULT.determinePermitCategory(getAgeFromLocalDate(dateOfBirth));
-    PermitType permitType = citizen.isVaccinated() ? PermitType.VACCINE : PermitType.TEST;
-    Permit permit =
-            Permit.builder()
-                    .restrictedAreas("").permitCategory(permitCategory)
-                    .citizen(citizen).permitType(permitType).build();
-            permitRepository.save(permit);
-     */
     public boolean generatePermit(SubmitForm submitForm) {
+        Optional<Permit> permitOptional = permitRepository
+                .findByCitizenEmailAndCitizenPassword(submitForm.getEmail(), submitForm.getPassword());
 
-
+        Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPassword(submitForm.getEmail(),submitForm.getPassword());
 
         /*
         if (!citizen.getLastName().isEmpty()) {
@@ -74,31 +66,30 @@ public class PermitService {
             }
         }
          */
-        return savePermit(submitForm);
+        return savePermit(permitOptional,citizenOptional);
     }
 
-    private boolean savePermit(SubmitForm form) {
-        Optional<Permit> optPermit = permitRepository
-                .findByCitizenEmailAndCitizenPassword(form.getEmail(), form.getPassword());
-        Optional<Citizen> optCitizen = citizenRepository.findByEmailAndPassword(form.getEmail(),form.getPassword());
-
-        if(optPermit.isPresent()){
-            
+    private boolean savePermit(Optional<Permit> permitOptional,Optional<Citizen> citizenOptional) {
+        if(permitOptional.isPresent()){
+            return !checkIfExpired(permitOptional.get().getExpirationDate());
         }
 
-
-        if(optPermit.isEmpty() && optCitizen.isPresent()){
-            int ageOfCitizen = getYearsBetweenNowAndThen(optCitizen.get().getDateOfBirth());
+        if(citizenOptional.isPresent()){
+            int ageOfCitizen = getYearsBetweenNowAndThen(citizenOptional.get().getDateOfBirth());
             PermitCategory permitCategory = PermitCategory.determinePermitCategory(ageOfCitizen);
-            PermitType permitType = optCitizen.get().isVaccinated() ? PermitType.VACCINE : PermitType.TEST;
+            PermitType permitType = citizenOptional.get().isVaccinated() ? PermitType.VACCINE : PermitType.TEST;
             Permit permit =
                     Permit.builder()
                             .restrictedAreas("")
-                            .citizen(optCitizen.get()).permitCategory(permitCategory).permitType(permitType).build();
+                            .citizen(citizenOptional.get()).permitCategory(permitCategory).permitType(permitType).build();
             permitRepository.save(permit);
             return true;
         }
         return false;
+    }
+
+    private boolean checkIfExpired(LocalDate expirationDate){
+        return expirationDate.isBefore(LocalDate.now());
     }
 
     private int getYearsBetweenNowAndThen(LocalDate dateOfBirth){

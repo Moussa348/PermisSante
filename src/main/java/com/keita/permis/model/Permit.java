@@ -16,15 +16,14 @@ public class Permit implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
-    private LocalDate dateCreation;
-    private LocalDate dateExpiration;
+    private LocalDate creationDate;
+    private LocalDate expirationDate;
     private byte[] qrCode;
     private String restrictedAreas;
     private boolean isActive;
     private PermitCategory permitCategory;
     private PermitType permitType;
     private int lifeTime;
-    private int numberOfTimesItWasSent;
 
     @OneToOne
     private Citizen citizen;
@@ -34,7 +33,7 @@ public class Permit implements Serializable {
     @Builder
     public Permit(String restrictedAreas,
                   PermitCategory permitCategory, Citizen citizen, PermitType permitType) {
-        this.dateCreation = LocalDate.now();
+        this.creationDate = LocalDate.now();
         this.restrictedAreas = restrictedAreas;
         this.permitCategory = permitCategory;
         this.citizen = citizen;
@@ -43,12 +42,12 @@ public class Permit implements Serializable {
         if(permitType.equals(PermitType.VACCINE)){
             this.permitType = PermitType.VACCINE;
             this.lifeTime = 6;
-            this.dateExpiration = LocalDate.now().plusMonths(lifeTime);
+            this.expirationDate = LocalDate.now().plusMonths(lifeTime);
         }
         if(permitType.equals(PermitType.TEST)){
             this.permitType = PermitType.TEST;
             this.lifeTime = 15;
-            this.dateExpiration = LocalDate.now().plusDays(lifeTime);
+            this.expirationDate = LocalDate.now().plusDays(lifeTime);
         }
     }
 

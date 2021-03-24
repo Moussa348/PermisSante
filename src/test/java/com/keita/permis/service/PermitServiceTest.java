@@ -101,15 +101,31 @@ public class PermitServiceTest {
                         .dateOfBirth(LocalDate.of(1996, 12, 23)).build()
         );
 
+        SubmitForm form2 = SubmitForm.builder().email("rejArch@gmail.com").password("fadi123").build();
+        Optional<Permit> optPermitForForm2 = Optional.of(
+                Permit.builder()
+                        .permitType(PermitType.VACCINE).build()
+        );
+
+
 
         //Act
         when(permitRepository.findByCitizenEmailAndCitizenPassword(form1.getEmail(), form1.getPassword()))
                 .thenReturn(Optional.empty());
         when(citizenRepository.findByEmailAndPassword(form1.getEmail(), form1.getPassword()))
                 .thenReturn(optCitizenForForm1);
+
+        when(permitRepository.findByCitizenEmailAndCitizenPassword(form2.getEmail(), form2.getPassword()))
+               .thenReturn(optPermitForForm2);
+        when(citizenRepository.findByEmailAndPassword(form2.getEmail(), form2.getPassword()))
+                .thenReturn(Optional.of(new Citizen()));
+
         when(permitRepository.save(any(Permit.class))).thenReturn(new Permit());
+
+
 
         //Assert
         assertTrue(permitService.generatePermit(form1));
+        assertTrue(permitService.generatePermit(form2));
     }
 }
