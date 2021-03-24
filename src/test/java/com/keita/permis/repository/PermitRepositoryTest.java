@@ -50,7 +50,17 @@ public class PermitRepositoryTest {
                         .cellNumber("4389765490")
                         .city("Quebec")
                         .dateOfBirth(LocalDate.of(1968, 9, 13))
-                        .socialInsurance("ANDM68091315").build()
+                        .socialInsurance("ANDM68091315").build(),
+                Citizen.builder()
+                        .firstName("Jack")
+                        .lastName("Daniels")
+                        .gender("M")
+                        .email("jackDaniels@gmail.com")
+                        .password("jack123")
+                        .cellNumber("4509876549")
+                        .city("Quebec")
+                        .dateOfBirth(LocalDate.of(1968, 9, 13))
+                        .socialInsurance("DANIJA1231233213").build()
         );
         citizenRepository.saveAll(citizens);
 
@@ -64,6 +74,11 @@ public class PermitRepositoryTest {
                         .citizen(citizenRepository.getOne(2L))
                         .permitCategory(PermitCategory.ADULT)
                         .permitType(PermitType.VACCINE)
+                        .restrictedAreas("NONE").build(),
+                Permit.builder()
+                        .citizen(citizenRepository.getOne(3L))
+                        .permitCategory(PermitCategory.ADULT)
+                        .permitType(PermitType.TEST)
                         .restrictedAreas("NONE").build()
 
         );
@@ -108,6 +123,25 @@ public class PermitRepositoryTest {
         //Assert
         assertTrue(citizenHasPermit.isPresent());
         assertFalse(citizenHasNotPermit.isPresent());
+    }
+
+    @Test
+    void findByCitizenEmailAndActiveTrue(){
+        //Arrange
+        Citizen citizen1 = Citizen.builder().email("andreMarc12@gmail.com").build();
+        Citizen citizen2 = Citizen.builder().email("jackDaniels@gmail.com").build();
+
+        //Act
+        Optional<Permit> citizenHasPermitNotExpired = permitRepository
+                .findByCitizenEmailAndExpirationDateAfter(citizen1.getEmail(),LocalDate.of(2021,7,24));
+
+        Optional<Permit> citizenHasPermitExpired = permitRepository
+                .findByCitizenEmailAndExpirationDateAfter(citizen2.getEmail(),LocalDate.of(2022,1,1));
+
+        //Assert
+        assertTrue(citizenHasPermitNotExpired.isPresent());
+        assertFalse(citizenHasPermitExpired.isPresent());
+
     }
 
 }

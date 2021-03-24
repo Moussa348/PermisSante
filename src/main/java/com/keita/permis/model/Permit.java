@@ -20,10 +20,10 @@ public class Permit implements Serializable {
     private LocalDate expirationDate;
     private byte[] qrCode;
     private String restrictedAreas;
-    private boolean isActive;
     private PermitCategory permitCategory;
     private PermitType permitType;
     private int lifeTime;
+    private boolean isActive;
 
     @OneToOne
     private Citizen citizen;
@@ -37,7 +37,6 @@ public class Permit implements Serializable {
         this.restrictedAreas = restrictedAreas;
         this.permitCategory = permitCategory;
         this.citizen = citizen;
-        this.isActive = true;
 
         if(permitType.equals(PermitType.VACCINE)){
             this.permitType = PermitType.VACCINE;
@@ -49,12 +48,6 @@ public class Permit implements Serializable {
             this.lifeTime = 15;
             this.expirationDate = LocalDate.now().plusDays(lifeTime);
         }
+        isActive = true;
     }
-
-    /*
-            TODO
-                -After, In my service related to Permit, I will have a method that will set the permit to inactive,
-                 for example for the test after 14 days and then send an email
-
-         */
 }
