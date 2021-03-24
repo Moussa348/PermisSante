@@ -37,14 +37,16 @@ public class Permit implements Serializable {
         this.dateCreation = LocalDate.now();
         this.restrictedAreas = restrictedAreas;
         this.permitCategory = permitCategory;
-        this.permitType = permitType;
         this.citizen = citizen;
         this.isActive = true;
 
         if(permitType.equals(PermitType.VACCINE)){
+            this.permitType = PermitType.VACCINE;
             this.lifeTime = 6;
             this.dateExpiration = LocalDate.now().plusMonths(lifeTime);
-        }else{
+        }
+        if(permitType.equals(PermitType.TEST)){
+            this.permitType = PermitType.TEST;
             this.lifeTime = 15;
             this.dateExpiration = LocalDate.now().plusDays(lifeTime);
         }

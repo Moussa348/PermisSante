@@ -104,9 +104,10 @@ public class CitizenServiceTest {
         when(citizenRepository.existsByEmailAndFirstNameAndLastName(
                 form2.getEmailParent(), form2.getFirstNameParent(), form2.getLastNameParent()))
                 .thenReturn(true);
+        //TODO:Put with value
         when(citizenRepository.findByFirstNameAndLastNameAndEmail(
                 form2.getFirstNameParent(), form2.getLastNameParent(), form2.getEmailParent()))
-                .thenReturn(Optional.of(Citizen.builder().build()));
+                .thenReturn(Optional.of(new Citizen()));
 
         when(citizenRepository.existsByEmail(form4.getEmail())).thenReturn(true);
 
@@ -120,7 +121,7 @@ public class CitizenServiceTest {
 
         when(citizenRepository.existsByEmail(form6.getEmail())).thenReturn(false);
 
-        when(citizenRepository.save(any(Citizen.class))).thenReturn(Citizen.builder().build());
+        when(citizenRepository.save(any(Citizen.class))).thenReturn(new Citizen());
 
         //Assert
         assertTrue(citizenService.registration(form1));

@@ -12,9 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -22,6 +20,8 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.*;
 
 @DataJpaTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -94,19 +94,22 @@ public class PermitServiceTest {
     @Test
     void generatePermit() {
         //Arrange
-        SubmitForm form1 = SubmitForm.builder().email("kMihoubi@gmail.com").password("karim123").build();
-        SubmitForm form2 = SubmitForm.builder().email("mikaKami@gmail.com").password("mika123").build();
+        SubmitForm form1 = SubmitForm.builder().email("moukFa@gmail.com").password("fadi123").build();
+        Optional<Citizen> optCitizenForForm1 = Optional.of(
+                Citizen.builder()
+                        .email("moukFa@gmail.com").password("fadi123")
+                        .dateOfBirth(LocalDate.of(1996, 12, 23)).build()
+        );
+
 
         //Act
-        Mockito.when(
-                permitRepository.findByCitizenEmailAndCitizenPassword(form1.getEmail(), form1.getPassword()))
-                .thenReturn(Optional.of(Permit.builder().build()));
-        Mockito.when(
-                citizenRepository.findByEmailAndPassword(form1.getEmail(), form1.getPassword()))
-                .thenReturn(Optional.of(Citizen.builder().build()));
-        //boolean successful = permitService.generatePermit(citizen1);
-        //boolean notSuccessful1 = permitService.generatePermit(citizen2);
-        //boolean notSuccessful2 = permitService.generatePermit(citizen3);
+        when(permitRepository.findByCitizenEmailAndCitizenPassword(form1.getEmail(), form1.getPassword()))
+                .thenReturn(Optional.empty());
+        when(citizenRepository.findByEmailAndPassword(form1.getEmail(), form1.getPassword()))
+                .thenReturn(optCitizenForForm1);
+        when(permitRepository.save(any(Permit.class))).thenReturn(new Permit());
+
         //Assert
+        assertTrue(permitService.generatePermit(form1));
     }
 }

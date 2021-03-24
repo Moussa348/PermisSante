@@ -13,7 +13,7 @@ public enum PermitCategory {
         this.maxAge = maxAge;
     }
 
-    public PermitCategory determinePermitCategory(int age){
+    public static PermitCategory determinePermitCategory(int age){
         if(age <= PermitCategory.LITTLE_KID.maxAge)
             return PermitCategory.LITTLE_KID;
         if(age <= PermitCategory.KID.maxAge)

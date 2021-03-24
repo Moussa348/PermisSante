@@ -10,6 +10,8 @@ import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.keita.permis.dto.SubmitForm;
+import com.keita.permis.enums.PermitCategory;
+import com.keita.permis.enums.PermitType;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.model.Permit;
 import com.keita.permis.repository.CitizenRepository;
@@ -24,6 +26,8 @@ import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,17 +74,35 @@ public class PermitService {
             }
         }
          */
-        return false;
+        return savePermit(submitForm);
     }
 
     private boolean savePermit(SubmitForm form) {
-        Optional<Permit> permit = permitRepository
+        Optional<Permit> optPermit = permitRepository
                 .findByCitizenEmailAndCitizenPassword(form.getEmail(), form.getPassword());
-        Optional<Citizen> citizen = citizenRepository.findByEmailAndPassword(form.getEmail(),form.getPassword());
-        if(!permit.isPresent()){
+        Optional<Citizen> optCitizen = citizenRepository.findByEmailAndPassword(form.getEmail(),form.getPassword());
 
+        if(optPermit.isPresent()){
+            
+        }
+
+
+        if(optPermit.isEmpty() && optCitizen.isPresent()){
+            int ageOfCitizen = getYearsBetweenNowAndThen(optCitizen.get().getDateOfBirth());
+            PermitCategory permitCategory = PermitCategory.determinePermitCategory(ageOfCitizen);
+            PermitType permitType = optCitizen.get().isVaccinated() ? PermitType.VACCINE : PermitType.TEST;
+            Permit permit =
+                    Permit.builder()
+                            .restrictedAreas("")
+                            .citizen(optCitizen.get()).permitCategory(permitCategory).permitType(permitType).build();
+            permitRepository.save(permit);
+            return true;
         }
         return false;
+    }
+
+    private int getYearsBetweenNowAndThen(LocalDate dateOfBirth){
+        return Period.between(dateOfBirth,LocalDate.now()).getYears();
     }
             /*
 
