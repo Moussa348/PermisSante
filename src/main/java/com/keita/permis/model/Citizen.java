@@ -22,7 +22,7 @@ public class Citizen implements Serializable {
             password,cellNumber,city,socialInsurance,role;
     private LocalDate dateOfBirth,registrationDate;
     private boolean isVaccinated;
-    private boolean isActive;
+    private boolean active;
 
     @OneToOne
     private Citizen parent;
@@ -44,7 +44,7 @@ public class Citizen implements Serializable {
         this.registrationDate = LocalDate.now();
         this.socialInsurance = socialInsurance;
         this.isVaccinated = false;
-        this.isActive = true;
+        this.active = true;
         this.role = "USER";
         this.parent = parent;
     }

@@ -23,7 +23,7 @@ public class Permit implements Serializable {
     private PermitCategory permitCategory;
     private PermitType permitType;
     private int lifeTime;
-    private boolean isActive;
+    private boolean active;
 
     @OneToOne
     private Citizen citizen;
@@ -48,6 +48,6 @@ public class Permit implements Serializable {
             this.lifeTime = 15;
             this.expirationDate = LocalDate.now().plusDays(lifeTime);
         }
-        isActive = true;
+        active = true;
     }
 }

@@ -82,6 +82,7 @@ public class PermitRepositoryTest {
                         .restrictedAreas("NONE").build()
 
         );
+        permits.get(2).setActive(false);
         permitRepository.saveAll(permits);
     }
 
@@ -126,22 +127,36 @@ public class PermitRepositoryTest {
     }
 
     @Test
-    void findByCitizenEmailAndActiveTrue(){
+    void findByActiveTrueAndCitizenEmail(){
         //Arrange
         Citizen citizen1 = Citizen.builder().email("andreMarc12@gmail.com").build();
         Citizen citizen2 = Citizen.builder().email("jackDaniels@gmail.com").build();
 
         //Act
-        Optional<Permit> citizenHasPermitNotExpired = permitRepository
-                .findByCitizenEmailAndExpirationDateAfter(citizen1.getEmail(),LocalDate.of(2021,7,24));
+        Optional<Permit> citizenHasPermitActive = permitRepository
+                .findByActiveTrueAndCitizenEmail(citizen1.getEmail());
 
-        Optional<Permit> citizenHasPermitExpired = permitRepository
-                .findByCitizenEmailAndExpirationDateAfter(citizen2.getEmail(),LocalDate.of(2022,1,1));
+        Optional<Permit> citizenHasPermitNotActive = permitRepository
+                .findByActiveTrueAndCitizenEmail(citizen2.getEmail());
 
         //Assert
-        assertTrue(citizenHasPermitNotExpired.isPresent());
-        assertFalse(citizenHasPermitExpired.isPresent());
+        assertTrue(citizenHasPermitActive.isPresent());
+        assertFalse(citizenHasPermitNotActive.isPresent());
+    }
 
+    @Test
+    void countByCitizenEmail(){
+        //Arrange
+        Citizen citizen1 = Citizen.builder().email("andreMarc12@gmail.com").build();
+        Citizen citizen2 = Citizen.builder().email("massou@gmail.com").build();
+
+        //Act
+        int nbrPermitCitizen1 = permitRepository.countByCitizenEmail(citizen1.getEmail());
+        int nbrPermitCitizen2 = permitRepository.countByCitizenEmail(citizen2.getEmail());
+
+        //Assert
+        assertEquals(nbrPermitCitizen1,1);
+        assertEquals(nbrPermitCitizen2,0);
     }
 
 }

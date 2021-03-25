@@ -88,6 +88,8 @@ public class PermitServiceTest {
                         .restrictedAreas("NONE").build()
         );
 
+        permits.get(2).setActive(false);
+
         permitRepository.saveAll(permits);
     }
 
@@ -102,23 +104,34 @@ public class PermitServiceTest {
         );
 
         SubmitForm form2 = SubmitForm.builder().email("rejArch@gmail.com").password("fadi123").build();
-        Optional<Permit> optPermitForForm2 = Optional.of(
-                Permit.builder()
-                        .permitType(PermitType.VACCINE).build()
-        );
 
+        SubmitForm form3 = SubmitForm.builder().email("mikaKami@gmail.com").password("mika123").build();
+        SubmitForm form4 = SubmitForm.builder().email("araaaaa@gmail.com").password("mika123").build();
 
 
         //Act
-        when(permitRepository.findByCitizenEmailAndCitizenPassword(form1.getEmail(), form1.getPassword()))
-                .thenReturn(Optional.empty());
         when(citizenRepository.findByEmailAndPassword(form1.getEmail(), form1.getPassword()))
                 .thenReturn(optCitizenForForm1);
+        when(permitRepository.findByActiveTrueAndCitizenEmail(form1.getEmail()))
+                .thenReturn(Optional.empty());
+        when(permitRepository.countByCitizenEmail(form1.getEmail())).thenReturn(0);
 
-        when(permitRepository.findByCitizenEmailAndCitizenPassword(form2.getEmail(), form2.getPassword()))
-               .thenReturn(optPermitForForm2);
+
         when(citizenRepository.findByEmailAndPassword(form2.getEmail(), form2.getPassword()))
                 .thenReturn(Optional.of(new Citizen()));
+        when(permitRepository.findByActiveTrueAndCitizenEmail(form2.getEmail()))
+                .thenReturn(Optional.of(new Permit()));
+        when(permitRepository.countByCitizenEmail(form2.getEmail())).thenReturn(1);
+
+
+        when(citizenRepository.findByEmailAndPassword(form3.getEmail(), form3.getPassword()))
+                .thenReturn(optCitizenForForm1);
+        when(permitRepository.findByActiveTrueAndCitizenEmail(form3.getEmail()))
+                .thenReturn(Optional.empty());
+        when(permitRepository.countByCitizenEmail(form3.getEmail())).thenReturn(1);
+
+        when(citizenRepository.findByEmailAndPassword(form4.getEmail(), form4.getPassword()))
+                .thenReturn(Optional.empty());
 
         when(permitRepository.save(any(Permit.class))).thenReturn(new Permit());
 
@@ -127,5 +140,8 @@ public class PermitServiceTest {
         //Assert
         assertTrue(permitService.generatePermit(form1));
         assertTrue(permitService.generatePermit(form2));
+
+        assertFalse(permitService.generatePermit(form3));
+        assertFalse(permitService.generatePermit(form4));
     }
 }

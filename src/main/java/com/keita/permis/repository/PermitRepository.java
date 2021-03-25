@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface PermitRepository extends JpaRepository<Permit,Long> {
     Optional<Permit> findByCitizenEmailAndCitizenPassword(String email,String password);
     Optional<Permit> findByCitizenEmailAndCitizenCellNumberAndCitizenCity(String email,String cellNumber,String city);
-    Optional<Permit> findByCitizenEmailAndExpirationDateAfter(String email, LocalDate date);
+    Optional<Permit> findByActiveTrueAndCitizenEmail(String email);
+    int countByCitizenEmail(String email);
 }
