@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
@@ -28,10 +29,17 @@ public class CitizenService {
             LocalDate dateOfBirth = dateFormatter(form.getDateOfBirth());
 
             if (dateOfBirth != null) {
-                if (ifMinorCheckIfParentExist(form, dateOfBirth)) {
+                Optional<Citizen> parent = ifMinorCheckIfParentExist(form, dateOfBirth);
 
-                    return saveCitizen(form, dateOfBirth);
-                }
+                if (parent.isEmpty() && getAgeFromLocalDate(dateOfBirth) < Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
+                    return false;
+
+                if (getAgeFromLocalDate(dateOfBirth) < Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min")))
+                        && parent.isPresent())
+                    return saveCitizen(form, dateOfBirth, parent);
+
+                return saveCitizen(form, dateOfBirth, Optional.empty());
+
             }
         }
         return false;
@@ -46,21 +54,20 @@ public class CitizenService {
         }
     }
 
-    private boolean ifMinorCheckIfParentExist(SubmitForm form, LocalDate dateOfBirth) {
+    private Optional<Citizen> ifMinorCheckIfParentExist(SubmitForm form, LocalDate dateOfBirth) {
         if (getAgeFromLocalDate(dateOfBirth) < Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
             return citizenRepository
-                    .existsByEmailAndFirstNameAndLastName(
+                    .findByEmailAndFirstNameAndLastName(
                             form.getEmailParent(), form.getFirstNameParent(), form.getLastNameParent());
-        return true;
+        return Optional.empty();
     }
 
 
-
-    private int getAgeFromLocalDate(LocalDate dateOfBirth){
-        return Period.between(dateOfBirth,LocalDate.now()).getYears();
+    private int getAgeFromLocalDate(LocalDate dateOfBirth) {
+        return Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
 
-    private boolean saveCitizen(SubmitForm form, LocalDate dateOfBirth) {
+    private boolean saveCitizen(SubmitForm form, LocalDate dateOfBirth, Optional<Citizen> parent) {
         if (form.getPassword().equals(form.getPasswordAgain())) {
             Citizen citizen =
                     Citizen.builder()
@@ -70,12 +77,7 @@ public class CitizenService {
                             .dateOfBirth(dateOfBirth)
                             .socialInsurance(form.getSocialInsurance()).build();
 
-            if(getAgeFromLocalDate(dateOfBirth) < Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
-                citizen.setParent(citizenRepository
-                        .findByEmailAndFirstNameAndLastName(
-                                form.getEmailParent(),
-                                form.getFirstNameParent(),
-                                form.getLastNameParent()).get());
+            parent.ifPresent(citizen::setParent);
             citizenRepository.save(citizen);
             return true;
         }

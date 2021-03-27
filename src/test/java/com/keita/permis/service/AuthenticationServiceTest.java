@@ -33,25 +33,34 @@ public class AuthenticationServiceTest {
     public void authentication() {
         //Arrange
         AuthForm authForm1 = new AuthForm("rejArch@gmail.com", "rej123", "");
-        AuthForm authForm2 = new AuthForm("andreMarc12@gmail.com", "andreee", null);
-
-        AuthForm authForm3 = new AuthForm("rejArch@gmail.com", "arc123", "arc123");
-        AuthForm authForm4 = new AuthForm("archRej@gmail.com", "arc123", "arc123");
-        AuthForm authForm5 = new AuthForm("rejArch@gmail.com", "arc123", "aarcc123");
-
-        //Act
         when(citizenRepository.existsByEmailAndPassword(authForm1.getEmail(), authForm1.getPassword())).thenReturn(true);
+
+        AuthForm authForm2 = new AuthForm("andreMarc12@gmail.com", "andreee", null);
         when(citizenRepository.existsByEmailAndPassword(authForm2.getEmail(), authForm2.getPassword())).thenReturn(false);
 
-        when(citizenRepository.existsByEmail(authForm3.getEmail())).thenReturn(true);
-        when(citizenRepository.existsByEmail(authForm4.getEmail())).thenReturn(false);
-        when(citizenRepository.existsByEmail(authForm5.getEmail())).thenReturn(true);
-        //Assert
-        assertTrue(authenticationService.authentication(authForm1));
-        assertFalse(authenticationService.authentication(authForm2));
 
-        assertTrue(authenticationService.authentication(authForm3));
-        assertFalse(authenticationService.authentication(authForm4));
-        assertFalse(authenticationService.authentication(authForm5));
+        AuthForm authForm3 = new AuthForm("rejArch@gmail.com", "arc123", "arc123");
+        when(citizenRepository.existsByEmail(authForm3.getEmail())).thenReturn(true);
+
+        AuthForm authForm4 = new AuthForm("archRej@gmail.com", "arc123", "arc123");
+        when(citizenRepository.existsByEmail(authForm4.getEmail())).thenReturn(false);
+
+        AuthForm authForm5 = new AuthForm("rejArch@gmail.com", "arc123", "aarcc123");
+        when(citizenRepository.existsByEmail(authForm5.getEmail())).thenReturn(true);
+
+        //Act
+        boolean isLoggedInWithAuth1 = authenticationService.authentication(authForm1);
+        boolean isNotLoggedInWithAuth2 = authenticationService.authentication(authForm2);
+        boolean passwordResetForAuthForm3 = authenticationService.authentication(authForm3);
+        boolean passwordResetForAuthForm4 = authenticationService.authentication(authForm4);
+        boolean passwordResetForAuthForm5 = authenticationService.authentication(authForm5);
+
+        //Assert
+        assertTrue(isLoggedInWithAuth1);
+        assertFalse(isNotLoggedInWithAuth2);
+
+        assertTrue(passwordResetForAuthForm3);
+        assertFalse(passwordResetForAuthForm4);
+        assertFalse(passwordResetForAuthForm5);
     }
 }

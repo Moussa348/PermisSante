@@ -55,9 +55,6 @@ public class CitizenServiceTest {
                         .dateOfBirth(LocalDate.of(1967, 12, 23)).build()
         );
         when(citizenRepository.existsByEmail(form2.getEmail())).thenReturn(false);
-        when(citizenRepository.existsByEmailAndFirstNameAndLastName(
-                form2.getEmailParent(), form2.getFirstNameParent(), form2.getLastNameParent()))
-                .thenReturn(true);
         when(citizenRepository.findByEmailAndFirstNameAndLastName(
                 form2.getEmailParent(), form2.getFirstNameParent(), form2.getLastNameParent()))
                 .thenReturn(parent);
@@ -84,9 +81,6 @@ public class CitizenServiceTest {
                         .socialInsurance("MIKA45678765").dateOfBirth("2004-12-23")
                         .firstNameParent("incognito").lastNameParent("incognito").emailParent("incognito@gmail.com").build();
         when(citizenRepository.existsByEmail(form5.getEmail())).thenReturn(false);
-        when(citizenRepository.existsByEmailAndFirstNameAndLastName(
-                form5.getEmailParent(), form5.getFirstNameParent(), form5.getLastNameParent()))
-                .thenReturn(false);
         when(citizenRepository.findByEmailAndFirstNameAndLastName(
                 form5.getEmailParent(), form5.getFirstNameParent(), form5.getLastNameParent()))
                 .thenReturn(Optional.empty());
@@ -96,9 +90,12 @@ public class CitizenServiceTest {
                 SubmitForm.builder()
                         .firstName("Mathieu").lastName("Marc")
                         .gender("F").email("mathieuMa@gmail.com").password("mathieu123")
-                        .passwordAgain("mathieu1234").cellNumber("5143786549").city("Montreal")
+                        .passwordAgain("mathieuuu1234").cellNumber("5143786549").city("Montreal")
                         .socialInsurance("MIKA45678765").dateOfBirth("1994-12-24").build();
         when(citizenRepository.existsByEmail(form6.getEmail())).thenReturn(false);
+        when(citizenRepository.findByEmailAndFirstNameAndLastName(
+                form6.getEmailParent(), form6.getFirstNameParent(), form6.getLastNameParent()))
+                .thenReturn(Optional.empty());
 
         when(environment.getProperty("age.min")).thenReturn("18");
 
