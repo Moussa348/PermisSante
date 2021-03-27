@@ -16,7 +16,7 @@ public class DatabaseRunner implements CommandLineRunner {
     @Autowired
     private CitizenService citizenService;
 
-    private void loadUsers() throws ParseException {
+    private void loadUsers() throws Exception {
         SubmitForm form1 =
                 SubmitForm.builder()
                         .firstName("Karim").lastName("Mihoubi")

@@ -4,11 +4,14 @@ import com.keita.permis.dto.SubmitForm;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.repository.CitizenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
+import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class CitizenService {
@@ -16,7 +19,8 @@ public class CitizenService {
     @Autowired
     private CitizenRepository citizenRepository;
 
-    private final int AGE_MIN = 18;
+    @Autowired
+    private Environment environment;
 
     public boolean registration(SubmitForm form) {
         if (!citizenRepository.existsByEmail(form.getEmail())) {
@@ -43,14 +47,15 @@ public class CitizenService {
     }
 
     private boolean ifMinorCheckIfParentExist(SubmitForm form, LocalDate dateOfBirth) {
-        if (getAgeFromLocalDate(dateOfBirth) < AGE_MIN)
+        if (getAgeFromLocalDate(dateOfBirth) < Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
             return citizenRepository
                     .existsByEmailAndFirstNameAndLastName(
                             form.getEmailParent(), form.getFirstNameParent(), form.getLastNameParent());
         return true;
     }
 
-    //TODO : move into a utils method
+
+
     private int getAgeFromLocalDate(LocalDate dateOfBirth){
         return Period.between(dateOfBirth,LocalDate.now()).getYears();
     }
@@ -65,17 +70,15 @@ public class CitizenService {
                             .dateOfBirth(dateOfBirth)
                             .socialInsurance(form.getSocialInsurance()).build();
 
-            if(getAgeFromLocalDate(dateOfBirth) < AGE_MIN)
+            if(getAgeFromLocalDate(dateOfBirth) < Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
                 citizen.setParent(citizenRepository
-                        .findByFirstNameAndLastNameAndEmail(
+                        .findByEmailAndFirstNameAndLastName(
+                                form.getEmailParent(),
                                 form.getFirstNameParent(),
-                                form.getLastNameParent(),
-                                form.getEmailParent()).get());
+                                form.getLastNameParent()).get());
             citizenRepository.save(citizen);
             return true;
         }
         return false;
     }
-
-
 }

@@ -1,6 +1,7 @@
 package com.keita.permis.service;
 
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -22,6 +23,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import javax.validation.constraints.NotNull;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -29,6 +31,7 @@ import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
@@ -40,33 +43,37 @@ public class PermitService {
     @Autowired
     private CitizenRepository citizenRepository;
 
-    //Put this as environment properties
-    private final String qrDirectory = "C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\barCode\\";
-    private final String pdfDirectory = "C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\pdf\\";
+    @Autowired
+    private Environment environment;
 
-    public boolean generatePermit(SubmitForm submitForm) {
+    public boolean generatePermit(SubmitForm submitForm) throws Exception {
         Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPassword(submitForm.getEmail(), submitForm.getPassword());
-        Optional<Permit> permitOptional = permitRepository.findByActiveTrueAndCitizenEmail(submitForm.getEmail());
-        int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(submitForm.getEmail());
 
         if (citizenOptional.isPresent()) {
+            Optional<Permit> permitOptional = permitRepository.findByActiveTrueAndCitizenEmail(submitForm.getEmail());
+            int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(submitForm.getEmail());
+
             if (permitOptional.isEmpty() && nbrPermitOfThisCitizen > 0) {
                 return false;
             }
-            if (permitOptional.isEmpty()) {
-                savePermit( citizenOptional.get());
+            if (permitOptional.isEmpty() && nbrPermitOfThisCitizen == 0) {
+                savePermit(citizenOptional.get());
             }
             //TODO : generateQR/generatePDF/sendEmail
-            return true;
+            Path qrFilePath = FileSystems.getDefault().getPath(
+                    environment.getProperty("qr.directory") +
+                            citizenOptional.get().getLastName() +
+                            environment.getProperty("qrcode.extension"));
+            return generateQR(citizenOptional.get(), qrFilePath);
         }
 
         return false;
         /*
         if (!citizen.getLastName().isEmpty()) {
 
+            Path qrFilePath = FileSystems.getDefault().getPath(qrDirectory + citizenOptional.get().getLastName() + ".PNG");
             Path qrDirectoryPath = FileSystems.getDefault().getPath(qrDirectory);
             Path pdfDirectoryPath = FileSystems.getDefault().getPath(pdfDirectory);
-            Path qrFilePath = FileSystems.getDefault().getPath(qrDirectory + citizen.getLastName() + ".PNG");
             Path pdfFilePath = FileSystems.getDefault().getPath(pdfDirectory + citizen.getLastName() + ".pdf");
 
             if (Files.exists(qrDirectoryPath) && Files.exists(pdfDirectoryPath)) {
@@ -93,29 +100,21 @@ public class PermitService {
     private int getYearsBetweenNowAndThen(LocalDate dateOfBirth) {
         return Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
-            /*
 
     //TODO: put width,height,format as environment properties
-    private boolean generateQR(Citizen citizen, Path path) {
-        if (!citizen.getSocialInsurance().isEmpty()) {
-
-            QRCodeWriter qrCodeWriter = new QRCodeWriter();
-            try {
-                MatrixToImageWriter
-                        .writeToPath(qrCodeWriter.encode(
-                                citizen.getSocialInsurance(),
-                                BarcodeFormat.QR_CODE,
-                                300,
-                                300),
-                                "PNG",
-                                path);
-            } catch (Exception e) {
-                return false;
-            }
-            return true;
-        }
-        return false;
+    private boolean generateQR(Citizen citizen, Path path) throws Exception {
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        MatrixToImageWriter
+                .writeToPath(qrCodeWriter.encode(
+                        citizen.getSocialInsurance(),
+                        BarcodeFormat.QR_CODE,
+                        Integer.parseInt(Objects.requireNonNull(environment.getProperty("qrcode.dimension"))),
+                        Integer.parseInt(Objects.requireNonNull(environment.getProperty("qrcode.dimension")))),
+                        Objects.requireNonNull(environment.getProperty("qrcode.format")),
+                        path);
+        return Files.exists(path);
     }
+            /*
 
     private boolean generatePDF(Citizen citizen) {
         String pdfFile = pdfDirectory + citizen.getLastName() + ".pdf";

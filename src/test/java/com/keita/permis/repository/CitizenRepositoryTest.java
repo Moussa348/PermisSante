@@ -121,7 +121,7 @@ public class CitizenRepositoryTest {
     }
 
     @Test
-    void findByFirstNameAndLastNameAndEmail(){
+    void findByEmailAndFirstNameAndLastName(){
         //Arrange
         Citizen citizen1 = Citizen.builder()
                 .firstName("Rejean").lastName("Archambault")
@@ -131,11 +131,11 @@ public class CitizenRepositoryTest {
                 .email("andreMarcc15@gmail.com").build();
         //Act
         Optional<Citizen> optionalCitizen1 = citizenRepository
-                .findByFirstNameAndLastNameAndEmail(
-                        citizen1.getFirstName(),citizen1.getLastName(),citizen1.getEmail());
+                .findByEmailAndFirstNameAndLastName(
+                        citizen1.getEmail(),citizen1.getFirstName(),citizen1.getLastName());
         Optional<Citizen> optionalCitizen2 = citizenRepository
-                .findByFirstNameAndLastNameAndEmail(
-                        citizen2.getFirstName(),citizen2.getLastName(),citizen2.getEmail());
+                .findByEmailAndFirstNameAndLastName(
+                        citizen2.getEmail(),citizen2.getFirstName(),citizen2.getLastName());
         //Assert
         assertTrue(optionalCitizen1.isPresent());
         assertFalse(optionalCitizen2.isPresent());

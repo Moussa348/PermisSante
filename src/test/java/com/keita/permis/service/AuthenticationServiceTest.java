@@ -7,13 +7,13 @@ import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.context.SpringBootTest;
 
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-@DataJpaTest
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@SpringBootTest
 public class AuthenticationServiceTest {
 
     @Mock
