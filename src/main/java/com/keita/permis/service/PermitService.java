@@ -1,7 +1,6 @@
 package com.keita.permis.service;
 
 import com.google.zxing.BarcodeFormat;
-import com.google.zxing.WriterException;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.qrcode.QRCodeWriter;
 import com.itextpdf.io.image.ImageDataFactory;
@@ -64,26 +63,16 @@ public class PermitService {
                     environment.getProperty("qr.directory") +
                             citizenOptional.get().getLastName() +
                             environment.getProperty("qrcode.extension"));
-            return generateQR(citizenOptional.get(), qrFilePath);
+
+            Path pdfFilePath = FileSystems.getDefault().getPath(
+                    environment.getProperty("pdf.directory") +
+                            citizenOptional.get().getLastName() +
+                            environment.getProperty("pdf.extension"));
+            return generateQR(citizenOptional.get(), qrFilePath) &&
+                    generatePDF(citizenOptional.get(),qrFilePath,pdfFilePath);
         }
 
         return false;
-        /*
-        if (!citizen.getLastName().isEmpty()) {
-
-            Path qrFilePath = FileSystems.getDefault().getPath(qrDirectory + citizenOptional.get().getLastName() + ".PNG");
-            Path qrDirectoryPath = FileSystems.getDefault().getPath(qrDirectory);
-            Path pdfDirectoryPath = FileSystems.getDefault().getPath(pdfDirectory);
-            Path pdfFilePath = FileSystems.getDefault().getPath(pdfDirectory + citizen.getLastName() + ".pdf");
-
-            if (Files.exists(qrDirectoryPath) && Files.exists(pdfDirectoryPath)) {
-
-                if (generateQR(citizen, qrFilePath)) {
-                    return generatePDF(citizen);
-                }
-            }
-        }
-         */
     }
 
     private void savePermit(Citizen citizen) {
@@ -114,27 +103,23 @@ public class PermitService {
                         path);
         return Files.exists(path);
     }
-            /*
 
-    private boolean generatePDF(Citizen citizen) {
-        String pdfFile = pdfDirectory + citizen.getLastName() + ".pdf";
-        String qrFile = qrDirectory + citizen.getLastName() + ".PNG";
 
-        try {
-            PdfWriter pdfWriter = new PdfWriter(pdfFile);
+    private boolean generatePDF(Citizen citizen, Path qrFilePath, Path pdfFilePath) throws Exception {
+        if (Files.exists(qrFilePath)) {
+            PdfWriter pdfWriter = new PdfWriter(pdfFilePath.toString());
             PdfDocument pdfDocument = new PdfDocument(pdfWriter);
             Document document = new Document(pdfDocument);
-            Image image = new Image(ImageDataFactory.create(qrFile));
+            Image image = new Image(ImageDataFactory.create(qrFilePath.toString()));
             Paragraph paragraph = new Paragraph("Hi M/Mme." + citizen.getLastName() + ", here is your qrCode and please be safe!\n")
                     .add(image);
             document.add(paragraph);
             document.close();
-        } catch (Exception e) {
-            return false;
         }
-        return true;
+        return Files.exists(pdfFilePath);
     }
 
+            /*
     //TODO : call into sendPermitToCitizen
     private boolean deleteFile(List<Path> paths) {
         for (Path path : paths) {

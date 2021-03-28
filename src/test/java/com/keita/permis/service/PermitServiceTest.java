@@ -94,7 +94,10 @@ public class PermitServiceTest {
 
         when(environment.getProperty("qr.directory"))
                 .thenReturn("C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\barCode\\");
+        when(environment.getProperty("pdf.directory"))
+                .thenReturn("C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\pdf\\");
         when(environment.getProperty("qrcode.extension")).thenReturn(".PNG");
+        when(environment.getProperty("pdf.extension")).thenReturn(".pdf");
         when(environment.getProperty("qrcode.format")).thenReturn("PNG");
         when(environment.getProperty("qrcode.dimension")).thenReturn("300");
 
