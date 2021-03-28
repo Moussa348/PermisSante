@@ -79,10 +79,16 @@ public class PermitRepositoryTest {
                         .citizen(citizenRepository.getOne(3L))
                         .permitCategory(PermitCategory.ADULT)
                         .permitType(PermitType.TEST)
+                        .restrictedAreas("NONE").build(),
+                Permit.builder()
+                        .citizen(citizenRepository.getOne(3L))
+                        .permitCategory(PermitCategory.ADULT)
+                        .permitType(PermitType.TEST)
                         .restrictedAreas("NONE").build()
 
         );
         permits.get(2).setActive(false);
+        permits.get(3).setActive(false);
         permitRepository.saveAll(permits);
     }
 
@@ -147,7 +153,7 @@ public class PermitRepositoryTest {
     @Test
     void countByCitizenEmail(){
         //Arrange
-        Citizen citizen1 = Citizen.builder().email("andreMarc12@gmail.com").build();
+        Citizen citizen1 = Citizen.builder().email("jackDaniels@gmail.com").build();
         Citizen citizen2 = Citizen.builder().email("massou@gmail.com").build();
 
         //Act
@@ -155,7 +161,7 @@ public class PermitRepositoryTest {
         int nbrPermitCitizen2 = permitRepository.countByCitizenEmail(citizen2.getEmail());
 
         //Assert
-        assertEquals(nbrPermitCitizen1,1);
+        assertEquals(nbrPermitCitizen1,2);
         assertEquals(nbrPermitCitizen2,0);
     }
 

@@ -78,29 +78,6 @@ public class CitizenRepositoryTest {
         assertFalse(notExist2);
     }
 
-
-    @Test
-    void existByEmailAndFirstNameAndLastName(){
-        //Arrange
-        Citizen citizen1 = Citizen.builder()
-                .firstName("Rejean").lastName("Archambault")
-                .email("rejArch@gmail.com").build();
-        Citizen citizen2 = Citizen.builder()
-                .firstName("Andre").lastName("Marc")
-                .email("andreMarcc15@gmail.com").build();
-        //Act
-        boolean exist = citizenRepository
-                .existsByEmailAndFirstNameAndLastName(
-                        citizen1.getEmail(),citizen1.getFirstName(),citizen1.getLastName());
-        boolean notExist = citizenRepository
-                .existsByEmailAndFirstNameAndLastName(
-                        citizen2.getEmail(),citizen2.getFirstName(),citizen2.getLastName());
-
-        //Assert
-        assertTrue(exist);
-        assertFalse(notExist);
-    }
-
     @Test
     void findByEmailAndPassword(){
         Citizen citizen1 = Citizen.builder()
