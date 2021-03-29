@@ -1,10 +1,12 @@
 package com.keita.permis.service;
 
-import com.keita.permis.dto.PermitForm;
+import com.keita.permis.dto.RequestPermitForm;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.model.Permit;
 import com.keita.permis.repository.CitizenRepository;
 import com.keita.permis.repository.PermitRepository;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -34,16 +36,33 @@ public class PermitServiceTest {
     @Mock
     Environment environment;
 
+    /*
+
     @Mock
     JavaMailSender javaMailSender;
+     */
 
     @InjectMocks
     PermitService permitService;
 
+    @BeforeEach
+    void mockingEnvironmentPropertyAndJavaMailSender(){
+        when(environment.getProperty("qr.directory"))
+                .thenReturn("C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\barCode\\");
+        when(environment.getProperty("pdf.directory"))
+                .thenReturn("C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\pdf\\");
+        when(environment.getProperty("qrcode.extension")).thenReturn(".PNG");
+        when(environment.getProperty("pdf.extension")).thenReturn(".pdf");
+        when(environment.getProperty("qrcode.format")).thenReturn("PNG");
+        when(environment.getProperty("qrcode.dimension")).thenReturn("300");
+       // when(javaMailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
+        when(environment.getProperty("age.min")).thenReturn("18");
+    }
+
     @Test
     void generatePermit() throws Exception {
         //Arrange
-        PermitForm form1 = PermitForm.builder().email("moukFa@gmail.com").password("fadi123").build();
+        RequestPermitForm form1 = RequestPermitForm.builder().email("moukFa@gmail.com").password("fadi123").build();
         Optional<Citizen> optionalCitizenForForm1 = Optional.of(
                 Citizen.builder()
                         .firstName("Fadi")
@@ -60,7 +79,7 @@ public class PermitServiceTest {
         when(permitRepository.save(any(Permit.class))).thenReturn(new Permit());
 
 
-        PermitForm form2 = PermitForm.builder().email("rejArch@gmail.com").password("fadi123").build();
+        RequestPermitForm form2 = RequestPermitForm.builder().email("rejArch@gmail.com").password("fadi123").build();
         Optional<Citizen> optionalCitizenForForm2 = Optional.of(
                 Citizen.builder()
                         .firstName("Rejean")
@@ -76,7 +95,7 @@ public class PermitServiceTest {
         when(permitRepository.countByCitizenEmail(form2.getEmail())).thenReturn(1);
 
 
-        PermitForm form3 = PermitForm.builder().email("mikaKami@gmail.com").password("mika123").build();
+        RequestPermitForm form3 = RequestPermitForm.builder().email("mikaKami@gmail.com").password("mika123").build();
         Optional<Citizen> optionalCitizenForForm3 = Optional.of(
                 Citizen.builder()
                         .firstName("Fadi")
@@ -90,21 +109,10 @@ public class PermitServiceTest {
         when(permitRepository.countByCitizenEmail(form3.getEmail())).thenReturn(4);
 
 
-        PermitForm form4 = PermitForm.builder().email("araaaaa@gmail.com").password("mika123").build();
+        RequestPermitForm form4 = RequestPermitForm.builder().email("araaaaa@gmail.com").password("mika123").build();
         when(citizenRepository.findByEmailAndPassword(form4.getEmail(), form4.getPassword()))
                 .thenReturn(Optional.empty());
 
-
-        when(environment.getProperty("qr.directory"))
-                .thenReturn("C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\barCode\\");
-        when(environment.getProperty("pdf.directory"))
-                .thenReturn("C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\pdf\\");
-        when(environment.getProperty("qrcode.extension")).thenReturn(".PNG");
-        when(environment.getProperty("pdf.extension")).thenReturn(".pdf");
-        when(environment.getProperty("qrcode.format")).thenReturn("PNG");
-        when(environment.getProperty("qrcode.dimension")).thenReturn("300");
-        when(javaMailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
-        when(environment.getProperty("age.min")).thenReturn("18");
         //Act
         boolean permitForForm1IsGenerated = permitService.generatePermit(form1);
         boolean permitForForm2IsGenerated = permitService.generatePermit(form2);

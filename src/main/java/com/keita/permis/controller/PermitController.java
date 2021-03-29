@@ -1,6 +1,6 @@
 package com.keita.permis.controller;
 
-import com.keita.permis.dto.PermitForm;
+import com.keita.permis.dto.RequestPermitForm;
 import com.keita.permis.service.PermitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,9 +20,9 @@ public class PermitController {
     private final Logger logger = LoggerFactory.getLogger(PermitController.class);
 
     @PostMapping("/generate")
-    public boolean generatePermit(@Valid PermitForm submitForm){
+    public boolean generatePermit(@Valid RequestPermitForm requestPermitForm){
         try {
-            return permitService.generatePermit(submitForm);
+            return permitService.generatePermit(requestPermitForm);
         } catch (Exception e) {
             logger.warn(e.getMessage());
             return false;

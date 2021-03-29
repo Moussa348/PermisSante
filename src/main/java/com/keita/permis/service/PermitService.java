@@ -9,7 +9,7 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
-import com.keita.permis.dto.PermitForm;
+import com.keita.permis.dto.RequestPermitForm;
 import com.keita.permis.enums.PermitCategory;
 import com.keita.permis.enums.PermitType;
 import com.keita.permis.model.Citizen;
@@ -19,18 +19,14 @@ import com.keita.permis.repository.PermitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
-import javax.mail.internet.MimeMessage;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.Period;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -47,15 +43,18 @@ public class PermitService {
     @Autowired
     private Environment environment;
 
+    /*
+
     @Autowired
     private JavaMailSender javaMailSender;
+     */
 
-    public boolean generatePermit(PermitForm permitForm) throws Exception {
-        Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPassword(permitForm.getEmail(), permitForm.getPassword());
+    public boolean generatePermit(RequestPermitForm requestPermitForm) throws Exception {
+        Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPassword(requestPermitForm.getEmail(), requestPermitForm.getPassword());
 
         if (citizenOptional.isPresent()) {
-            Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(permitForm.getEmail());
-            int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(permitForm.getEmail());
+            Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(requestPermitForm.getEmail());
+            int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(requestPermitForm.getEmail());
 
             if (permitOptionalActive.isEmpty() && nbrPermitOfThisCitizen > 0) {
                 return false;
@@ -126,6 +125,8 @@ public class PermitService {
 
 
     //TODO: Maybe put all the sendEmail in a EmailService afterwards, if i have to add a sendEmail to resetPassword
+    /*
+
     public boolean sendPermitToCitizen(Citizen citizen, List<Path> filePaths) throws Exception {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -148,5 +149,6 @@ public class PermitService {
         return true;
 
     }
+     */
 
 }

@@ -1,6 +1,6 @@
 package com.keita.permis;
 
-import com.keita.permis.dto.PermitForm;
+import com.keita.permis.dto.RequestPermitForm;
 import com.keita.permis.dto.SubmitForm;
 import com.keita.permis.service.CitizenService;
 import com.keita.permis.service.PermitService;
@@ -50,12 +50,12 @@ public class DatabaseRunner implements CommandLineRunner {
     }
 
     private void loadPermit() throws Exception {
-        PermitForm permitForm = PermitForm.builder().email("mikaMihoubi@gmail.com")
+        RequestPermitForm requestPermitForm = RequestPermitForm.builder().email("mikaMihoubi@gmail.com")
                 .password("mika123").build();
-        PermitForm permitForm2 = PermitForm.builder().email("karimMihoubi@gmail.com")
+        RequestPermitForm requestPermitForm2 = RequestPermitForm.builder().email("karimMihoubi@gmail.com")
                 .password("karim123").build();
-        permitService.generatePermit(permitForm);
-        permitService.generatePermit(permitForm2);
+        permitService.generatePermit(requestPermitForm);
+        permitService.generatePermit(requestPermitForm2);
     }
 
     @Override
