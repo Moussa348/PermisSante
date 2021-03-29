@@ -27,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -63,22 +64,40 @@ public class PermitService {
                 savePermit(citizenOptional.get());
             }
 
-            Path qrFilePath = FileSystems.getDefault().getPath(
-                    environment.getProperty("qr.directory") +
-                            citizenOptional.get().getLastName() +
-                            environment.getProperty("qrcode.extension"));
+            List<Path> filePaths = setListPath(citizenOptional.get().getLastName());
 
-            Path pdfFilePath = FileSystems.getDefault().getPath(
-                    environment.getProperty("pdf.directory") +
-                            citizenOptional.get().getLastName() +
-                            environment.getProperty("pdf.extension"));
-
-            return generateQR(citizenOptional.get(), qrFilePath) &&
-                    generatePDF(citizenOptional.get(), qrFilePath, pdfFilePath);
+            return generateQR(citizenOptional.get(), filePaths.get(0)) &&
+                    generatePDF(citizenOptional.get(), filePaths.get(0), filePaths.get(1));
 
                     //sendPermitToCitizen(citizenOptional.get(), Arrays.asList(qrFilePath, pdfFilePath));
         }
 
+        return false;
+    }
+
+    public boolean renewPermit(RequestPermitForm requestPermitForm) throws Exception {
+        Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
+                requestPermitForm.getEmail(),
+                requestPermitForm.getPassword(),
+                requestPermitForm.getNumber(),
+                requestPermitForm.getCity()
+        );
+
+        if(citizenOptional.isPresent() ){
+            Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(requestPermitForm.getEmail());
+            int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(requestPermitForm.getEmail());
+
+            if(permitOptionalActive.isEmpty() && nbrPermitOfThisCitizen > 0) {
+                savePermit(citizenOptional.get());
+                List<Path> filePaths = setListPath(citizenOptional.get().getLastName());
+
+                return generateQR(citizenOptional.get(), filePaths.get(0)) &&
+                        generatePDF(citizenOptional.get(), filePaths.get(0), filePaths.get(1));
+
+            }else
+                return false;
+
+        }
         return false;
     }
 
@@ -94,6 +113,19 @@ public class PermitService {
 
     private int getYearsBetweenNowAndThen(LocalDate dateOfBirth) {
         return Period.between(dateOfBirth, LocalDate.now()).getYears();
+    }
+
+    private List<Path> setListPath(String fileName){
+        Path qrFilePath = FileSystems.getDefault().getPath(
+                environment.getProperty("qr.directory") +
+                        fileName +
+                        environment.getProperty("qrcode.extension"));
+
+        Path pdfFilePath = FileSystems.getDefault().getPath(
+                environment.getProperty("pdf.directory") +
+                        fileName +
+                        environment.getProperty("pdf.extension"));
+        return Arrays.asList(qrFilePath,pdfFilePath);
     }
 
     private boolean generateQR(Citizen citizen, Path path) throws Exception {

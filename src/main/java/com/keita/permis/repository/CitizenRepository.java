@@ -12,4 +12,5 @@ public interface CitizenRepository extends JpaRepository<Citizen,Long> {
     boolean existsByEmailAndPassword(String email, String password);
     Optional<Citizen> findByEmailAndPassword(String email,String password);//TODO:will replace existByEmailAndPassword in AuthenticationService
     Optional<Citizen> findByEmailAndFirstNameAndLastName(String email,String firstName,String lastName);
+    Optional<Citizen> findByEmailAndPasswordAndCellNumberAndCity(String email,String password, String cellNumber,String city);
 }

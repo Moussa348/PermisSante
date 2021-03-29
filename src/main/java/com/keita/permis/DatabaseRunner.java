@@ -60,7 +60,7 @@ public class DatabaseRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-       loadUsers();
-       loadPermit();
+       //loadUsers();
+       //loadPermit();
     }
 }
