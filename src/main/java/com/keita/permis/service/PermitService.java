@@ -19,8 +19,11 @@ import com.keita.permis.repository.PermitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
+import javax.mail.internet.MimeMessage;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -44,11 +47,8 @@ public class PermitService {
     @Autowired
     private Environment environment;
 
-    /*
-
     @Autowired
     private JavaMailSender javaMailSender;
-     */
 
     public boolean generatePermit(RequestPermitForm requestPermitForm) throws Exception {
         Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPassword(requestPermitForm.getEmail(), requestPermitForm.getPassword());
@@ -67,9 +67,8 @@ public class PermitService {
             List<Path> filePaths = setListPath(citizenOptional.get().getLastName());
 
             return generateQR(citizenOptional.get(), filePaths.get(0)) &&
-                    generatePDF(citizenOptional.get(), filePaths.get(0), filePaths.get(1));
-
-                    //sendPermitToCitizen(citizenOptional.get(), Arrays.asList(qrFilePath, pdfFilePath));
+                    generatePDF(citizenOptional.get(), filePaths.get(0), filePaths.get(1)) &&
+                    sendPermitToCitizen(citizenOptional.get(), filePaths);
         }
 
         return false;
@@ -79,22 +78,24 @@ public class PermitService {
         Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
                 requestPermitForm.getEmail(),
                 requestPermitForm.getPassword(),
-                requestPermitForm.getNumber(),
+                requestPermitForm.getCellNumber(),
                 requestPermitForm.getCity()
         );
 
-        if(citizenOptional.isPresent() ){
+        if (citizenOptional.isPresent()) {
             Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(requestPermitForm.getEmail());
             int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(requestPermitForm.getEmail());
 
-            if(permitOptionalActive.isEmpty() && nbrPermitOfThisCitizen > 0) {
+            if (permitOptionalActive.isEmpty() && nbrPermitOfThisCitizen > 0) {
+                citizenOptional.get().setVaccinated(requestPermitForm.getTypePermit().equals("VACCINE"));
                 savePermit(citizenOptional.get());
                 List<Path> filePaths = setListPath(citizenOptional.get().getLastName());
 
                 return generateQR(citizenOptional.get(), filePaths.get(0)) &&
-                        generatePDF(citizenOptional.get(), filePaths.get(0), filePaths.get(1));
+                        generatePDF(citizenOptional.get(), filePaths.get(0), filePaths.get(1)) &&
+                        sendPermitToCitizen(citizenOptional.get(), filePaths);
 
-            }else
+            } else
                 return false;
 
         }
@@ -107,7 +108,7 @@ public class PermitService {
         PermitCategory permitCategory = PermitCategory.determinePermitCategory(ageOfCitizen);
         PermitType permitType = citizen.isVaccinated() ? PermitType.VACCINE : PermitType.TEST;
         Permit permit = Permit.builder()
-                        .citizen(citizen).permitCategory(permitCategory).permitType(permitType).build();
+                .citizen(citizen).permitCategory(permitCategory).permitType(permitType).build();
         permitRepository.save(permit);
     }
 
@@ -115,7 +116,7 @@ public class PermitService {
         return Period.between(dateOfBirth, LocalDate.now()).getYears();
     }
 
-    private List<Path> setListPath(String fileName){
+    private List<Path> setListPath(String fileName) {
         Path qrFilePath = FileSystems.getDefault().getPath(
                 environment.getProperty("qr.directory") +
                         fileName +
@@ -125,7 +126,7 @@ public class PermitService {
                 environment.getProperty("pdf.directory") +
                         fileName +
                         environment.getProperty("pdf.extension"));
-        return Arrays.asList(qrFilePath,pdfFilePath);
+        return Arrays.asList(qrFilePath, pdfFilePath);
     }
 
     private boolean generateQR(Citizen citizen, Path path) throws Exception {
@@ -155,10 +156,6 @@ public class PermitService {
         return Files.exists(pdfFilePath);
     }
 
-
-    //TODO: Maybe put all the sendEmail in a EmailService afterwards, if i have to add a sendEmail to resetPassword
-    /*
-
     public boolean sendPermitToCitizen(Citizen citizen, List<Path> filePaths) throws Exception {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
@@ -168,6 +165,8 @@ public class PermitService {
         else
             helper.setTo(citizen.getEmail());
 
+        helper.setSubject("subject");
+        helper.setText("mailBody", true);
         helper.addAttachment("QR_CODE IMAGE", new File(filePaths.get(0).toString()));
         helper.addAttachment("QR_CODE PDF", new File(filePaths.get(1).toString()));
         javaMailSender.send(helper.getMimeMessage());
@@ -181,6 +180,5 @@ public class PermitService {
         return true;
 
     }
-     */
 
 }

@@ -36,17 +36,16 @@ public class PermitServiceTest {
     @Mock
     Environment environment;
 
-    /*
+    //TODO : learn Mockito @Spy
 
     @Mock
     JavaMailSender javaMailSender;
-     */
 
     @InjectMocks
     PermitService permitService;
 
     @BeforeEach
-    void mockingEnvironmentPropertyAndJavaMailSender(){
+    void mockingEnvironmentPropertyAndJavaMailSender() {
         //il va falloir mettre le directory ou vous voulez que ca soit générer
         when(environment.getProperty("qr.directory"))
                 .thenReturn("C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\PermisSante\\barCode\\");
@@ -56,7 +55,7 @@ public class PermitServiceTest {
         when(environment.getProperty("pdf.extension")).thenReturn(".pdf");
         when(environment.getProperty("qrcode.format")).thenReturn("PNG");
         when(environment.getProperty("qrcode.dimension")).thenReturn("300");
-       // when(javaMailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
+        when(javaMailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
         when(environment.getProperty("age.min")).thenReturn("18");
     }
 
@@ -132,7 +131,7 @@ public class PermitServiceTest {
         //Arrange
         RequestPermitForm form1 = RequestPermitForm.builder()
                 .email("AurelieLaflamme@gmail.com").password("aurelie123")
-                .city("Laval").number("5143278654").build();
+                .city("Laval").cellNumber("5143278654").build();
         Optional<Citizen> optionalCitizenForForm1 = Optional.of(
                 Citizen.builder()
                         .firstName("Aurelie")
@@ -144,14 +143,14 @@ public class PermitServiceTest {
                         .dateOfBirth(LocalDate.of(1996, 12, 23)).build()
         );
         when(citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
-                form1.getEmail(), form1.getPassword(), form1.getNumber(), form1.getCity()
+                form1.getEmail(), form1.getPassword(), form1.getCellNumber(), form1.getCity()
         )).thenReturn(optionalCitizenForForm1);
         when(permitRepository.findByActiveTrueAndCitizenEmail(form1.getEmail())).thenReturn(Optional.empty());
         when(permitRepository.countByCitizenEmail(form1.getEmail())).thenReturn(5);
 
         RequestPermitForm form2 = RequestPermitForm.builder()
                 .email("saukeUchiha@gmail.com").password("chidori123")
-                .city("Konoha").number("5143278654").build();
+                .city("Konoha").cellNumber("5143278654").build();
         Optional<Citizen> optionalCitizenForForm2 = Optional.of(
                 Citizen.builder()
                         .firstName("Sasuke")
@@ -163,14 +162,14 @@ public class PermitServiceTest {
                         .dateOfBirth(LocalDate.of(1996, 12, 23)).build()
         );
         when(citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
-                form2.getEmail(), form2.getPassword(), form2.getNumber(), form2.getCity()
+                form2.getEmail(), form2.getPassword(), form2.getCellNumber(), form2.getCity()
         )).thenReturn(optionalCitizenForForm2);
         when(permitRepository.findByActiveTrueAndCitizenEmail(form2.getEmail())).thenReturn(Optional.of(new Permit()));
         when(permitRepository.countByCitizenEmail(form2.getEmail())).thenReturn(5);
 
         RequestPermitForm form3 = RequestPermitForm.builder()
                 .email("mikeTyson@gmail.com").password("mike123")
-                .city("United-States").number("5143278654").build();
+                .city("United-States").cellNumber("5143278654").build();
         Optional<Citizen> optionalCitizenForForm3 = Optional.of(
                 Citizen.builder()
                         .firstName("Mike")
@@ -182,16 +181,16 @@ public class PermitServiceTest {
                         .dateOfBirth(LocalDate.of(1996, 12, 23)).build()
         );
         when(citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
-                form3.getEmail(), form3.getPassword(), form3.getNumber(), form3.getCity()
+                form3.getEmail(), form3.getPassword(), form3.getCellNumber(), form3.getCity()
         )).thenReturn(optionalCitizenForForm3);
         when(permitRepository.findByActiveTrueAndCitizenEmail(form3.getEmail())).thenReturn(Optional.empty());
         when(permitRepository.countByCitizenEmail(form3.getEmail())).thenReturn(0);
 
         RequestPermitForm form4 = RequestPermitForm.builder()
                 .email("fafafafa@gmail.com").password("fafa")
-                .city("Fafafa").number("fafafaf").build();
+                .city("Fafafa").cellNumber("fafafaf").build();
         when(citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
-                form4.getEmail(), form4.getPassword(), form4.getNumber(), form4.getCity()
+                form4.getEmail(), form4.getPassword(), form4.getCellNumber(), form4.getCity()
         )).thenReturn(Optional.empty());
         //Act
         boolean renewPermitOfForm1 = permitService.renewPermit(form1);

@@ -20,23 +20,20 @@ public class DatabaseRunner implements CommandLineRunner {
     @Autowired
     private PermitService permitService;
 
-    private void loadUsers() throws Exception {
+    private void loadUsers() {
         SubmitForm form1 =
-
                 SubmitForm.builder()
-                        .firstName("Karim").lastName("Mihoubi")
-                        .gender("M").email("karimMihoubi@gmail.com").password("karim123")
-                        .passwordAgain("karim123").cellNumber("5143786549").city("Montreal")
-                        .socialInsurance("MIHOUKa1234390").dateOfBirth("1976-02-01").build();
-
-
+                        .firstName("Reda").lastName("Hamza")
+                        .gender("M").email("developpeurspring@gmail.com").password("reda123")
+                        .passwordAgain("reda123").cellNumber("5143786549").city("Montreal")
+                        .socialInsurance("45456789").dateOfBirth("1976-02-01").build();
         SubmitForm form2 =
                 SubmitForm.builder()
-                        .firstName("Mika").lastName("Mihoubi")
-                        .gender("F").email("mikaMihoubi@gmail.com").password("mika123")
-                        .passwordAgain("mika123").cellNumber("5143786549").city("Montreal")
-                        .socialInsurance("MIKA45678765").dateOfBirth("2004-12-23")
-                        .firstNameParent("Karim").lastNameParent("Mihoubi").emailParent("karimMihoubi@gmail.com").build();
+                        .firstName("Mathilde").lastName("Marie")
+                        .gender("F").email("Mathilde@gmail.com").password("mathilde123")
+                        .passwordAgain("mathilde123").cellNumber("5143345678").city("Chicoutimi")
+                        .socialInsurance("123456789").dateOfBirth("2005-02-01")
+                        .emailParent("developpeurspring@gmail.com").firstNameParent("Reda").lastNameParent("Hamza").build();
 
         citizenService.registration(form1);
         citizenService.registration(form2);
@@ -45,17 +42,14 @@ public class DatabaseRunner implements CommandLineRunner {
 
 
     private void loadPermit() throws Exception {
-        RequestPermitForm requestPermitForm = RequestPermitForm.builder().email("mikaMihoubi@gmail.com")
-                .password("mika123").build();
-        RequestPermitForm requestPermitForm2 = RequestPermitForm.builder().email("karimMihoubi@gmail.com")
-                .password("karim123").build();
+        RequestPermitForm requestPermitForm = RequestPermitForm.builder().email("developpeurspring@gmail.com")
+                .password("reda123").build();
         permitService.generatePermit(requestPermitForm);
-        permitService.generatePermit(requestPermitForm2);
     }
 
     @Override
     public void run(String... args) throws Exception {
-       loadUsers();
-       //loadPermit();
+        loadUsers();
+        loadPermit();
     }
 }
