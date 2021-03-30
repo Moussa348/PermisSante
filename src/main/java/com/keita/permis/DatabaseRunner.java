@@ -22,36 +22,21 @@ public class DatabaseRunner implements CommandLineRunner {
 
     private void loadUsers() throws Exception {
         SubmitForm form1 =
-                new SubmitForm(
-                        "Mika",
-                        "Kami","F","mikaKami@gmail.com","mika123","mika123",
-                        "5143786549","Montreal","MIKA45678765","2010-12-23",
-                        "Rejean","Archambault","rejArch@gmail.com");
-        /*
 
                 SubmitForm.builder()
                         .firstName("Karim").lastName("Mihoubi")
                         .gender("M").email("karimMihoubi@gmail.com").password("karim123")
                         .passwordAgain("karim123").cellNumber("5143786549").city("Montreal")
                         .socialInsurance("MIHOUKa1234390").dateOfBirth("1976-02-01").build();
-         */
 
 
         SubmitForm form2 =
-                new SubmitForm(
-                        "Karim",
-                        "Mihoubi","M","kMihoubi@gmail.com","karim123","karim123",
-                        "5143786549","Montreal","MIHOUKa1234390","1976-02-01",
-                        "","","");
-        /*
-
                 SubmitForm.builder()
                         .firstName("Mika").lastName("Mihoubi")
                         .gender("F").email("mikaMihoubi@gmail.com").password("mika123")
                         .passwordAgain("mika123").cellNumber("5143786549").city("Montreal")
                         .socialInsurance("MIKA45678765").dateOfBirth("2004-12-23")
                         .firstNameParent("Karim").lastNameParent("Mihoubi").emailParent("karimMihoubi@gmail.com").build();
-         */
 
         citizenService.registration(form1);
         citizenService.registration(form2);
@@ -70,7 +55,7 @@ public class DatabaseRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-       //loadUsers();
+       loadUsers();
        //loadPermit();
     }
 }
