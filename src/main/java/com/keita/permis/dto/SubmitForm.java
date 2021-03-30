@@ -10,18 +10,20 @@ import java.io.Serializable;
 @Data
 public class SubmitForm implements Serializable {
 
-    @NotNull @NotEmpty
+    @NotNull
     private String firstName,lastName,gender,email,
             password,passwordAgain,cellNumber,city,socialInsurance,dateOfBirth;
 
     private String firstNameParent,lastNameParent,emailParent;
     private boolean renewal;
 
+    public SubmitForm(){}
+
     @Builder
-    public SubmitForm(@NotNull @NotEmpty String firstName, @NotNull @NotEmpty String lastName, @NotNull @NotEmpty String gender,
-                      @NotNull @NotEmpty String email, @NotNull @NotEmpty String password, @NotNull @NotEmpty String passwordAgain,
-                      @NotNull @NotEmpty String cellNumber, @NotNull @NotEmpty String city, @NotNull @NotEmpty String socialInsurance,
-                      @NotNull @NotEmpty String dateOfBirth, String firstNameParent, String lastNameParent, String emailParent) {
+    public SubmitForm(@NotNull String firstName, @NotNull String lastName, @NotNull String gender,
+                      @NotNull String email, @NotNull String password, @NotNull String passwordAgain,
+                      @NotNull String cellNumber, @NotNull String city, @NotNull String socialInsurance,
+                      @NotNull String dateOfBirth, String firstNameParent, String lastNameParent, String emailParent) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -37,4 +39,5 @@ public class SubmitForm implements Serializable {
         this.emailParent = emailParent;
         this.renewal = false;
     }
+
 }

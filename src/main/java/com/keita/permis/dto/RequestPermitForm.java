@@ -9,7 +9,10 @@ import javax.validation.constraints.NotNull;
 public class RequestPermitForm {
     @NotNull
     private String email,password;
+
     private String number,city;
+
+    public RequestPermitForm(){}
 
     @Builder
     public RequestPermitForm(@NotNull String email, @NotNull String password, String number, String city) {

@@ -47,10 +47,11 @@ public class PermitServiceTest {
 
     @BeforeEach
     void mockingEnvironmentPropertyAndJavaMailSender(){
+        //il va falloir mettre le directory ou vous voulez que ca soit générer
         when(environment.getProperty("qr.directory"))
-                .thenReturn("C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\barCode\\");
+                .thenReturn("C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\PermisSante\\barCode\\");
         when(environment.getProperty("pdf.directory"))
-                .thenReturn("C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\spring-angular\\PermisSante\\pdf\\");
+                .thenReturn("C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\PermisSante\\pdf\\");
         when(environment.getProperty("qrcode.extension")).thenReturn(".PNG");
         when(environment.getProperty("pdf.extension")).thenReturn(".pdf");
         when(environment.getProperty("qrcode.format")).thenReturn("PNG");

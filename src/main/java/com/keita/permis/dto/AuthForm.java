@@ -2,7 +2,7 @@ package com.keita.permis.dto;
 
 import javax.validation.constraints.*;
 
-import com.keita.permis.utils.ErrorMessage;
+import lombok.Builder;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -12,16 +12,15 @@ public class AuthForm implements Serializable {
 
     //TODO: will have to generate a secret key when forgotPassword is null, to send an email
 
-    @NotNull(message = ErrorMessage.LOGIN_INVALID)
-    private String email;
+    @NotNull
+    private String email,password;
 
-    @NotNull(message = ErrorMessage.PASSWORD_INVALID)
-    private String password;
     private String newPassword;
     private boolean forgotPassword = false;
 
     public AuthForm() { }
 
+    @Builder
     public AuthForm(@NotNull String email,
                     @NotNull String password,
                     String newPassword) {
