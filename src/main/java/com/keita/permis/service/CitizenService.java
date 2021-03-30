@@ -77,6 +77,7 @@ public class CitizenService {
                             .socialInsurance(form.getSocialInsurance()).build();
 
             parent.ifPresent(citizen::setParent);
+            citizen.setVaccinated(form.getTypePermit().equals("VACCINE"));
             citizenRepository.save(citizen);
             return true;
         }

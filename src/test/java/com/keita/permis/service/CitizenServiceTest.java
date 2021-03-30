@@ -36,6 +36,7 @@ public class CitizenServiceTest {
                         .gender("M").email("kMihoubi@gmail.com").password("karim123")
                         .passwordAgain("karim123").cellNumber("5143786549").city("Montreal")
                         .socialInsurance("MIHOUKa1234390").dateOfBirth("1976-02-01").build();
+        form1.setTypePermit("TEST");
         when(citizenRepository.existsByEmail(form1.getEmail())).thenReturn(false);
 
 
@@ -46,6 +47,7 @@ public class CitizenServiceTest {
                         .passwordAgain("mika123").cellNumber("5143786549").city("Montreal")
                         .socialInsurance("MIKA45678765").dateOfBirth("2010-12-23")
                         .firstNameParent("Rejean").lastNameParent("Archambault").emailParent("rejArch@gmail.com").build();
+        form2.setTypePermit("TEST");
         Optional<Citizen> parent = Optional.of(
                 Citizen.builder()
                         .firstName("Rejean")

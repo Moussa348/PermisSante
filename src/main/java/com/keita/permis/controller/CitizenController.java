@@ -29,13 +29,12 @@ public class CitizenController {
         ResponseEntity<String> responseEntity =
                 restTemplate
                         .getForEntity("http://localhost:9093/ministry/search" + "/"+ submitForm.getSocialInsurance(),String.class);
-        if (Objects.equals(responseEntity.getBody(), "TEST") || Objects.equals(responseEntity.getBody(), "VACCIN")){
+        if (Objects.equals(responseEntity.getBody(), "TEST") || Objects.equals(responseEntity.getBody(), "VACCINE")){
+            submitForm.setTypePermit(responseEntity.getBody());
             logger.info(responseEntity.getBody());
-            return true;
+            return citizenService.registration(submitForm);
         }
         else
             return false;
-
-        //return citizenService.registration(submitForm);
     }
 }

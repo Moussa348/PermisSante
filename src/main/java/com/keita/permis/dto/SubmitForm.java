@@ -14,8 +14,7 @@ public class SubmitForm implements Serializable {
     private String firstName,lastName,gender,email,
             password,passwordAgain,cellNumber,city,socialInsurance,dateOfBirth;
 
-    private String firstNameParent,lastNameParent,emailParent;
-    private boolean renewal;
+    private String firstNameParent,lastNameParent,emailParent,typePermit;
 
     public SubmitForm(){}
 
@@ -37,7 +36,7 @@ public class SubmitForm implements Serializable {
         this.firstNameParent = firstNameParent;
         this.lastNameParent = lastNameParent;
         this.emailParent = emailParent;
-        this.renewal = false;
+        this.typePermit = "";
     }
 
 }
