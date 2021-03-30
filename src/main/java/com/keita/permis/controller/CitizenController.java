@@ -28,7 +28,7 @@ public class CitizenController {
     public boolean registration(@Valid @RequestBody SubmitForm submitForm){
         ResponseEntity<String> responseEntity =
                 restTemplate
-                        .getForEntity("localhost:9093/ministry/search/" + submitForm.getSocialInsurance(),String.class);
+                        .getForEntity("http://localhost:9093/ministry/search" + "/"+ submitForm.getSocialInsurance(),String.class);
         if (Objects.equals(responseEntity.getBody(), "TEST") || Objects.equals(responseEntity.getBody(), "VACCIN")){
             logger.info(responseEntity.getBody());
             return true;
