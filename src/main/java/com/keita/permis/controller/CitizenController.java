@@ -7,6 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -24,7 +25,7 @@ public class CitizenController {
     private final Logger logger = LoggerFactory.getLogger(CitizenController.class);
 
     @PostMapping("/registration")
-    public boolean registration(@Valid SubmitForm submitForm){
+    public boolean registration(@Valid @RequestBody SubmitForm submitForm){
         ResponseEntity<String> responseEntity =
                 restTemplate
                         .getForEntity("localhost:9093/ministry/search/" + submitForm.getSocialInsurance(),String.class);

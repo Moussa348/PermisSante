@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,7 +21,7 @@ public class PermitController {
     private final Logger logger = LoggerFactory.getLogger(PermitController.class);
 
     @PostMapping("/generate")
-    public boolean generatePermit(@Valid RequestPermitForm requestPermitForm){
+    public boolean generatePermit(@Valid @RequestBody RequestPermitForm requestPermitForm){
         try {
             return permitService.generatePermit(requestPermitForm);
         } catch (Exception e) {
