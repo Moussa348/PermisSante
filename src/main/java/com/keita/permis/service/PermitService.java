@@ -165,8 +165,8 @@ public class PermitService {
         else
             helper.setTo(citizen.getEmail());
 
-        helper.setSubject("subject");
-        helper.setText("mailBody", true);
+        helper.setSubject("PERMIT");
+        helper.setText("FORMAT PNG et PDF", true);
         helper.addAttachment("QR_CODE IMAGE", new File(filePaths.get(0).toString()));
         helper.addAttachment("QR_CODE PDF", new File(filePaths.get(1).toString()));
         javaMailSender.send(helper.getMimeMessage());
