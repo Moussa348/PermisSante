@@ -1,6 +1,7 @@
 package com.keita.permis.service;
 
 import com.keita.permis.dto.SubmitForm;
+import com.keita.permis.enums.PermitType;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.repository.CitizenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -77,7 +78,7 @@ public class CitizenService {
                             .socialInsurance(form.getSocialInsurance()).build();
 
             parent.ifPresent(citizen::setParent);
-            citizen.setVaccinated(form.getTypePermit().equals(environment.getProperty("permit.type1")));
+            citizen.setVaccinated(form.getTypePermit().equals(PermitType.VACCINE.toString()));
             citizenRepository.save(citizen);
             return true;
         }

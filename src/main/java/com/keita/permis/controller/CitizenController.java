@@ -1,6 +1,7 @@
 package com.keita.permis.controller;
 
 import com.keita.permis.dto.SubmitForm;
+import com.keita.permis.enums.PermitType;
 import com.keita.permis.service.CitizenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +37,8 @@ public class CitizenController {
                         .getForEntity(environment.getProperty("api.url.registration") +
                                 submitForm.getSocialInsurance(), String.class);
 
-        if (Objects.equals(responseEntity.getBody(), environment.getProperty("permit.type1")) ||
-                Objects.equals(responseEntity.getBody(), environment.getProperty("permit.type2"))) {
+        if (Objects.equals(responseEntity.getBody(), PermitType.VACCINE.toString()) ||
+                Objects.equals(responseEntity.getBody(), PermitType.TEST.toString())) {
             submitForm.setTypePermit(responseEntity.getBody());
             logger.info(responseEntity.getBody());
             return citizenService.registration(submitForm);
