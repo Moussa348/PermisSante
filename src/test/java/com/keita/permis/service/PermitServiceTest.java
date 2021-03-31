@@ -59,6 +59,8 @@ public class PermitServiceTest {
         when(environment.getProperty("age.min")).thenReturn("18");
     }
 
+    //TODO : Test improbable situations (TP3)
+
     @Test
     void generatePermit() throws Exception {
         //Arrange

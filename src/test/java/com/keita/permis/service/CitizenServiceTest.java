@@ -27,8 +27,10 @@ public class CitizenServiceTest {
     @InjectMocks
     CitizenService citizenService;
 
+    //TODO : add improbable test (TP3)
+
     @Test
-    void registration() throws Exception {
+    void registration() {
         //Arrange
         SubmitForm form1 =
                 SubmitForm.builder()
