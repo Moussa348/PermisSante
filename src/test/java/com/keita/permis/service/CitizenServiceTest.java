@@ -102,6 +102,7 @@ public class CitizenServiceTest {
                 .thenReturn(Optional.empty());
 
         when(environment.getProperty("age.min")).thenReturn("18");
+        when(environment.getProperty("permit.type1")).thenReturn("VACCINE");
 
         //Act
         boolean citizenFromForm1IsRegistered = citizenService.registration(form1);

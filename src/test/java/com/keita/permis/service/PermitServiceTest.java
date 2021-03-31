@@ -57,6 +57,7 @@ public class PermitServiceTest {
         when(environment.getProperty("qrcode.dimension")).thenReturn("300");
         when(javaMailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
         when(environment.getProperty("age.min")).thenReturn("18");
+        when(environment.getProperty("permit.type1")).thenReturn("VACCINE");
     }
 
     //TODO : Test improbable situations (TP3)

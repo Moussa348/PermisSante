@@ -5,6 +5,7 @@ import com.keita.permis.service.PermitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +22,9 @@ public class PermitController {
 
     @Autowired
     private PermitService permitService;
+
+    @Autowired
+    private Environment environment;
     private final RestTemplate restTemplate = new RestTemplate();
     private final Logger logger = LoggerFactory.getLogger(PermitController.class);
 
@@ -38,9 +42,11 @@ public class PermitController {
     public boolean renewPermit(@Valid @RequestBody RequestPermitForm requestPermitForm) {
         ResponseEntity<String> responseEntity =
                 restTemplate
-                        .getForEntity("http://localhost:9093/ministry/searchForRenewal/" +
+                        .getForEntity(environment.getProperty("api.url.renewal") +
                                 requestPermitForm.getCellNumber(), String.class);
-        if (Objects.equals(responseEntity.getBody(), "TEST") || Objects.equals(responseEntity.getBody(), "VACCINE")) {
+
+        if (Objects.equals(responseEntity.getBody(), environment.getProperty("permit.type1")) ||
+                Objects.equals(responseEntity.getBody(), environment.getProperty("permit.type2"))) {
             requestPermitForm.setTypePermit(responseEntity.getBody());
             try {
                 return permitService.renewPermit(requestPermitForm);

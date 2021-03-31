@@ -5,6 +5,7 @@ import com.keita.permis.service.CitizenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,22 +22,26 @@ public class CitizenController {
 
     @Autowired
     private CitizenService citizenService;
+
+    @Autowired
+    private Environment environment;
+
     private final RestTemplate restTemplate = new RestTemplate();
     private final Logger logger = LoggerFactory.getLogger(CitizenController.class);
 
     @PostMapping("/registration")
-    public boolean registration(@Valid @RequestBody SubmitForm submitForm){
+    public boolean registration(@Valid @RequestBody SubmitForm submitForm) {
         ResponseEntity<String> responseEntity =
                 restTemplate
-                        .getForEntity("http://localhost:9093/ministry/searchForRegistration/" +
-                                submitForm.getSocialInsurance(),String.class);
+                        .getForEntity(environment.getProperty("api.url.registration") +
+                                submitForm.getSocialInsurance(), String.class);
 
-        if (Objects.equals(responseEntity.getBody(), "TEST") || Objects.equals(responseEntity.getBody(), "VACCINE")){
+        if (Objects.equals(responseEntity.getBody(), environment.getProperty("permit.type1")) ||
+                Objects.equals(responseEntity.getBody(), environment.getProperty("permit.type2"))) {
             submitForm.setTypePermit(responseEntity.getBody());
             logger.info(responseEntity.getBody());
             return citizenService.registration(submitForm);
-        }
-        else
+        } else
             return false;
     }
 }

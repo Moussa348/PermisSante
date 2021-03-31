@@ -87,7 +87,7 @@ public class PermitService {
             int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(requestPermitForm.getEmail());
 
             if (permitOptionalActive.isEmpty() && nbrPermitOfThisCitizen > 0) {
-                citizenOptional.get().setVaccinated(requestPermitForm.getTypePermit().equals("VACCINE"));
+                citizenOptional.get().setVaccinated(requestPermitForm.getTypePermit().equals(environment.getProperty("permit.type1")));
                 savePermit(citizenOptional.get());
                 List<Path> filePaths = setListPath(citizenOptional.get().getLastName());
 
