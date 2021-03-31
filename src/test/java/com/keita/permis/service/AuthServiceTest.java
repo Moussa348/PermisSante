@@ -3,10 +3,8 @@ package com.keita.permis.service;
 import com.keita.permis.dto.AuthForm;
 import com.keita.permis.repository.CitizenRepository;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
 
 
@@ -14,13 +12,13 @@ import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
-public class AuthenticationServiceTest {
+public class AuthServiceTest {
 
     @Mock
     CitizenRepository citizenRepository;
 
     @InjectMocks
-    AuthenticationService authenticationService;
+    AuthService authService;
 
     /*
         -@Spy
@@ -49,11 +47,11 @@ public class AuthenticationServiceTest {
         when(citizenRepository.existsByEmail(authForm5.getEmail())).thenReturn(true);
 
         //Act
-        boolean isLoggedInWithAuth1 = authenticationService.authentication(authForm1);
-        boolean isNotLoggedInWithAuth2 = authenticationService.authentication(authForm2);
-        boolean passwordResetForAuthForm3 = authenticationService.authentication(authForm3);
-        boolean passwordResetForAuthForm4 = authenticationService.authentication(authForm4);
-        boolean passwordResetForAuthForm5 = authenticationService.authentication(authForm5);
+        boolean isLoggedInWithAuth1 = authService.authentication(authForm1);
+        boolean isNotLoggedInWithAuth2 = authService.authentication(authForm2);
+        boolean passwordResetForAuthForm3 = authService.authentication(authForm3);
+        boolean passwordResetForAuthForm4 = authService.authentication(authForm4);
+        boolean passwordResetForAuthForm5 = authService.authentication(authForm5);
 
         //Assert
         assertTrue(isLoggedInWithAuth1);

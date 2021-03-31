@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 
 @Service
-public class AuthenticationService {
+public class AuthService {
 
     @Autowired
     private CitizenRepository citizenRepository;

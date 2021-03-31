@@ -9,3 +9,6 @@ puis ca va afficher comme quoi nous allons maintenant générer et vous envoyer 
 
 dans le cas ou la registration est mal faite et que rien na ete retournee ben jaurais un message qui me dira que je ne fais pas parti de la base de donné
 du ministère
+
+
+caljavadev@gmail.com

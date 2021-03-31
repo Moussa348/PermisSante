@@ -1,7 +1,7 @@
 package com.keita.permis.controller;
 
 import com.keita.permis.dto.AuthForm;
-import com.keita.permis.service.AuthenticationService;
+import com.keita.permis.service.AuthService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +14,15 @@ import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/auth")
-public class AuthenticationController {
+public class AuthController {
 
     @Autowired
-    private AuthenticationService authenticationService;
-    private final Logger logger = LoggerFactory.getLogger(AuthenticationController.class);
+    private AuthService authService;
+    private final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     @PostMapping("/authentication")
     public boolean authentication(@Valid @RequestBody AuthForm authForm){
-        if(authenticationService.authentication(authForm)) {
+        if(authService.authentication(authForm)) {
             logger.info("A user has logged into the application!");
             return true;
         }else {
