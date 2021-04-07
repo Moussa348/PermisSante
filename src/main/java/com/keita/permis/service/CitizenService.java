@@ -1,12 +1,18 @@
 package com.keita.permis.service;
 
+import com.keita.permis.controller.CitizenController;
+import com.keita.permis.dto.AuthForm;
 import com.keita.permis.dto.SubmitForm;
 import com.keita.permis.enums.PermitType;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.repository.CitizenRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -23,6 +29,15 @@ public class CitizenService {
     @Autowired
     private Environment environment;
 
+    Logger logger = LoggerFactory.getLogger(CitizenService.class);
+
+    public String authentication(AuthForm authForm) {
+        Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPassword(authForm.getEmail(), authForm.getPassword());
+        if (citizenOptional.isPresent())
+            return citizenOptional.get().getEmail();
+        return "";
+    }
+
     public boolean registration(SubmitForm form) {
         if (!citizenRepository.existsByEmail(form.getEmail())) {
 
@@ -37,12 +52,25 @@ public class CitizenService {
                 if (getAgeFromLocalDate(dateOfBirth) < Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min")))
                         && parent.isPresent())
                     return saveCitizen(form, dateOfBirth, parent);
-
+                logger.info("saving");
                 return saveCitizen(form, dateOfBirth, Optional.empty());
 
             }
         }
         return false;
+    }
+
+    //CALL WS
+    public String getPermitTypeIfInhabitantIsValidWithSocialInsurance(String socialInsurance){
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity =
+                restTemplate
+                        .getForEntity(environment.getProperty("api.url.registration") +
+                                socialInsurance, String.class);
+        if (Objects.equals(responseEntity.getBody(), PermitType.VACCINE.toString()) ||
+                Objects.equals(responseEntity.getBody(), PermitType.TEST.toString()))
+            return responseEntity.getBody();
+        return "";
     }
 
     private LocalDate dateFormatter(String date) {

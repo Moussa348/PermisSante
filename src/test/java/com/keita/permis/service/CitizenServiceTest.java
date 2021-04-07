@@ -1,5 +1,6 @@
 package com.keita.permis.service;
 
+import com.keita.permis.dto.AuthForm;
 import com.keita.permis.dto.SubmitForm;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.repository.CitizenRepository;
@@ -8,6 +9,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -24,11 +28,31 @@ public class CitizenServiceTest {
     @Mock
     Environment environment;
 
+    @Mock
+    RestTemplate restTemplate;
+
     @InjectMocks
     CitizenService citizenService;
 
     //TODO : add improbable test (TP3)
+    @Test
+    void authentication(){
+        //ARRANGE
+        AuthForm authForm1 = new AuthForm("rejArch@gmail.com", "rej123");
+        Optional<Citizen> citizenOptional = Optional.of(Citizen.builder().email("rejArch@gmail.com").build());
+        when(citizenRepository.findByEmailAndPassword(authForm1.getEmail(), authForm1.getPassword())).thenReturn(citizenOptional);
 
+        AuthForm authForm2 = new AuthForm("andreMarc12@gmail.com", "andreee");
+        when(citizenRepository.findByEmailAndPassword(authForm2.getEmail(), authForm2.getPassword())).thenReturn(Optional.empty());
+
+        //ACT
+        String emailReturned = citizenService.authentication(authForm1);
+        String emailNotReturned = citizenService.authentication(authForm2);
+
+        //ASSERT
+        assertEquals(emailReturned,authForm1.getEmail());
+        assertEquals(emailNotReturned,"");
+    }
     @Test
     void registration() {
         //Arrange
@@ -118,6 +142,23 @@ public class CitizenServiceTest {
         assertFalse(citizenFromForm4IsNotRegistered);
         assertFalse(citizenFromForm5IsNotRegistered);
         assertFalse(citizenFromForm6IsNotRegistered);
+    }
+
+    @Test
+    void getPermitTypeIfInhabitantIsValidWithSocialInsurance(){
+        //ARRANGE
+        String socialInsurance1 = "21321314";
+        when(restTemplate.getForEntity("http://localhost:9093/ministry/searchForRegistration/" + socialInsurance1,String.class))
+                .thenReturn(new ResponseEntity(socialInsurance1, HttpStatus.OK));
+        String socialInsurance2 = "43242442";
+
+        //when(environment.getProperty("api.url.registration")).thenReturn("http://localhost:9093/ministry/searchForRegistration/");
+        //ACT
+        String gettingSocialInsurance = citizenService.getPermitTypeIfInhabitantIsValidWithSocialInsurance(socialInsurance1);
+        //String notGettingSocialInsurance
+        //ASSERT
+        assertEquals(gettingSocialInsurance,socialInsurance1);
+
     }
 
 

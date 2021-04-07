@@ -18,9 +18,11 @@ import com.keita.permis.repository.CitizenRepository;
 import com.keita.permis.repository.PermitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import javax.mail.internet.MimeMessage;
 import java.io.File;
@@ -100,6 +102,18 @@ public class PermitService {
 
         }
         return false;
+    }
+
+    public String getPermitTypeIfInhabitantIsValidWithCellNumber(String socialInsurance){
+        RestTemplate restTemplate = new RestTemplate();
+        ResponseEntity<String> responseEntity =
+                restTemplate
+                        .getForEntity(environment.getProperty("api.url.renewal") +
+                                socialInsurance, String.class);
+        if (Objects.equals(responseEntity.getBody(), PermitType.VACCINE.toString()) ||
+                Objects.equals(responseEntity.getBody(), PermitType.TEST.toString()))
+            return responseEntity.getBody();
+        return "";
     }
 
     private void savePermit(Citizen citizen) {

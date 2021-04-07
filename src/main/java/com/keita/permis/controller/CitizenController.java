@@ -1,5 +1,6 @@
 package com.keita.permis.controller;
 
+import com.keita.permis.dto.AuthForm;
 import com.keita.permis.dto.SubmitForm;
 import com.keita.permis.enums.PermitType;
 import com.keita.permis.service.CitizenService;
@@ -23,26 +24,22 @@ public class CitizenController {
 
     @Autowired
     private CitizenService citizenService;
+    Logger logger = LoggerFactory.getLogger(CitizenController.class);
 
-    @Autowired
-    private Environment environment;
-
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final Logger logger = LoggerFactory.getLogger(CitizenController.class);
+    @PostMapping("/authentication")
+    public String authentication(@Valid @RequestBody AuthForm authForm){
+        return citizenService.authentication(authForm);
+    }
 
     @PostMapping("/registration")
     public boolean registration(@Valid @RequestBody SubmitForm submitForm) {
-        ResponseEntity<String> responseEntity =
-                restTemplate
-                        .getForEntity(environment.getProperty("api.url.registration") +
-                                submitForm.getSocialInsurance(), String.class);
+        String response = citizenService.getPermitTypeIfInhabitantIsValidWithSocialInsurance(submitForm.getSocialInsurance());
 
-        if (Objects.equals(responseEntity.getBody(), PermitType.VACCINE.toString()) ||
-                Objects.equals(responseEntity.getBody(), PermitType.TEST.toString())) {
-            submitForm.setTypePermit(responseEntity.getBody());
-            logger.info(responseEntity.getBody());
+        if(!response.isEmpty()){
+            submitForm.setTypePermit(response);
+            logger.info(response);
             return citizenService.registration(submitForm);
-        } else
-            return false;
+        }
+        return false;
     }
 }

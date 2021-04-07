@@ -23,10 +23,6 @@ public class PermitController {
 
     @Autowired
     private PermitService permitService;
-
-    @Autowired
-    private Environment environment;
-    private final RestTemplate restTemplate = new RestTemplate();
     private final Logger logger = LoggerFactory.getLogger(PermitController.class);
 
     @PostMapping("/generate")
@@ -41,14 +37,10 @@ public class PermitController {
 
     @PostMapping("/renewal")
     public boolean renewPermit(@Valid @RequestBody RequestPermitForm requestPermitForm) {
-        ResponseEntity<String> responseEntity =
-                restTemplate
-                        .getForEntity(environment.getProperty("api.url.renewal") +
-                                requestPermitForm.getCellNumber(), String.class);
+        String response = permitService.getPermitTypeIfInhabitantIsValidWithCellNumber(requestPermitForm.getCellNumber());
 
-        if (Objects.equals(responseEntity.getBody(), PermitType.VACCINE.toString()) ||
-                Objects.equals(responseEntity.getBody(), PermitType.TEST.toString())) {
-            requestPermitForm.setTypePermit(responseEntity.getBody());
+        if (!response.isEmpty()) {
+            requestPermitForm.setTypePermit(response);
             try {
                 return permitService.renewPermit(requestPermitForm);
             } catch (Exception e) {
