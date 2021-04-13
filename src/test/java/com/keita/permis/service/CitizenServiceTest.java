@@ -28,9 +28,6 @@ public class CitizenServiceTest {
     @Mock
     Environment environment;
 
-    @Mock
-    RestTemplate restTemplate;
-
     @InjectMocks
     CitizenService citizenService;
 
@@ -56,94 +53,52 @@ public class CitizenServiceTest {
     @Test
     void registration() {
         //Arrange
-        SubmitForm form1 =
-                SubmitForm.builder()
-                        .firstName("Karim").lastName("Mihoubi")
-                        .gender("M").email("kMihoubi@gmail.com").password("karim123")
-                        .passwordAgain("karim123").cellNumber("5143786549").city("Montreal")
-                        .socialInsurance("MIHOUKa1234390").dateOfBirth("1976-02-01").build();
-        form1.setTypePermit("TEST");
-        when(citizenRepository.existsByEmail(form1.getEmail())).thenReturn(false);
-
-
-        SubmitForm form2 =
-                SubmitForm.builder()
-                        .firstName("Mika").lastName("Kami")
-                        .gender("F").email("mikaKami@gmail.com").password("mika123")
-                        .passwordAgain("mika123").cellNumber("5143786549").city("Montreal")
-                        .socialInsurance("MIKA45678765").dateOfBirth("2010-12-23")
-                        .firstNameParent("Rejean").lastNameParent("Archambault").emailParent("rejArch@gmail.com").build();
-        form2.setTypePermit("TEST");
-        Optional<Citizen> parent = Optional.of(
+        Citizen citizen1 =
                 Citizen.builder()
-                        .firstName("Rejean")
-                        .lastName("Kami")
-                        .socialInsurance("21313123")
-                        .email("rejArch@gmail.com")
-                        .dateOfBirth(LocalDate.of(1967, 12, 23)).build()
-        );
-        when(citizenRepository.existsByEmail(form2.getEmail())).thenReturn(false);
-        when(citizenRepository.findByEmailAndFirstNameAndLastName(
-                form2.getEmailParent(), form2.getFirstNameParent(), form2.getLastNameParent()))
-                .thenReturn(parent);
+                        .email("kMihoubi@gmail.com")
+                        .dateOfBirth(LocalDate.of(1981,01,01))
+                        .build();
+        when(citizenRepository.existsByEmail(citizen1.getEmail())).thenReturn(false);
+
+
+
+        Citizen citizen2 =
+                Citizen.builder()
+                      .email("mikaKami@gmail.com")
+                        .dateOfBirth(LocalDate.of(2009,02,03)).build();
+        citizen2.setParent(Citizen.builder().email("massou@gmail.com").build());
+        when(citizenRepository.existsByEmail(citizen2.getEmail())).thenReturn(false);
+        when(citizenRepository.findByEmail(citizen2.getParent().getEmail())).thenReturn(Optional.of(new Citizen()));
+
+
+
+
+        Citizen citizen3 =
+                Citizen.builder()
+                        .email("moukFa@gmail.com").dateOfBirth(LocalDate.of(1996,12,23)).build();
+        when(citizenRepository.existsByEmail(citizen3.getEmail())).thenReturn(true);
+
+        Citizen citizen4 =
+                Citizen.builder()
+                        .email("tazzz@gmail.com")
+                        .dateOfBirth(LocalDate.of(2009,02,03)).build();
+        citizen4.setParent(Citizen.builder().email("marc@gmail.com").build());
+        when(citizenRepository.existsByEmail(citizen4.getEmail())).thenReturn(false);
+        when(citizenRepository.findByEmail(citizen4.getParent().getEmail())).thenReturn(Optional.empty());
 
         when(citizenRepository.save(any(Citizen.class))).thenReturn(new Citizen());
-
-
-        SubmitForm form3 =
-                SubmitForm.builder()
-                        .email("mikaKami@gmail.com").dateOfBirth("54-12-12").build();
-
-
-        SubmitForm form4 =
-                SubmitForm.builder()
-                        .email("moukFa@gmail.com").dateOfBirth("1996-12-23").build();
-        when(citizenRepository.existsByEmail(form4.getEmail())).thenReturn(true);
-
-
-        SubmitForm form5 =
-                SubmitForm.builder()
-                        .firstName("Mika").lastName("Kami")
-                        .gender("F").email("mikaKami@gmail.com").password("mika123")
-                        .passwordAgain("mika123").cellNumber("5143786549").city("Montreal")
-                        .socialInsurance("MIKA45678765").dateOfBirth("2004-12-23")
-                        .firstNameParent("incognito").lastNameParent("incognito").emailParent("incognito@gmail.com").build();
-        when(citizenRepository.existsByEmail(form5.getEmail())).thenReturn(false);
-        when(citizenRepository.findByEmailAndFirstNameAndLastName(
-                form5.getEmailParent(), form5.getFirstNameParent(), form5.getLastNameParent()))
-                .thenReturn(Optional.empty());
-
-
-        SubmitForm form6 =
-                SubmitForm.builder()
-                        .firstName("Mathieu").lastName("Marc")
-                        .gender("F").email("mathieuMa@gmail.com").password("mathieu123")
-                        .passwordAgain("mathieuuu1234").cellNumber("5143786549").city("Montreal")
-                        .socialInsurance("MIKA45678765").dateOfBirth("1994-12-24").build();
-        when(citizenRepository.existsByEmail(form6.getEmail())).thenReturn(false);
-        when(citizenRepository.findByEmailAndFirstNameAndLastName(
-                form6.getEmailParent(), form6.getFirstNameParent(), form6.getLastNameParent()))
-                .thenReturn(Optional.empty());
-
         when(environment.getProperty("age.min")).thenReturn("18");
 
         //Act
-        /*
 
-        boolean citizenFromForm1IsRegistered = citizenService.registration(form1);
-        boolean citizenFromForm2IsRegistered = citizenService.registration(form2);
-        boolean citizenFromForm3IsNotRegistered = citizenService.registration(form3);
-        boolean citizenFromForm4IsNotRegistered = citizenService.registration(form4);
-        boolean citizenFromForm5IsNotRegistered = citizenService.registration(form5);
-        boolean citizenFromForm6IsNotRegistered = citizenService.registration(form6);
-
+        boolean adultCitizenIsRegistered = citizenService.registration(citizen1);
+        boolean kidCitizenIsRegistered = citizenService.registration(citizen2);
+        boolean adultIsNotRegistered = citizenService.registration(citizen3);
+        boolean kidIsNotRegistered = citizenService.registration(citizen4);
         //Assert
-        assertTrue(citizenFromForm1IsRegistered);
-        assertTrue(citizenFromForm2IsRegistered);
-        assertFalse(citizenFromForm3IsNotRegistered);
-        assertFalse(citizenFromForm4IsNotRegistered);
-        assertFalse(citizenFromForm5IsNotRegistered);
-        assertFalse(citizenFromForm6IsNotRegistered);
-         */
+        assertTrue(adultCitizenIsRegistered);
+        assertTrue(kidCitizenIsRegistered);
+        assertFalse(adultIsNotRegistered);
+        assertFalse(kidIsNotRegistered);
     }
 }

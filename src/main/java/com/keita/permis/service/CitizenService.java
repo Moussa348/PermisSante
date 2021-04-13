@@ -43,7 +43,7 @@ public class CitizenService {
 
             Optional<Citizen> parent = ifMinorCheckIfParentExist(citizen);
 
-            if (parent.isEmpty() && getAgeFromLocalDate(citizen.getDateOfBirth()) < Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
+            if (parent.isEmpty() && getAgeFromLocalDate(citizen.getDateOfBirth()) <= Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
                 return false;
 
             parent.ifPresent(citizen::setParent);
@@ -55,8 +55,6 @@ public class CitizenService {
     }
 
     private Optional<Citizen> ifMinorCheckIfParentExist(Citizen citizen) {
-        logger.info(citizen.getDateOfBirth().toString());
-
         if (getAgeFromLocalDate(citizen.getDateOfBirth()) <= Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
             return citizenRepository.findByEmail(citizen.getParent().getEmail());
         return Optional.empty();
