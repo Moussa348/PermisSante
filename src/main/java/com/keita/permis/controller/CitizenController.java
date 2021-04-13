@@ -34,10 +34,4 @@ public class CitizenController {
     public Integer registration(@RequestBody Citizen citizen) {
         return citizenService.registration(citizen);
     }
-    /*
-
-    public boolean registration(@Valid @RequestBody SubmitForm submitForm) {
-        return citizenService.registration(submitForm);
-    }
-     */
 }

@@ -1,22 +1,17 @@
 package com.keita.permis.service;
 
-import com.keita.permis.controller.CitizenController;
 import com.keita.permis.dto.AuthForm;
-import com.keita.permis.dto.SubmitForm;
-import com.keita.permis.enums.PermitType;
+import com.keita.permis.enums.Role;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.repository.CitizenRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.Period;
-import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -47,6 +42,8 @@ public class CitizenService {
                 return -1;
 
             parent.ifPresent(citizen::setParent);
+            citizen.setRegistrationDate(LocalDate.now());
+            citizen.setRole(Role.USER);
             citizenRepository.save(citizen);
             logger.info("SAVING");
             return 0;
@@ -56,10 +53,9 @@ public class CitizenService {
 
     private Optional<Citizen> ifMinorCheckIfParentExist(Citizen citizen) {
         if (getAgeFromLocalDate(citizen.getDateOfBirth()) <= Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
-            return citizenRepository.findByEmail(citizen.getParent().getEmail());
+            return citizenRepository.findBySocialInsurance(citizen.getParent().getSocialInsurance());
         return Optional.empty();
     }
-
 
     private int getAgeFromLocalDate(LocalDate dateOfBirth) {
         return Period.between(dateOfBirth, LocalDate.now()).getYears();

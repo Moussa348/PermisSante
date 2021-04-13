@@ -64,9 +64,9 @@ public class CitizenServiceTest {
                 Citizen.builder()
                       .email("mikaKami@gmail.com")
                         .dateOfBirth(LocalDate.of(2009,02,03)).build();
-        citizen2.setParent(Citizen.builder().email("massou@gmail.com").build());
+        citizen2.setParent(Citizen.builder().socialInsurance("454676424").build());
         when(citizenRepository.existsByEmail(citizen2.getEmail())).thenReturn(false);
-        when(citizenRepository.findByEmail(citizen2.getParent().getEmail())).thenReturn(Optional.of(new Citizen()));
+        when(citizenRepository.findBySocialInsurance(citizen2.getParent().getSocialInsurance())).thenReturn(Optional.of(new Citizen()));
 
         Citizen citizen3 =
                 Citizen.builder()
@@ -77,9 +77,9 @@ public class CitizenServiceTest {
                 Citizen.builder()
                         .email("tazzz@gmail.com")
                         .dateOfBirth(LocalDate.of(2009,02,03)).build();
-        citizen4.setParent(Citizen.builder().email("marc@gmail.com").build());
+        citizen4.setParent(Citizen.builder().socialInsurance("3243243243").build());
         when(citizenRepository.existsByEmail(citizen4.getEmail())).thenReturn(false);
-        when(citizenRepository.findByEmail(citizen4.getParent().getEmail())).thenReturn(Optional.empty());
+        when(citizenRepository.findBySocialInsurance(citizen4.getParent().getSocialInsurance())).thenReturn(Optional.empty());
 
         when(citizenRepository.save(any(Citizen.class))).thenReturn(new Citizen());
         when(environment.getProperty("age.min")).thenReturn("18");

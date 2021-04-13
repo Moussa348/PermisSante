@@ -76,6 +76,23 @@ public class CitizenRepositoryTest {
     }
 
     @Test
+    void findBySocialInsurance(){
+        Citizen citizen1 = Citizen.builder()
+                .socialInsurance("REJEAR1239892").build();
+        Citizen citizen2 = Citizen.builder()
+                .email("11111111").build();
+        //Act
+        Optional<Citizen> optionalCitizen1 = citizenRepository
+                .findBySocialInsurance(citizen1.getSocialInsurance());
+        Optional<Citizen> optionalCitizen2 = citizenRepository
+                .findBySocialInsurance(citizen2.getSocialInsurance());
+
+        //Assert
+        assertTrue(optionalCitizen1.isPresent());
+        assertFalse(optionalCitizen2.isPresent());
+    }
+
+    @Test
     void findByEmailAndPassword(){
         Citizen citizen1 = Citizen.builder()
                 .email("rejArch@gmail.com").password("rej123").build();

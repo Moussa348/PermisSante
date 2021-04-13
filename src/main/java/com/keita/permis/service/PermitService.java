@@ -53,6 +53,7 @@ public class PermitService {
     private JavaMailSender javaMailSender;
 
     public boolean generatePermit(RequestPermitForm requestPermitForm) throws Exception {
+        //TODO -> remove this
         Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPassword(requestPermitForm.getEmail(), requestPermitForm.getPassword());
 
         if (citizenOptional.isPresent()) {
