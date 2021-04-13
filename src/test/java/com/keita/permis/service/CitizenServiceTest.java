@@ -52,15 +52,13 @@ public class CitizenServiceTest {
     }
     @Test
     void registration() {
-        //Arrange
+        //ARRANGE
         Citizen citizen1 =
                 Citizen.builder()
                         .email("kMihoubi@gmail.com")
                         .dateOfBirth(LocalDate.of(1981,01,01))
                         .build();
         when(citizenRepository.existsByEmail(citizen1.getEmail())).thenReturn(false);
-
-
 
         Citizen citizen2 =
                 Citizen.builder()
@@ -69,9 +67,6 @@ public class CitizenServiceTest {
         citizen2.setParent(Citizen.builder().email("massou@gmail.com").build());
         when(citizenRepository.existsByEmail(citizen2.getEmail())).thenReturn(false);
         when(citizenRepository.findByEmail(citizen2.getParent().getEmail())).thenReturn(Optional.of(new Citizen()));
-
-
-
 
         Citizen citizen3 =
                 Citizen.builder()
@@ -89,13 +84,13 @@ public class CitizenServiceTest {
         when(citizenRepository.save(any(Citizen.class))).thenReturn(new Citizen());
         when(environment.getProperty("age.min")).thenReturn("18");
 
-        //Act
-
+        //ACT
         int adultCitizenIsRegistered = citizenService.registration(citizen1);
         int kidCitizenIsRegistered = citizenService.registration(citizen2);
         int adultIsNotRegisteredAccountAlreadyExist = citizenService.registration(citizen3);
         int kidIsNotRegisteredParentAccountDoNotExist = citizenService.registration(citizen4);
-        //Assert
+
+        //ASSERT
         assertEquals(adultCitizenIsRegistered,0);
         assertEquals(kidCitizenIsRegistered,0);
         assertEquals(adultIsNotRegisteredAccountAlreadyExist,1);
