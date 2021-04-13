@@ -31,7 +31,7 @@ public class CitizenController {
     }
 
     @PostMapping("/registration")
-    public boolean registration(@RequestBody Citizen citizen) {
+    public Integer registration(@RequestBody Citizen citizen) {
         return citizenService.registration(citizen);
     }
     /*

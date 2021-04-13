@@ -91,14 +91,14 @@ public class CitizenServiceTest {
 
         //Act
 
-        boolean adultCitizenIsRegistered = citizenService.registration(citizen1);
-        boolean kidCitizenIsRegistered = citizenService.registration(citizen2);
-        boolean adultIsNotRegistered = citizenService.registration(citizen3);
-        boolean kidIsNotRegistered = citizenService.registration(citizen4);
+        int adultCitizenIsRegistered = citizenService.registration(citizen1);
+        int kidCitizenIsRegistered = citizenService.registration(citizen2);
+        int adultIsNotRegisteredAccountAlreadyExist = citizenService.registration(citizen3);
+        int kidIsNotRegisteredParentAccountDoNotExist = citizenService.registration(citizen4);
         //Assert
-        assertTrue(adultCitizenIsRegistered);
-        assertTrue(kidCitizenIsRegistered);
-        assertFalse(adultIsNotRegistered);
-        assertFalse(kidIsNotRegistered);
+        assertEquals(adultCitizenIsRegistered,0);
+        assertEquals(kidCitizenIsRegistered,0);
+        assertEquals(adultIsNotRegisteredAccountAlreadyExist,1);
+        assertEquals(kidIsNotRegisteredParentAccountDoNotExist,-1);
     }
 }

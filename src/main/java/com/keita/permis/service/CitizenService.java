@@ -38,20 +38,20 @@ public class CitizenService {
         return "";
     }
 
-    public boolean registration(Citizen citizen) {
+    public Integer registration(Citizen citizen) {
         if (!citizenRepository.existsByEmail(citizen.getEmail())) {
 
             Optional<Citizen> parent = ifMinorCheckIfParentExist(citizen);
 
             if (parent.isEmpty() && getAgeFromLocalDate(citizen.getDateOfBirth()) <= Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
-                return false;
+                return -1;
 
             parent.ifPresent(citizen::setParent);
             citizenRepository.save(citizen);
             logger.info("SAVING");
-            return true;
+            return 0;
         }
-        return false;
+        return 1;
     }
 
     private Optional<Citizen> ifMinorCheckIfParentExist(Citizen citizen) {
