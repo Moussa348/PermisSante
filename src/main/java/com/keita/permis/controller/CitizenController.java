@@ -3,16 +3,14 @@ package com.keita.permis.controller;
 import com.keita.permis.dto.AuthForm;
 import com.keita.permis.dto.SubmitForm;
 import com.keita.permis.enums.PermitType;
+import com.keita.permis.model.Citizen;
 import com.keita.permis.service.CitizenService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.validation.Valid;
@@ -20,6 +18,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/citizen")
+@CrossOrigin(origins = "http://localhost:4600")
 public class CitizenController {
 
     @Autowired
@@ -27,19 +26,18 @@ public class CitizenController {
     Logger logger = LoggerFactory.getLogger(CitizenController.class);
 
     @PostMapping("/authentication")
-    public String authentication(@Valid @RequestBody AuthForm authForm){
+    public String authentication(@Valid @RequestBody AuthForm authForm) {
         return citizenService.authentication(authForm);
     }
 
     @PostMapping("/registration")
-    public boolean registration(@Valid @RequestBody SubmitForm submitForm) {
-        String response = citizenService.getPermitTypeIfInhabitantIsValidWithSocialInsurance(submitForm.getSocialInsurance());
-
-        if(!response.isEmpty()){
-            submitForm.setTypePermit(response);
-            logger.info(response);
-            return citizenService.registration(submitForm);
-        }
-        return false;
+    public boolean registration(@RequestBody Citizen citizen) {
+        return citizenService.registration(citizen);
     }
+    /*
+
+    public boolean registration(@Valid @RequestBody SubmitForm submitForm) {
+        return citizenService.registration(submitForm);
+    }
+     */
 }

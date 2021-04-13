@@ -80,6 +80,23 @@ public class CitizenRepositoryTest {
     }
 
     @Test
+    void findByEmail(){
+        Citizen citizen1 = Citizen.builder()
+                .email("rejArch@gmail.com").build();
+        Citizen citizen2 = Citizen.builder()
+                .email("fafaAnnn@gmail.com").build();
+        //Act
+        Optional<Citizen> optionalCitizen1 = citizenRepository
+                .findByEmail(citizen1.getEmail());
+        Optional<Citizen> optionalCitizen2 = citizenRepository
+                .findByEmail(citizen2.getEmail());
+
+        //Assert
+        assertTrue(optionalCitizen1.isPresent());
+        assertFalse(optionalCitizen2.isPresent());
+    }
+
+    @Test
     void findByEmailAndPassword(){
         Citizen citizen1 = Citizen.builder()
                 .email("rejArch@gmail.com").password("rej123").build();

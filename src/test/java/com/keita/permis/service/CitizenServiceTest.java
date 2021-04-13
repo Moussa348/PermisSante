@@ -128,6 +128,8 @@ public class CitizenServiceTest {
         when(environment.getProperty("age.min")).thenReturn("18");
 
         //Act
+        /*
+
         boolean citizenFromForm1IsRegistered = citizenService.registration(form1);
         boolean citizenFromForm2IsRegistered = citizenService.registration(form2);
         boolean citizenFromForm3IsNotRegistered = citizenService.registration(form3);
@@ -142,24 +144,6 @@ public class CitizenServiceTest {
         assertFalse(citizenFromForm4IsNotRegistered);
         assertFalse(citizenFromForm5IsNotRegistered);
         assertFalse(citizenFromForm6IsNotRegistered);
+         */
     }
-
-    @Test
-    void getPermitTypeIfInhabitantIsValidWithSocialInsurance(){
-        //ARRANGE
-        String socialInsurance1 = "21321314";
-        when(restTemplate.getForEntity("http://localhost:9093/ministry/searchForRegistration/" + socialInsurance1,String.class))
-                .thenReturn(new ResponseEntity(socialInsurance1, HttpStatus.OK));
-        String socialInsurance2 = "43242442";
-
-        //when(environment.getProperty("api.url.registration")).thenReturn("http://localhost:9093/ministry/searchForRegistration/");
-        //ACT
-        String gettingSocialInsurance = citizenService.getPermitTypeIfInhabitantIsValidWithSocialInsurance(socialInsurance1);
-        //String notGettingSocialInsurance
-        //ASSERT
-        assertEquals(gettingSocialInsurance,socialInsurance1);
-
-    }
-
-
 }

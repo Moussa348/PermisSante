@@ -24,19 +24,19 @@ public class DatabaseRunner implements CommandLineRunner {
         SubmitForm form1 =
                 SubmitForm.builder()
                         .firstName("Reda").lastName("Hamza")
-                        .gender("M").email("developpeurspring@gmail.com").password("reda123")
+                        .gender("Male").email("developpeurspring@gmail.com").password("reda123")
                         .passwordAgain("reda123").cellNumber("5143786549").city("Montreal")
                         .socialInsurance("45456789").dateOfBirth("1976-02-01").build();
         SubmitForm form2 =
                 SubmitForm.builder()
                         .firstName("Mathilde").lastName("Marie")
-                        .gender("F").email("Mathilde@gmail.com").password("mathilde123")
+                        .gender("Female").email("Mathilde@gmail.com").password("mathilde123")
                         .passwordAgain("mathilde123").cellNumber("5143345678").city("Chicoutimi")
                         .socialInsurance("123456789").dateOfBirth("2005-02-01")
                         .emailParent("developpeurspring@gmail.com").firstNameParent("Reda").lastNameParent("Hamza").build();
 
-        citizenService.registration(form1);
-        citizenService.registration(form2);
+        //citizenService.registration(form1);
+        //citizenService.registration(form2);
 
     }
 

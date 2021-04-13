@@ -38,78 +38,32 @@ public class CitizenService {
         return "";
     }
 
-    public boolean registration(SubmitForm form) {
-        if (!citizenRepository.existsByEmail(form.getEmail())) {
+    public boolean registration(Citizen citizen) {
+        if (!citizenRepository.existsByEmail(citizen.getEmail())) {
 
-            LocalDate dateOfBirth = dateFormatter(form.getDateOfBirth());
+            Optional<Citizen> parent = ifMinorCheckIfParentExist(citizen);
 
-            if (dateOfBirth != null) {
-                Optional<Citizen> parent = ifMinorCheckIfParentExist(form, dateOfBirth);
+            if (parent.isEmpty() && getAgeFromLocalDate(citizen.getDateOfBirth()) < Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
+                return false;
 
-                if (parent.isEmpty() && getAgeFromLocalDate(dateOfBirth) < Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
-                    return false;
-
-                if (getAgeFromLocalDate(dateOfBirth) < Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min")))
-                        && parent.isPresent())
-                    return saveCitizen(form, dateOfBirth, parent);
-                logger.info("saving");
-                return saveCitizen(form, dateOfBirth, Optional.empty());
-
-            }
+            parent.ifPresent(citizen::setParent);
+            citizenRepository.save(citizen);
+            logger.info("SAVING");
+            return true;
         }
         return false;
     }
 
-    //CALL WS
-    public String getPermitTypeIfInhabitantIsValidWithSocialInsurance(String socialInsurance){
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> responseEntity =
-                restTemplate
-                        .getForEntity(environment.getProperty("api.url.registration") +
-                                socialInsurance, String.class);
-        if (Objects.equals(responseEntity.getBody(), PermitType.VACCINE.toString()) ||
-                Objects.equals(responseEntity.getBody(), PermitType.TEST.toString()))
-            return responseEntity.getBody();
-        return "";
-    }
+    private Optional<Citizen> ifMinorCheckIfParentExist(Citizen citizen) {
+        logger.info(citizen.getDateOfBirth().toString());
 
-    private LocalDate dateFormatter(String date) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        try {
-            return LocalDate.parse(date, formatter);
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private Optional<Citizen> ifMinorCheckIfParentExist(SubmitForm form, LocalDate dateOfBirth) {
-        if (getAgeFromLocalDate(dateOfBirth) < Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
-            return citizenRepository
-                    .findByEmailAndFirstNameAndLastName(
-                            form.getEmailParent(), form.getFirstNameParent(), form.getLastNameParent());
+        if (getAgeFromLocalDate(citizen.getDateOfBirth()) <= Integer.parseInt(Objects.requireNonNull(environment.getProperty("age.min"))))
+            return citizenRepository.findByEmail(citizen.getParent().getEmail());
         return Optional.empty();
     }
 
 
     private int getAgeFromLocalDate(LocalDate dateOfBirth) {
         return Period.between(dateOfBirth, LocalDate.now()).getYears();
-    }
-
-    private boolean saveCitizen(SubmitForm form, LocalDate dateOfBirth, Optional<Citizen> parent) {
-        if (form.getPassword().equals(form.getPasswordAgain())) {
-            Citizen citizen =
-                    Citizen.builder()
-                            .firstName(form.getFirstName()).lastName(form.getLastName())
-                            .email(form.getEmail()).password(form.getPassword())
-                            .cellNumber(form.getCellNumber()).city(form.getCity())
-                            .dateOfBirth(dateOfBirth)
-                            .socialInsurance(form.getSocialInsurance()).build();
-
-            parent.ifPresent(citizen::setParent);
-            citizen.setVaccinated(form.getTypePermit().equals(PermitType.VACCINE.toString()));
-            citizenRepository.save(citizen);
-            return true;
-        }
-        return false;
     }
 }

@@ -1,5 +1,6 @@
 package com.keita.permis.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Builder;
 import lombok.Data;
 import lombok.ToString;
@@ -13,26 +14,29 @@ import java.time.LocalDate;
 
 @Entity
 @Data
-@ToString(callSuper=true)
+@ToString(callSuper = true)
 public class Citizen implements Serializable {
     @Id
     @GeneratedValue
     private Long id;
-    private String firstName,lastName,gender,email,
-            password,cellNumber,city,socialInsurance,role;
-    private LocalDate dateOfBirth,registrationDate;
-    private boolean isVaccinated;
+    private String firstName, lastName, gender, email,
+            password, cellNumber, city, socialInsurance, role;
+    @JsonFormat(pattern="yyyy-MM-dd")
+    private LocalDate dateOfBirth;
+    private LocalDate registrationDate;
+    private boolean vaccinated;
     private boolean active;
 
     @OneToOne
     private Citizen parent;
 
-    public Citizen() { }
+    public Citizen() {
+    }
 
     @Builder
     public Citizen(String firstName, String lastName, String gender,
                    String email, String password, String cellNumber,
-                   String city, LocalDate dateOfBirth, String socialInsurance,Citizen parent) {
+                   String city, LocalDate dateOfBirth, String socialInsurance) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.gender = gender;
@@ -43,9 +47,8 @@ public class Citizen implements Serializable {
         this.dateOfBirth = dateOfBirth;
         this.registrationDate = LocalDate.now();
         this.socialInsurance = socialInsurance;
-        this.isVaccinated = false;
+        this.vaccinated = false;
         this.active = true;
         this.role = "USER";
-        this.parent = parent;
     }
 }
