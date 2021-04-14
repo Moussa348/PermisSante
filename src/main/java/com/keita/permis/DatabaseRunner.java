@@ -44,7 +44,7 @@ public class DatabaseRunner implements CommandLineRunner {
     private void loadPermit() throws Exception {
         RequestPermitForm requestPermitForm = RequestPermitForm.builder().email("developpeurspring@gmail.com")
                 .password("reda123").build();
-        permitService.generatePermit(requestPermitForm);
+        //permitService.generatePermit(requestPermitForm);
     }
 
     @Override

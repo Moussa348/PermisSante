@@ -23,7 +23,6 @@ public class CitizenController {
 
     @Autowired
     private CitizenService citizenService;
-    Logger logger = LoggerFactory.getLogger(CitizenController.class);
 
     @PostMapping("/authentication")
     public String authentication(@Valid @RequestBody AuthForm authForm) {

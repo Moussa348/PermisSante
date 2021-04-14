@@ -63,74 +63,65 @@ public class PermitServiceTest {
 
     @Test
     void generatePermit() throws Exception {
-        //Arrange
-        RequestPermitForm form1 = RequestPermitForm.builder().email("moukFa@gmail.com").password("fadi123").build();
+        //ARRANGE
+        String email1 = "moukFa@gmail.com";
         Optional<Citizen> optionalCitizenForForm1 = Optional.of(
                 Citizen.builder()
-                        .firstName("Fadi")
-                        .lastName("Mouk")
-                        .socialInsurance("21313123")
-                        .email("moukFa@gmail.com")
+                        .email(email1)
+                        .socialInsurance("132131231")
+                        .lastName("Fadi")
                         .dateOfBirth(LocalDate.of(1996, 12, 23)).build()
         );
-        when(citizenRepository.findByEmailAndPassword(form1.getEmail(), form1.getPassword()))
-                .thenReturn(optionalCitizenForForm1);
-        when(permitRepository.findByActiveTrueAndCitizenEmail(form1.getEmail()))
-                .thenReturn(Optional.empty());
-        when(permitRepository.countByCitizenEmail(form1.getEmail())).thenReturn(0);
+        when(citizenRepository.findByEmail(email1)).thenReturn(optionalCitizenForForm1);
+        when(permitRepository.findByActiveTrueAndCitizenEmail(email1)).thenReturn(Optional.empty());
+        when(permitRepository.countByCitizenEmail(email1)).thenReturn(0);
         when(permitRepository.save(any(Permit.class))).thenReturn(new Permit());
 
 
-        RequestPermitForm form2 = RequestPermitForm.builder().email("rejArch@gmail.com").password("fadi123").build();
+
+        String email2 = "rejArch@gmail.com";
         Optional<Citizen> optionalCitizenForForm2 = Optional.of(
                 Citizen.builder()
-                        .firstName("Rejean")
                         .lastName("Archambault")
-                        .socialInsurance("21313123")
+                        .socialInsurance("64646456")
                         .email("rejArch@gmail.com")
                         .dateOfBirth(LocalDate.of(1996, 12, 23)).build()
         );
-        when(citizenRepository.findByEmailAndPassword(form2.getEmail(), form2.getPassword()))
-                .thenReturn(optionalCitizenForForm2);
-        when(permitRepository.findByActiveTrueAndCitizenEmail(form2.getEmail()))
-                .thenReturn(Optional.of(new Permit()));
-        when(permitRepository.countByCitizenEmail(form2.getEmail())).thenReturn(1);
+        when(citizenRepository.findByEmail(email2)).thenReturn(optionalCitizenForForm2);
+        when(permitRepository.findByActiveTrueAndCitizenEmail(email2)).thenReturn(Optional.of(new Permit()));
+        when(permitRepository.countByCitizenEmail(email2)).thenReturn(2);
 
 
-        RequestPermitForm form3 = RequestPermitForm.builder().email("mikaKami@gmail.com").password("mika123").build();
+        String email3 = "mikaKami@gmail.com";
         Optional<Citizen> optionalCitizenForForm3 = Optional.of(
                 Citizen.builder()
-                        .firstName("Fadi")
-                        .lastName("Mouk").email("mikaKami@gmail.com").password("mika123")
+                        .lastName("Mouk").email("mikaKami@gmail.com")
                         .socialInsurance("21313123").dateOfBirth(LocalDate.of(1991, 12, 23)).build()
         );
-        when(citizenRepository.findByEmailAndPassword(form3.getEmail(), form3.getPassword()))
-                .thenReturn(optionalCitizenForForm3);
-        when(permitRepository.findByActiveTrueAndCitizenEmail(form3.getEmail()))
-                .thenReturn(Optional.empty());
-        when(permitRepository.countByCitizenEmail(form3.getEmail())).thenReturn(4);
+        when(citizenRepository.findByEmail(email3)).thenReturn(optionalCitizenForForm3);
+        when(permitRepository.findByActiveTrueAndCitizenEmail(email3)).thenReturn(Optional.empty());
+        when(permitRepository.countByCitizenEmail(email3)).thenReturn(4);
 
 
-        RequestPermitForm form4 = RequestPermitForm.builder().email("araaaaa@gmail.com").password("mika123").build();
-        when(citizenRepository.findByEmailAndPassword(form4.getEmail(), form4.getPassword()))
-                .thenReturn(Optional.empty());
+        String email4 = "araaaaa@gmail.com";
+        when(citizenRepository.findByEmail(email4)).thenReturn(Optional.empty());
 
-        //Act
-        boolean permitForForm1IsGenerated = permitService.generatePermit(form1);
-        boolean permitForForm2IsGenerated = permitService.generatePermit(form2);
-        boolean permitForForm3IsNotGenerated = permitService.generatePermit(form3);
-        boolean permitForForm4IsNotGenerated = permitService.generatePermit(form4);
+        //ACT
+        boolean permitGeneratedForUserThatHaveNoPermit = permitService.generatePermit(email1);
+        boolean permitGeneratedForUserThatHaveOnePermitActive = permitService.generatePermit(email2);
+        boolean permitNotGeneratedForUserThatHavePermitsAndNoneActive = permitService.generatePermit(email3);
+        boolean permitNotGeneratedForUserThatDoNotExist = permitService.generatePermit(email4);
 
-        //Assert
-        assertTrue(permitForForm1IsGenerated);
-        assertTrue(permitForForm2IsGenerated);
-        assertFalse(permitForForm3IsNotGenerated);
-        assertFalse(permitForForm4IsNotGenerated);
+        //ASSERT
+        assertTrue(permitGeneratedForUserThatHaveNoPermit);
+        assertTrue(permitGeneratedForUserThatHaveOnePermitActive);
+        assertFalse(permitNotGeneratedForUserThatHavePermitsAndNoneActive);
+        assertFalse(permitNotGeneratedForUserThatDoNotExist);
     }
 
     @Test
     void renewPermit() throws Exception {
-        //Arrange
+        //ARRANGE
         RequestPermitForm form1 = RequestPermitForm.builder()
                 .email("AurelieLaflamme@gmail.com").password("aurelie123")
                 .city("Laval").cellNumber("5143278654").build();
@@ -194,12 +185,14 @@ public class PermitServiceTest {
         when(citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
                 form4.getEmail(), form4.getPassword(), form4.getCellNumber(), form4.getCity()
         )).thenReturn(Optional.empty());
-        //Act
+
+        //ACT
         boolean renewPermitOfForm1 = permitService.renewPermit(form1);
         boolean cantRenewPermitOfForm2 = permitService.renewPermit(form2);
         boolean cantRenewPermitOfForm3 = permitService.renewPermit(form3);
         boolean cantRenewPermitOfForm4 = permitService.renewPermit(form4);
-        //Assert
+
+        //ASSERT
         assertTrue(renewPermitOfForm1);
         assertFalse(cantRenewPermitOfForm2);
         assertFalse(cantRenewPermitOfForm3);

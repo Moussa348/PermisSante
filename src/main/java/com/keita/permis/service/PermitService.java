@@ -16,6 +16,8 @@ import com.keita.permis.model.Citizen;
 import com.keita.permis.model.Permit;
 import com.keita.permis.repository.CitizenRepository;
 import com.keita.permis.repository.PermitRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
@@ -52,13 +54,15 @@ public class PermitService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    public boolean generatePermit(RequestPermitForm requestPermitForm) throws Exception {
+    private final Logger logger = LoggerFactory.getLogger(PermitService.class);
+
+    public boolean generatePermit(String email) throws Exception {
         //TODO -> remove this
-        Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPassword(requestPermitForm.getEmail(), requestPermitForm.getPassword());
+        Optional<Citizen> citizenOptional = citizenRepository.findByEmail(email);
 
         if (citizenOptional.isPresent()) {
-            Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(requestPermitForm.getEmail());
-            int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(requestPermitForm.getEmail());
+            Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(email);
+            int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(email);
 
             if (permitOptionalActive.isEmpty() && nbrPermitOfThisCitizen > 0) {
                 return false;
@@ -78,6 +82,7 @@ public class PermitService {
     }
 
     public boolean renewPermit(RequestPermitForm requestPermitForm) throws Exception {
+        //TODO : remove this
         Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
                 requestPermitForm.getEmail(),
                 requestPermitForm.getPassword(),
@@ -85,13 +90,15 @@ public class PermitService {
                 requestPermitForm.getCity()
         );
 
+        //TODO:remove this if
         if (citizenOptional.isPresent()) {
             Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(requestPermitForm.getEmail());
             int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(requestPermitForm.getEmail());
-
+            //only this is necessary + add requeteMinistry qui return citizen || null et tester dans el if si citizen != null
             if (permitOptionalActive.isEmpty() && nbrPermitOfThisCitizen > 0) {
                 citizenOptional.get().setVaccinated(requestPermitForm.getTypePermit().equals(PermitType.VACCINE.toString()));
                 savePermit(citizenOptional.get());
+
                 List<Path> filePaths = setListPath(citizenOptional.get().getLastName());
 
                 return generateQR(citizenOptional.get(), filePaths.get(0)) &&
@@ -171,7 +178,7 @@ public class PermitService {
         return Files.exists(pdfFilePath);
     }
 
-    public boolean sendPermitToCitizen(Citizen citizen, List<Path> filePaths) throws Exception {
+    private boolean sendPermitToCitizen(Citizen citizen, List<Path> filePaths) throws Exception {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true);
 

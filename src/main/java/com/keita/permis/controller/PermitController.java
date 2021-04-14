@@ -24,9 +24,9 @@ public class PermitController {
     private final Logger logger = LoggerFactory.getLogger(PermitController.class);
 
     @PostMapping("/generate")
-    public boolean generatePermit(@Valid @RequestBody RequestPermitForm requestPermitForm) {
+    public boolean generatePermit(String email) {
         try {
-            return permitService.generatePermit(requestPermitForm);
+            return permitService.generatePermit(email);
         } catch (Exception e) {
             logger.warn(e.getMessage());
             return false;
