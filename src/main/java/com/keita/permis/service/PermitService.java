@@ -60,6 +60,7 @@ public class PermitService {
         //TODO -> remove this
         Optional<Citizen> citizenOptional = citizenRepository.findByEmail(email);
 
+            logger.info(email);
         if (citizenOptional.isPresent()) {
             Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(email);
             int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(email);
@@ -82,7 +83,6 @@ public class PermitService {
     }
 
     public boolean renewPermit(RequestPermitForm requestPermitForm) throws Exception {
-        //TODO : remove this
         Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
                 requestPermitForm.getEmail(),
                 requestPermitForm.getPassword(),

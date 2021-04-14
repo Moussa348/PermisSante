@@ -16,7 +16,7 @@ import java.util.Objects;
 
 @RestController
 @RequestMapping("/permit")
-@CrossOrigin(origins = "http://localhost:4600/HealthPermit")
+@CrossOrigin(origins = "http://localhost:4600")
 public class PermitController {
 
     @Autowired
@@ -24,7 +24,7 @@ public class PermitController {
     private final Logger logger = LoggerFactory.getLogger(PermitController.class);
 
     @PostMapping("/generate")
-    public boolean generatePermit(String email) {
+    public boolean generatePermit(@RequestBody String email) {
         try {
             return permitService.generatePermit(email);
         } catch (Exception e) {
