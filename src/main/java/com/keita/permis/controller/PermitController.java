@@ -1,7 +1,9 @@
 package com.keita.permis.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.keita.permis.dto.RequestPermitForm;
 import com.keita.permis.enums.PermitType;
+import com.keita.permis.model.Citizen;
 import com.keita.permis.service.PermitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,19 +35,13 @@ public class PermitController {
         }
     }
 
-    @PostMapping("/renewal")
-    public boolean renewPermit(@Valid @RequestBody RequestPermitForm requestPermitForm) {
-        String response = permitService.getPermitTypeIfInhabitantIsValidWithCellNumber(requestPermitForm.getCellNumber());
+    /*
 
-        if (!response.isEmpty()) {
-            requestPermitForm.setTypePermit(response);
-            try {
-                return permitService.renewPermit(requestPermitForm);
-            } catch (Exception e) {
-                logger.warn(e.getMessage());
-                return false;
-            }
-        }
-        return false;
+    @GetMapping("test/{socialInsurance}")
+    public Citizen get(@PathVariable String socialInsurance) throws JsonProcessingException {
+        Citizen citizen = permitService.getBySocialInsuranceFromMinistry(socialInsurance);
+        logger.info(citizen.toString());
+        return citizen;
     }
+     */
 }

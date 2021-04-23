@@ -1,6 +1,11 @@
 package com.keita.permis.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateSerializer;
 import com.keita.permis.enums.Role;
 import lombok.Builder;
 import lombok.Data;
@@ -23,7 +28,8 @@ public class Citizen implements Serializable {
     private String firstName, lastName, gender, email,
             password, cellNumber, city, socialInsurance;
 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern="yyyy-MM-dd")
+    @JsonDeserialize(using = LocalDateDeserializer.class)
     private LocalDate dateOfBirth;
     private LocalDate registrationDate;
     private boolean vaccinated;
@@ -33,8 +39,7 @@ public class Citizen implements Serializable {
     @OneToOne
     private Citizen parent;
 
-    public Citizen() {
-    }
+    public Citizen() { }
 
     @Builder
     public Citizen(String firstName, String lastName, String gender,

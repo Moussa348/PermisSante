@@ -1,5 +1,7 @@
 package com.keita.permis.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.j2se.MatrixToImageWriter;
 import com.google.zxing.qrcode.QRCodeWriter;
@@ -59,7 +61,7 @@ public class PermitService {
     public boolean generatePermit(String email) throws Exception {
         Optional<Citizen> citizenOptional = citizenRepository.findByEmail(email);
 
-            logger.info(email);
+        logger.info(email);
         if (citizenOptional.isPresent()) {
             Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(email);
             int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(email);
@@ -80,50 +82,40 @@ public class PermitService {
         return false;
     }
 
-    public boolean renewPermit(RequestPermitForm requestPermitForm) throws Exception {
-        Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
-                requestPermitForm.getEmail(),
-                requestPermitForm.getPassword(),
-                requestPermitForm.getCellNumber(),
-                requestPermitForm.getCity()
-        );
+    public boolean renewPermit(Citizen citizen) throws Exception {
+        Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(citizen.getEmail());
+        int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(citizen.getEmail());
 
-        //TODO:remove this if and check if active
-        if (citizenOptional.isPresent()) {
-            Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(requestPermitForm.getEmail());
-            int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(requestPermitForm.getEmail());
-            //only this is necessary + add requeteMinistry qui return citizen || null et tester dans el if si citizen != null
-            if (permitOptionalActive.isEmpty() && nbrPermitOfThisCitizen > 0) {
-                citizenOptional.get().setVaccinated(requestPermitForm.getTypePermit().equals(PermitType.VACCINE.toString()));
-                savePermit(citizenOptional.get());
+        if (permitOptionalActive.isEmpty() && nbrPermitOfThisCitizen > 0) {
+            savePermit(citizen);
 
-                List<Path> filePaths = setListPath(citizenOptional.get().getLastName());
+            List<Path> filePaths = setListPath(citizen.getLastName());
 
-                return generateQR(citizenOptional.get(), filePaths.get(0)) &&
-                        generatePDF(citizenOptional.get(), filePaths.get(0), filePaths.get(1)) &&
-                        sendPermitToCitizen(citizenOptional.get(), filePaths);
-
-            } else
-                return false;
-
+            return generateQR(citizen, filePaths.get(0)) &&
+                    generatePDF(citizen, filePaths.get(0), filePaths.get(1)) &&
+                    sendPermitToCitizen(citizen, filePaths);
         }
         return false;
+
     }
 
-    public String getPermitTypeIfInhabitantIsValidWithCellNumber(String socialInsurance){
+    /*
+
+
+    public Citizen getBySocialInsuranceFromMinistry(String socialInsurance) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
         RestTemplate restTemplate = new RestTemplate();
         ResponseEntity<String> responseEntity =
                 restTemplate
                         .getForEntity(environment.getProperty("api.url.renewal") +
                                 socialInsurance, String.class);
-        if (Objects.equals(responseEntity.getBody(), PermitType.VACCINE.toString()) ||
-                Objects.equals(responseEntity.getBody(), PermitType.TEST.toString()))
-            return responseEntity.getBody();
-        return "";
+        if (!Objects.requireNonNull(responseEntity.getBody()).isEmpty())
+            return mapper.readValue(responseEntity.getBody(), Citizen.class);
+        return null;
     }
+     */
 
     private void savePermit(Citizen citizen) {
-        //TODO : Move it into a util class method because it used in 2 classes or ask the teacher
         int ageOfCitizen = getYearsBetweenNowAndThen(citizen.getDateOfBirth());
         PermitCategory permitCategory = PermitCategory.determinePermitCategory(ageOfCitizen);
         PermitType permitType = citizen.isVaccinated() ? PermitType.VACCINE : PermitType.TEST;

@@ -94,35 +94,50 @@ public class PermitRepositoryTest {
 
     @Test
     void findByActiveTrueAndCitizenEmail(){
-        //Arrange
+        //ARRANGE
         Citizen citizen1 = Citizen.builder().email("andreMarc12@gmail.com").build();
         Citizen citizen2 = Citizen.builder().email("jackDaniels@gmail.com").build();
 
-        //Act
+        //ACT
         Optional<Permit> citizenHasPermitActive = permitRepository
                 .findByActiveTrueAndCitizenEmail(citizen1.getEmail());
 
         Optional<Permit> citizenHasPermitNotActive = permitRepository
                 .findByActiveTrueAndCitizenEmail(citizen2.getEmail());
 
-        //Assert
+        //ASSERT
         assertTrue(citizenHasPermitActive.isPresent());
         assertFalse(citizenHasPermitNotActive.isPresent());
     }
 
     @Test
     void countByCitizenEmail(){
-        //Arrange
+        //ARRANGE
         Citizen citizen1 = Citizen.builder().email("jackDaniels@gmail.com").build();
         Citizen citizen2 = Citizen.builder().email("massou@gmail.com").build();
 
-        //Act
+        //ACT
         int nbrPermitCitizen1 = permitRepository.countByCitizenEmail(citizen1.getEmail());
         int nbrPermitCitizen2 = permitRepository.countByCitizenEmail(citizen2.getEmail());
 
-        //Assert
+        //ASSERT
         assertEquals(nbrPermitCitizen1,2);
         assertEquals(nbrPermitCitizen2,0);
+    }
+
+    @Test
+    void getByExpirationDateBefore(){
+        //ARRANGE
+        LocalDate date1 = LocalDate.of(2021,11,23);
+        LocalDate date2 = LocalDate.now();
+
+        //ACT
+        List<Permit> permitsExceedingDate1 = permitRepository.getByExpirationDateBefore(date1);
+        List<Permit> permitsExceedingDate2 = permitRepository.getByExpirationDateBefore(date2);
+
+        //ASSERT
+        assertEquals(4,permitsExceedingDate1.size());
+        assertEquals(0,permitsExceedingDate2.size());
     }
 
     @Test

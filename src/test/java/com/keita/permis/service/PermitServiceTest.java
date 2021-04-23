@@ -118,80 +118,42 @@ public class PermitServiceTest {
     @Test
     void renewPermit() throws Exception {
         //ARRANGE
-        RequestPermitForm form1 = RequestPermitForm.builder()
-                .email("AurelieLaflamme@gmail.com").password("aurelie123")
-                .city("Laval").cellNumber("5143278654").build();
-        Optional<Citizen> optionalCitizenForForm1 = Optional.of(
+        Citizen citizen1 =
                 Citizen.builder()
-                        .firstName("Aurelie")
                         .lastName("Laflamme")
                         .socialInsurance("21313123")
                         .email("AurelieLaflamme@gmail.com")
-                        .password("aurelie123")
-                        .city("Laval").cellNumber("5143278654")
-                        .dateOfBirth(LocalDate.of(1996, 12, 23)).build()
-        );
-        when(citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
-                form1.getEmail(), form1.getPassword(), form1.getCellNumber(), form1.getCity()
-        )).thenReturn(optionalCitizenForForm1);
-        when(permitRepository.findByActiveTrueAndCitizenEmail(form1.getEmail())).thenReturn(Optional.empty());
-        when(permitRepository.countByCitizenEmail(form1.getEmail())).thenReturn(5);
+                        .dateOfBirth(LocalDate.of(1996, 12, 23)).build();
+        when(permitRepository.findByActiveTrueAndCitizenEmail(citizen1.getEmail())).thenReturn(Optional.empty());
+        when(permitRepository.countByCitizenEmail(citizen1.getEmail())).thenReturn(5);
 
-        RequestPermitForm form2 = RequestPermitForm.builder()
-                .email("saukeUchiha@gmail.com").password("chidori123")
-                .city("Konoha").cellNumber("5143278654").build();
-        Optional<Citizen> optionalCitizenForForm2 = Optional.of(
+        Citizen citizen2 =
                 Citizen.builder()
-                        .firstName("Sasuke")
                         .lastName("Uchiha")
                         .socialInsurance("21313123")
                         .email("saukeUchiha@gmail.com")
-                        .password("chidori123")
-                        .city("Konoha").cellNumber("5143278654")
-                        .dateOfBirth(LocalDate.of(1996, 12, 23)).build()
-        );
-        when(citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
-                form2.getEmail(), form2.getPassword(), form2.getCellNumber(), form2.getCity()
-        )).thenReturn(optionalCitizenForForm2);
-        when(permitRepository.findByActiveTrueAndCitizenEmail(form2.getEmail())).thenReturn(Optional.of(new Permit()));
-        when(permitRepository.countByCitizenEmail(form2.getEmail())).thenReturn(5);
+                        .dateOfBirth(LocalDate.of(1996, 12, 23)).build();
+        when(permitRepository.findByActiveTrueAndCitizenEmail(citizen2.getEmail())).thenReturn(Optional.of(new Permit()));
+        when(permitRepository.countByCitizenEmail(citizen2.getEmail())).thenReturn(5);
 
-        RequestPermitForm form3 = RequestPermitForm.builder()
-                .email("mikeTyson@gmail.com").password("mike123")
-                .city("United-States").cellNumber("5143278654").build();
-        Optional<Citizen> optionalCitizenForForm3 = Optional.of(
+        Citizen citizen3 =
                 Citizen.builder()
-                        .firstName("Mike")
                         .lastName("Tyson")
                         .socialInsurance("21313123")
                         .email("mikeTyson@gmail.com")
                         .password("mike123")
-                        .city("United-States").cellNumber("5143278654")
-                        .dateOfBirth(LocalDate.of(1996, 12, 23)).build()
-        );
-        when(citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
-                form3.getEmail(), form3.getPassword(), form3.getCellNumber(), form3.getCity()
-        )).thenReturn(optionalCitizenForForm3);
-        when(permitRepository.findByActiveTrueAndCitizenEmail(form3.getEmail())).thenReturn(Optional.empty());
-        when(permitRepository.countByCitizenEmail(form3.getEmail())).thenReturn(0);
-
-        RequestPermitForm form4 = RequestPermitForm.builder()
-                .email("fafafafa@gmail.com").password("fafa")
-                .city("Fafafa").cellNumber("fafafaf").build();
-        when(citizenRepository.findByEmailAndPasswordAndCellNumberAndCity(
-                form4.getEmail(), form4.getPassword(), form4.getCellNumber(), form4.getCity()
-        )).thenReturn(Optional.empty());
+                        .dateOfBirth(LocalDate.of(1996, 12, 23)).build();
+        when(permitRepository.findByActiveTrueAndCitizenEmail(citizen3.getEmail())).thenReturn(Optional.empty());
+        when(permitRepository.countByCitizenEmail(citizen3.getEmail())).thenReturn(0);
 
         //ACT
-        boolean renewPermitOfForm1 = permitService.renewPermit(form1);
-        boolean cantRenewPermitOfForm2 = permitService.renewPermit(form2);
-        boolean cantRenewPermitOfForm3 = permitService.renewPermit(form3);
-        boolean cantRenewPermitOfForm4 = permitService.renewPermit(form4);
+        boolean renewPermitOfForm1 = permitService.renewPermit(citizen1);
+        boolean cantRenewPermitOfForm2 = permitService.renewPermit(citizen2);
+        boolean cantRenewPermitOfForm3 = permitService.renewPermit(citizen3);
 
         //ASSERT
         assertTrue(renewPermitOfForm1);
         assertFalse(cantRenewPermitOfForm2);
         assertFalse(cantRenewPermitOfForm3);
-        assertFalse(cantRenewPermitOfForm4);
     }
 }

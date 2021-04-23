@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -16,6 +17,7 @@ import java.util.Optional;
 public interface PermitRepository extends JpaRepository<Permit,Long> {
     Optional<Permit> findByActiveTrueAndCitizenEmail(String email);
     int countByCitizenEmail(String email);
+    List<Permit> getByExpirationDateBefore(LocalDate date);
 
     @Transactional
     @Modifying
