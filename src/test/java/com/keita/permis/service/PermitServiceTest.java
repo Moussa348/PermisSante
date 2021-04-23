@@ -77,8 +77,6 @@ public class PermitServiceTest {
         when(permitRepository.countByCitizenEmail(email1)).thenReturn(0);
         when(permitRepository.save(any(Permit.class))).thenReturn(new Permit());
 
-
-
         String email2 = "rejArch@gmail.com";
         Optional<Citizen> optionalCitizenForForm2 = Optional.of(
                 Citizen.builder()
@@ -91,7 +89,6 @@ public class PermitServiceTest {
         when(permitRepository.findByActiveTrueAndCitizenEmail(email2)).thenReturn(Optional.of(new Permit()));
         when(permitRepository.countByCitizenEmail(email2)).thenReturn(2);
 
-
         String email3 = "mikaKami@gmail.com";
         Optional<Citizen> optionalCitizenForForm3 = Optional.of(
                 Citizen.builder()
@@ -101,7 +98,6 @@ public class PermitServiceTest {
         when(citizenRepository.findByEmail(email3)).thenReturn(optionalCitizenForForm3);
         when(permitRepository.findByActiveTrueAndCitizenEmail(email3)).thenReturn(Optional.empty());
         when(permitRepository.countByCitizenEmail(email3)).thenReturn(4);
-
 
         String email4 = "araaaaa@gmail.com";
         when(citizenRepository.findByEmail(email4)).thenReturn(Optional.empty());

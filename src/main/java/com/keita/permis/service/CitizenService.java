@@ -28,7 +28,7 @@ public class CitizenService {
 
     public String authentication(AuthForm authForm) {
         Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPassword(authForm.getEmail(), authForm.getPassword());
-        if (citizenOptional.isPresent())
+        if (citizenOptional.isPresent() && citizenOptional.get().isActive())
             return citizenOptional.get().getEmail();
         return "";
     }
@@ -49,6 +49,11 @@ public class CitizenService {
             return 0;
         }
         return 1;
+    }
+
+    public Citizen viewCitizenInfo(String email){
+        Optional<Citizen> citizenOptional = citizenRepository.findByEmail(email);
+        return citizenOptional.orElse(null);
     }
 
     private Optional<Citizen> ifMinorCheckIfParentExist(Citizen citizen) {

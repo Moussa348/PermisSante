@@ -1,7 +1,6 @@
 package com.keita.permis.repository;
 
 import com.keita.permis.model.Citizen;
-import com.keita.permis.model.Permit;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -16,7 +15,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@DataJpaTest
+@DataJpaTest(properties = "spring.datasource.initialization-mode=never")//Désactivé,car il insert les donnees de mon data.sql
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class CitizenRepositoryTest {
 

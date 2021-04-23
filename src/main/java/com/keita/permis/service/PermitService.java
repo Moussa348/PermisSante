@@ -57,7 +57,6 @@ public class PermitService {
     private final Logger logger = LoggerFactory.getLogger(PermitService.class);
 
     public boolean generatePermit(String email) throws Exception {
-        //TODO -> remove this
         Optional<Citizen> citizenOptional = citizenRepository.findByEmail(email);
 
             logger.info(email);
@@ -78,7 +77,6 @@ public class PermitService {
                     generatePDF(citizenOptional.get(), filePaths.get(0), filePaths.get(1)) &&
                     sendPermitToCitizen(citizenOptional.get(), filePaths);
         }
-
         return false;
     }
 
@@ -90,7 +88,7 @@ public class PermitService {
                 requestPermitForm.getCity()
         );
 
-        //TODO:remove this if
+        //TODO:remove this if and check if active
         if (citizenOptional.isPresent()) {
             Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(requestPermitForm.getEmail());
             int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(requestPermitForm.getEmail());

@@ -17,7 +17,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@DataJpaTest
+@DataJpaTest(properties = "spring.datasource.initialization-mode=never")//Désactivé,car il insert les donnees de mon data.sql
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class PermitRepositoryTest {
 
@@ -123,6 +123,20 @@ public class PermitRepositoryTest {
         //Assert
         assertEquals(nbrPermitCitizen1,2);
         assertEquals(nbrPermitCitizen2,0);
+    }
+
+    @Test
+    void disablePermit(){
+        //ARRANGE
+        LocalDate expirationDate1 = LocalDate.of(2021,05,10);
+        LocalDate expirationDate2 = LocalDate.now();
+
+        //ACT
+        int nbOfUpdates1 = permitRepository.disablePermit(expirationDate1);
+        int nbOfUpdates2 = permitRepository.disablePermit(expirationDate2);
+        //ASSERT
+        assertEquals(2,nbOfUpdates1);
+        assertEquals(0,nbOfUpdates2);
     }
 
 

@@ -1,7 +1,6 @@
 package com.keita.permis.service;
 
 import com.keita.permis.dto.AuthForm;
-import com.keita.permis.dto.SubmitForm;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.repository.CitizenRepository;
 import org.junit.jupiter.api.Test;
@@ -9,9 +8,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.env.Environment;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -35,20 +31,27 @@ public class CitizenServiceTest {
     @Test
     void authentication(){
         //ARRANGE
-        AuthForm authForm1 = new AuthForm("rejArch@gmail.com", "rej123");
+        AuthForm authForm1 = new AuthForm("rejArch@gmail.com", "rejean123");
         Optional<Citizen> citizenOptional = Optional.of(Citizen.builder().email("rejArch@gmail.com").build());
         when(citizenRepository.findByEmailAndPassword(authForm1.getEmail(), authForm1.getPassword())).thenReturn(citizenOptional);
 
         AuthForm authForm2 = new AuthForm("andreMarc12@gmail.com", "andreee");
         when(citizenRepository.findByEmailAndPassword(authForm2.getEmail(), authForm2.getPassword())).thenReturn(Optional.empty());
 
+        AuthForm authForm3 = new AuthForm("fanafan@gmail.com", "fanfan123");
+        Optional<Citizen> citizenOptional2 = Optional.of(Citizen.builder().email("fanafan@gmail.com").build());
+        citizenOptional2.get().setActive(false);
+        when(citizenRepository.findByEmailAndPassword(authForm3.getEmail(), authForm3.getPassword())).thenReturn(Optional.empty());
+
         //ACT
         String emailReturned = citizenService.authentication(authForm1);
-        String emailNotReturned = citizenService.authentication(authForm2);
+        String emailNotReturnedUserNonExistent = citizenService.authentication(authForm2);
+        String emailNotReturnedNotUserNotActive = citizenService.authentication(authForm2);
 
         //ASSERT
         assertEquals(emailReturned,authForm1.getEmail());
-        assertEquals(emailNotReturned,"");
+        assertEquals(emailNotReturnedUserNonExistent,"");
+        assertEquals(emailNotReturnedNotUserNotActive,"");
     }
     @Test
     void registration() {
@@ -91,9 +94,28 @@ public class CitizenServiceTest {
         int kidIsNotRegisteredParentAccountDoNotExist = citizenService.registration(citizen4);
 
         //ASSERT
-        assertEquals(adultCitizenIsRegistered,0);
-        assertEquals(kidCitizenIsRegistered,0);
-        assertEquals(adultIsNotRegisteredAccountAlreadyExist,1);
-        assertEquals(kidIsNotRegisteredParentAccountDoNotExist,-1);
+        assertEquals(0,adultCitizenIsRegistered);
+        assertEquals(0,kidCitizenIsRegistered);
+        assertEquals(1,adultIsNotRegisteredAccountAlreadyExist);
+        assertEquals(-1,kidIsNotRegisteredParentAccountDoNotExist);
+    }
+
+    @Test
+    void viewCitizenInfo(){
+        //ARRANGE
+        String email1 = "citizen1@gmail.com";
+        when(citizenRepository.findByEmail(email1)).thenReturn(Optional.of(new Citizen()));
+
+        String email2 = "citizen2@gmail.com";
+        when(citizenRepository.findByEmail(email2)).thenReturn(Optional.empty());
+
+        //ACT
+        Citizen citizenExist = citizenService.viewCitizenInfo(email1);
+        Citizen citizenDoNotExist = citizenService.viewCitizenInfo(email2);
+
+        //ASSERT
+        assertNotNull(citizenExist);
+        assertNull(citizenDoNotExist);
+
     }
 }
