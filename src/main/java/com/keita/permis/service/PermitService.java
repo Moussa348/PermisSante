@@ -99,19 +99,6 @@ public class PermitService {
 
     }
 
-    //TODO : test and maybe move it into PoolService
-    public Citizen getBySocialInsuranceFromMinistry(String socialInsurance) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> responseEntity =
-                restTemplate
-                        .getForEntity(environment.getProperty("api.url.renewal") +
-                                socialInsurance, String.class);
-        if (!Objects.requireNonNull(responseEntity.getBody()).isEmpty())
-            return mapper.readValue(responseEntity.getBody(), Citizen.class);
-        return null;
-    }
-
     private void savePermit(Citizen citizen) {
         int ageOfCitizen = getYearsBetweenNowAndThen(citizen.getDateOfBirth());
         PermitCategory permitCategory = PermitCategory.determinePermitCategory(ageOfCitizen);
