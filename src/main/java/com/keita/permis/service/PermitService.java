@@ -11,22 +11,20 @@ import com.itextpdf.kernel.pdf.PdfWriter;
 import com.itextpdf.layout.Document;
 import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
-import com.keita.permis.dto.RequestPermitForm;
 import com.keita.permis.enums.PermitCategory;
 import com.keita.permis.enums.PermitType;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.model.Permit;
 import com.keita.permis.repository.CitizenRepository;
 import com.keita.permis.repository.PermitRepository;
+import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
-import org.springframework.http.ResponseEntity;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import javax.mail.internet.MimeMessage;
 import java.io.File;
@@ -42,6 +40,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Log
 public class PermitService {
 
     @Autowired
@@ -56,12 +55,11 @@ public class PermitService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-    private final Logger logger = LoggerFactory.getLogger(PermitService.class);
 
     public boolean generatePermit(String email) throws Exception {
         Optional<Citizen> citizenOptional = citizenRepository.findByEmail(email);
 
-        logger.info(email);
+        log.info(email);
         if (citizenOptional.isPresent()) {
             Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(email);
             int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(email);

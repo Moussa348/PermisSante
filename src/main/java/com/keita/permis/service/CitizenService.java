@@ -4,6 +4,7 @@ import com.keita.permis.dto.AuthForm;
 import com.keita.permis.enums.Role;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.repository.CitizenRepository;
+import lombok.extern.java.Log;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Service
+@Log
 public class CitizenService {
 
     @Autowired
@@ -23,8 +25,6 @@ public class CitizenService {
 
     @Autowired
     private Environment environment;
-
-    Logger logger = LoggerFactory.getLogger(CitizenService.class);
 
     public String authentication(AuthForm authForm) {
         Optional<Citizen> citizenOptional = citizenRepository.findByEmailAndPassword(authForm.getEmail(), authForm.getPassword());
@@ -45,7 +45,7 @@ public class CitizenService {
             citizen.setRegistrationDate(LocalDate.now());
             citizen.setRole(Role.USER);
             citizenRepository.save(citizen);
-            logger.info("SAVING");
+            log.info("SAVING");
             return 0;
         }
         return 1;

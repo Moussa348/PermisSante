@@ -1,10 +1,8 @@
 package com.keita.permis.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.keita.permis.model.Citizen;
-import com.keita.permis.repository.CitizenRepository;
 import com.keita.permis.repository.PermitRepository;
+import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.http.ResponseEntity;
@@ -15,13 +13,11 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Service
+@Log
 public class PoolService {
 
     @Autowired
     private PermitRepository permitRepository;
-
-    @Autowired
-    private CitizenRepository citizenRepository;
 
     @Autowired
     private Environment environment;
@@ -44,15 +40,16 @@ public class PoolService {
         return null;
     }
 
-    public Citizen getBySocialInsuranceFromMinistry(String socialInsurance) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
+    public Citizen getBySocialInsuranceFromMinistry(String socialInsurance) {
         RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<String> responseEntity =
+        ResponseEntity<Citizen> responseEntity =
                 restTemplate
                         .getForEntity(environment.getProperty("api.url.renewal") +
-                                socialInsurance, String.class);
-        if (!Objects.requireNonNull(responseEntity.getBody()).isEmpty())
-            return mapper.readValue(responseEntity.getBody(), Citizen.class);
+                                socialInsurance, Citizen.class);
+        if (responseEntity.hasBody()){
+            log.info(Objects.requireNonNull(responseEntity.getBody()).toString());
+            return responseEntity.getBody();
+        }
         return null;
     }
 

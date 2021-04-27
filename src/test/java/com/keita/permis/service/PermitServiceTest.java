@@ -1,11 +1,9 @@
 package com.keita.permis.service;
 
-import com.keita.permis.dto.RequestPermitForm;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.model.Permit;
 import com.keita.permis.repository.CitizenRepository;
 import com.keita.permis.repository.PermitRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -48,9 +46,9 @@ public class PermitServiceTest {
     void mockingEnvironmentPropertyAndJavaMailSender() {
         //il va falloir mettre le directory ou vous voulez que ca soit générer
         when(environment.getProperty("qr.directory"))
-                .thenReturn("C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\PermisSante\\barCode\\");
+                .thenReturn("./barcode/");
         when(environment.getProperty("pdf.directory"))
-                .thenReturn("C:\\Users\\mansa\\Documents\\OneDrive\\Documents\\techniqueInformatique\\quatriemeSession\\PermisSante\\pdf\\");
+                .thenReturn("./pdf/");
         when(environment.getProperty("qrcode.extension")).thenReturn(".PNG");
         when(environment.getProperty("pdf.extension")).thenReturn(".pdf");
         when(environment.getProperty("qrcode.format")).thenReturn("PNG");
