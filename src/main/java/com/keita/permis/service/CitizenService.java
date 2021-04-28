@@ -5,8 +5,6 @@ import com.keita.permis.enums.Role;
 import com.keita.permis.model.Citizen;
 import com.keita.permis.repository.CitizenRepository;
 import lombok.extern.java.Log;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;

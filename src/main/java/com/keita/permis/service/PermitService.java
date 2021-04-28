@@ -18,8 +18,6 @@ import com.keita.permis.model.Permit;
 import com.keita.permis.repository.CitizenRepository;
 import com.keita.permis.repository.PermitRepository;
 import lombok.extern.java.Log;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -59,7 +57,6 @@ public class PermitService {
     public boolean generatePermit(String email) throws Exception {
         Optional<Citizen> citizenOptional = citizenRepository.findByEmail(email);
 
-        log.info(email);
         if (citizenOptional.isPresent()) {
             Optional<Permit> permitOptionalActive = permitRepository.findByActiveTrueAndCitizenEmail(email);
             int nbrPermitOfThisCitizen = permitRepository.countByCitizenEmail(email);

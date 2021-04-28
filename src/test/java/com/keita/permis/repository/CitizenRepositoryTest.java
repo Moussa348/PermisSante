@@ -109,35 +109,4 @@ public class CitizenRepositoryTest {
         assertTrue(optionalCitizen1.isPresent());
         assertFalse(optionalCitizen2.isPresent());
     }
-
-    @Test
-    void findByEmailAndPasswordAndCellNumberAndCity(){
-        //Arrange
-        Citizen citizen1 = Citizen.builder()
-                .email("rejArch@gmail.com").password("rej123")
-                .cellNumber("5143456789").city("Gaspesie").build();
-        Citizen citizen2 = Citizen.builder()
-                .email("jackDaniels@gmail.com")
-                .password("jack123")
-                .cellNumber("4509876549")
-                .city("Quebec").build();
-        //Act
-        Optional<Citizen> citizenExist = citizenRepository
-                .findByEmailAndPasswordAndCellNumberAndCity(
-                        citizen1.getEmail(),
-                        citizen1.getPassword(),
-                        citizen1.getCellNumber(),
-                        citizen1.getCity()
-                );
-        Optional<Citizen> citizenNotExist = citizenRepository
-                .findByEmailAndPasswordAndCellNumberAndCity(
-                        citizen2.getEmail(),
-                        citizen2.getPassword(),
-                        citizen2.getCellNumber(),
-                        citizen2.getCity()
-                );
-        //Assert
-        assertTrue(citizenExist.isPresent());
-        assertFalse(citizenNotExist.isPresent());
-    }
 }

@@ -12,5 +12,4 @@ public interface CitizenRepository extends JpaRepository<Citizen,Long> {
     Optional<Citizen> findByEmail(String email);
     Optional<Citizen> findBySocialInsurance(String socialInsurance);
     Optional<Citizen> findByEmailAndPassword(String email,String password);//TODO:will replace existByEmailAndPassword in AuthenticationService
-    Optional<Citizen> findByEmailAndPasswordAndCellNumberAndCity(String email,String password, String cellNumber,String city);
 }

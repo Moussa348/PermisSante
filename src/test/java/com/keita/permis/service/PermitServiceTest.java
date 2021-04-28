@@ -34,8 +34,6 @@ public class PermitServiceTest {
     @Mock
     Environment environment;
 
-    //TODO : learn Mockito @Spy
-
     @Mock
     JavaMailSender javaMailSender;
 
@@ -44,7 +42,6 @@ public class PermitServiceTest {
 
     @BeforeEach
     void mockingEnvironmentPropertyAndJavaMailSender() {
-        //il va falloir mettre le directory ou vous voulez que ca soit générer
         when(environment.getProperty("qr.directory"))
                 .thenReturn("./barcode/");
         when(environment.getProperty("pdf.directory"))
@@ -56,8 +53,6 @@ public class PermitServiceTest {
         when(javaMailSender.createMimeMessage()).thenReturn(new MimeMessage((Session) null));
         when(environment.getProperty("age.min")).thenReturn("18");
     }
-
-    //TODO : Test improbable situations (TP3)
 
     @Test
     void generatePermit() throws Exception {

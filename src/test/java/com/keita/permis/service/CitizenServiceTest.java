@@ -27,7 +27,6 @@ public class CitizenServiceTest {
     @InjectMocks
     CitizenService citizenService;
 
-    //TODO : add improbable test (TP3)
     @Test
     void authentication(){
         //ARRANGE
@@ -116,6 +115,5 @@ public class CitizenServiceTest {
         //ASSERT
         assertNotNull(citizenExist);
         assertNull(citizenDoNotExist);
-
     }
 }
